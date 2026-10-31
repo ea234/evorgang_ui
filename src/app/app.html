@@ -1,1 +1,14 @@
-<app-statusbar-top  [isDark]="true"></app-statusbar-top>
+<app-statusbar-top
+    [title]="appTitle"
+    [icon]="appIcon"
+    
+    [isDark]="isDark"
+
+    (themeChanged)="onThemeChanged($event)"    >
+</app-statusbar-top>
+
+@if (currentUser === null) {
+    <p>Login wird hier angezeigt.</p>
+} @else {
+    <p>Anwendungsauswahl wird hier angezeigt.</p>
+}

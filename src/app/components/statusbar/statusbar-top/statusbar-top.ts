@@ -1,4 +1,4 @@
-import { Component, input, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-statusbar-top',
@@ -8,23 +8,25 @@ import { Component, input, Input } from '@angular/core';
 })
 export class StatusbarTop {
 
-
-  
-
-
-
-
-
+  @Input() title: string = '';
+  @Input() icon: string = '';
 
   @Input() isDark: boolean = false;
 
+  @Output() themeChanged = new EventEmitter<boolean>();
+
   ngOnInit(): void {
     this.setTheme();
+    //this.title = 'Titel1'
   }
 
-  toggleTheme(): void {
+  toggleTheme(): void 
+  {
     this.isDark = !this.isDark;
+
     this.setTheme();
+
+    this.themeChanged.emit(this.isDark );
   }
 
   setTheme(): void {
