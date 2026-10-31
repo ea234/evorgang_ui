@@ -1,1 +1,26 @@
-<p>statusbar-top works!</p>
+
+<header class="statusbar">
+    <div class="app-brand">
+        <span class="brand-icon">V</span>
+        <span>Vorgangsverwaltung</span>
+    </div>
+
+    <div class="statusbar-right">
+        <span class="status-label">Darstellung</span>
+
+        <button
+            type="button"
+            id="theme-toggle"
+            class="theme-toggle"
+            aria-label="Darstellung wechseln"
+            aria-pressed="false"
+            
+            (click)="toggleTheme()"
+
+            >
+            <span id="theme-icon" >{{ isDark ? '&#9789;' : '&#9728;' }}</span>
+            <span id="theme-label">{{ isDark ? 'Dunkel'  : 'Hell'    }}</span>
+        </button>
+    </div>
+</header>
+
