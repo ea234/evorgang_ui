@@ -16,6 +16,10 @@ export class App {
 
   isDark: boolean = false;
 
+onLoginSuccess(username: string): void {
+    this.currentUser = new User( username );
+}
+
 onThemeChanged(dark: boolean): void {
     this.isDark = dark;
 }  

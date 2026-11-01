@@ -1,0 +1,101 @@
+
+.application-page {
+    padding: 32px;
+    color: var(--text-primary);
+}
+
+.application-header {
+    margin-bottom: 30px;
+}
+
+.application-header h1 {
+    margin: 0 0 8px;
+    font-size: 24px;
+}
+
+.application-header p {
+    margin: 0;
+    color: var(--text-secondary);
+}
+
+.application-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 280px));
+    gap: 20px;
+}
+
+.application-card {
+    padding: 24px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+
+    transition:
+        transform 0.2s ease,
+        background-color 0.2s ease;
+}
+
+.application-card:hover {
+    transform: translateY(-3px);
+    background: var(--surface-hover);
+}
+
+.application-card-icon {
+    width: 48px;
+    height: 48px;
+    display: grid;
+    place-items: center;
+
+    margin-bottom: 18px;
+    border-radius: 10px;
+
+    background: var(--accent);
+    color: var(--accent-text);
+
+    font-size: 22px;
+    font-weight: 700;
+}
+
+.application-card h2 {
+    margin: 0 0 10px;
+    font-size: 18px;
+}
+
+.application-card p {
+    min-height: 40px;
+    margin: 0 0 20px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+.application-card button {
+    width: 100%;
+    min-height: 40px;
+    border: 1px solid var(--accent);
+    border-radius: 7px;
+
+    background: var(--accent);
+    color: var(--accent-text);
+
+    font-weight: 600;
+}
+
+.application-card button:hover {
+    background: var(--accent-hover);
+}
+
+.application-card button:focus-visible {
+    outline: 3px solid var(--focus-ring);
+    outline-offset: 3px;
+}
+
+@media (max-width: 480px) {
+    .application-page {
+        padding: 20px 14px;
+    }
+
+    .application-grid {
+        grid-template-columns: 1fr;
+    }
+}

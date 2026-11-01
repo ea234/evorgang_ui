@@ -8,7 +8,13 @@
 </app-statusbar-top>
 
 @if (currentUser === null) {
-    <p>Login wird hier angezeigt.</p>
+        <app-login
+        (loginSuccess)="onLoginSuccess($event)">
+    </app-login>
 } @else {
-    <p>Anwendungsauswahl wird hier angezeigt.</p>
+
+  <app-application-selection
+        [user]="currentUser">
+  </app-application-selection>
+
 }
