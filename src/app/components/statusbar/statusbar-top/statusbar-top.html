@@ -6,6 +6,20 @@
     </div>
 
     <div class="statusbar-right">
+
+        @if (user !== null) {
+            <span class="status-username">
+                {{ user.username }}
+            </span>
+
+            <button
+                type="button"
+                class="logout-button"
+                (click)="onLogout()">
+                Abmelden
+            </button>
+        }
+                
         <span class="status-label">Darstellung</span>
 
         <button

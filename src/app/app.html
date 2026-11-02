@@ -1,20 +1,28 @@
 <app-statusbar-top
     [title]="appTitle"
     [icon]="appIcon"
-    
     [isDark]="isDark"
-
-    (themeChanged)="onThemeChanged($event)"    >
+    [user]="currentUser"
+    (themeChanged)="onThemeChanged($event)"
+    (logout)="onLogout()">
 </app-statusbar-top>
 
-@if (currentUser === null) {
-        <app-login
+@if (loginStatus === logged_none) {
+
+    <app-login
         (loginSuccess)="onLoginSuccess($event)">
     </app-login>
-} @else {
 
-  <app-application-selection
-        [user]="currentUser">
-  </app-application-selection>
+} @else if (loginStatus === logged_in) {
+
+    <app-application-selection
+        [user]="currentUser!">
+    </app-application-selection>
+
+} @else if (loginStatus === logged_out) {
+
+    <app-logout
+        (backToLogin)="onBackToLogin()">
+    </app-logout>
 
 }

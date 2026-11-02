@@ -1,0 +1,42 @@
+.logout-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 70vh;
+    padding: 24px;
+}
+
+.logout-card {
+    width: 100%;
+    max-width: 420px;
+    padding: 32px;
+    background: var(--surface);
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    text-align: center;
+}
+
+.logout-card h2 {
+    margin-top: 0;
+    margin-bottom: 16px;
+}
+
+.logout-card p {
+    color: var(--text-secondary);
+    margin-bottom: 28px;
+}
+
+.logout-card button {
+    padding: 11px 22px;
+    border: none;
+    border-radius: 6px;
+    background: var(--accent);
+    color: var(--accent-text);
+    cursor: pointer;
+}
+
+.logout-card button:hover {
+    background: var(--accent-hover);
+}

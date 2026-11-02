@@ -8,8 +8,8 @@ import { Component, EventEmitter, Output } from '@angular/core';
 })
 export class Login {
 
-  username: string = '';
-  password: string = '';
+  username: string = 'demo';
+  password: string = 'demo123';
 
   showPassword: boolean = false;
   errorMessage: string = '';

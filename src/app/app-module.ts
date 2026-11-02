@@ -6,9 +6,10 @@ import { App } from './app';
 import { StatusbarTop } from './components/statusbar/statusbar-top/statusbar-top';
 import { Login } from './components/login/login';
 import { ApplicationSelection } from './components/application-selection/application-selection';
+import { Logout } from './components/logout/logout';
 
 @NgModule({
-  declarations: [App, StatusbarTop, Login, ApplicationSelection],
+  declarations: [App, StatusbarTop, Login, ApplicationSelection, Logout],
   imports: [BrowserModule, AppRoutingModule, FormsModule],
   providers: [provideBrowserGlobalErrorListeners()],
   bootstrap: [App],
