@@ -1,30 +1,81 @@
-import { TestBed } from '@angular/core/testing';
-import { RouterModule } from '@angular/router';
+
+import { describe, it, expect } from 'vitest';
 import { App } from './app';
+import { User } from './models/user';
 
 describe('App', () => {
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [
-        RouterModule.forRoot([])
-      ],
-      declarations: [
-        App
-      ],
-    })
-      .compileComponents();
+
+  it('soll eine App-Instanz erstellen', () => {
+
+    const app = new App();
+
+    expect(app).toBeInstanceOf(App);
+
   });
 
-  it('should create the app', () => {
-    const fixture = TestBed.createComponent(App);
-    const app = fixture.componentInstance;
-    expect(app).toBeTruthy();
+  it('soll mit dem Status logged_none starten', () => {
+
+    const app = new App();
+
+    expect(app.fkAnwendung.loginStatus)
+      .toBe(app.fkAnwendung.logged_none);
+
   });
 
-  it('should render title', async () => {
-    const fixture = TestBed.createComponent(App);
-    await fixture.whenStable();
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, evorgang_ui');
+  it('soll einen Benutzer nach erfolgreichem Login speichern', () => {
+
+    const app = new App();
+
+    app.onLoginSuccess('demo');
+
+    expect(app.fkAnwendung.currentUser)
+      .toBeInstanceOf(User);
+
+    expect(app.fkAnwendung.currentUser?.username)
+      .toBe('demo');
+
+    expect(app.fkAnwendung.loginStatus)
+      .toBe(app.fkAnwendung.logged_in);
+
   });
+
+  it('soll den Benutzer beim Logout entfernen', () => {
+
+    const app = new App();
+
+    app.onLoginSuccess('demo');
+    app.onLogout();
+
+    expect(app.fkAnwendung.currentUser).toBeNull();
+
+    expect(app.fkAnwendung.loginStatus)
+      .toBe(app.fkAnwendung.logged_out);
+
+  });
+
+  it('soll nach Logout wieder zum Login zurückkehren', () => {
+
+    const app = new App();
+
+    app.onLoginSuccess('demo');
+    app.onLogout();
+    app.onBackToLogin();
+
+    expect(app.fkAnwendung.currentUser).toBeNull();
+
+    expect(app.fkAnwendung.loginStatus)
+      .toBe(app.fkAnwendung.logged_none);
+
+  });
+
+  it('soll den Theme-Status ändern können', () => {
+
+    const app = new App();
+
+    app.onThemeChanged(true);
+
+    expect(app.fkAnwendung.isDark).toBe(true);
+
+  });
+
 });

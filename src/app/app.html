@@ -1,25 +1,26 @@
+
 <app-statusbar-top
-    [title]="appTitle"
-    [icon]="appIcon"
-    [isDark]="isDark"
-    [user]="currentUser"
+    [title]="fkAnwendung.appTitle"
+    [icon]="fkAnwendung.appIcon"
+    [isDark]="fkAnwendung.isDark"
+    [user]="fkAnwendung.currentUser"
     (themeChanged)="onThemeChanged($event)"
     (logout)="onLogout()">
 </app-statusbar-top>
 
-@if (loginStatus === logged_none) {
+@if (fkAnwendung.loginStatus === fkAnwendung.logged_none) {
 
     <app-login
         (loginSuccess)="onLoginSuccess($event)">
     </app-login>
 
-} @else if (loginStatus === logged_in) {
+} @else if (fkAnwendung.loginStatus === fkAnwendung.logged_in) {
 
     <app-application-selection
-        [user]="currentUser!">
+        [user]="fkAnwendung.currentUser!">
     </app-application-selection>
 
-} @else if (loginStatus === logged_out) {
+} @else if (fkAnwendung.loginStatus === fkAnwendung.logged_out) {
 
     <app-logout
         (backToLogin)="onBackToLogin()">

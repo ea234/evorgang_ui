@@ -1,5 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { User } from './models/user';
+import { FkAnwendung } from './models/fkAnwendung';
 
 @Component({
   selector: 'app-root',
@@ -9,48 +10,30 @@ import { User } from './models/user';
 })
 export class App {
 
-  // Login-Status
-  readonly logged_in: number = 0;
-  readonly logged_out: number = 1;
-  readonly logged_none: number = 2;
 
-  loginStatus: number = this.logged_none;
-
-  // Angemeldeter Benutzer
-  currentUser: User | null = null;
-
-  // Anwendungstitel und Icon
-  appTitle: string = 'Anwendungs-Auswahl';
-  appIcon: string = 'V';
-
-  // Theme
-  isDark: boolean = false;
+  // Zentrale Anwendungsverwaltung
+  fkAnwendung: FkAnwendung = new FkAnwendung();
 
   // Erfolgreiche Anmeldung
   onLoginSuccess(username: string): void {
-    this.currentUser = new User(username);
-    this.loginStatus = this.logged_in;
+    this.fkAnwendung.currentUser = new User(username);
+    this.fkAnwendung.loginStatus = this.fkAnwendung.logged_in;
   }
 
   // Theme-Wechsel
   onThemeChanged(dark: boolean): void {
-    this.isDark = dark;
+    this.fkAnwendung.isDark = dark;
   }
 
   // Abmeldung
   onLogout(): void {
-    this.currentUser = null;
-    this.loginStatus = this.logged_out;
+    this.fkAnwendung.currentUser = null;
+    this.fkAnwendung.loginStatus = this.fkAnwendung.logged_out;
   }
 
   // Zurück zum Login
- onBackToLogin(): void {
-    console.log('Zurück zum Login');
-
-    this.loginStatus = this.logged_none;
-
-    console.log('Neuer Login-Status:', this.loginStatus);
-}
-
-  protected readonly title = signal('evorgang_ui');
+  onBackToLogin(): void {
+    this.fkAnwendung.currentUser = null;
+    this.fkAnwendung.loginStatus = this.fkAnwendung.logged_none;
+  }
 }
