@@ -1,6 +1,6 @@
 
 import { User } from './user';
-
+import { ApplicationType } from './application-type';
 export class FkAnwendung {
 
   // =====================================
@@ -31,5 +31,11 @@ export class FkAnwendung {
   // =====================================
 
   isDark: boolean = false;
+
+  // =====================================
+  // Aktuell ausgewählte Fachanwendung
+  // =====================================
+  
+  selectedApplication: ApplicationType | null = null;
 
 }

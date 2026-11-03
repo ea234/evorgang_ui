@@ -1,5 +1,7 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { User } from '../../models/user';
+import { ApplicationType } from '../../models/application-type';
+
 @Component({
   selector: 'app-application-selection',
   standalone: false,
@@ -9,5 +11,14 @@ import { User } from '../../models/user';
 export class ApplicationSelection {
 
   @Input( { required: true } ) user!: User;
+
+@Output() applicationSelected = new EventEmitter<ApplicationType>();
+
+  onOpenApplication(application: ApplicationType): void {
+    this.applicationSelected.emit(application);
+  }
+
+  // Zugriff auf das Enum im HTML-Template
+  ApplicationType = ApplicationType;
 
 }

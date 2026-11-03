@@ -1,6 +1,7 @@
 import { Component, signal } from '@angular/core';
 import { User } from './models/user';
 import { FkAnwendung } from './models/fkAnwendung';
+import { ApplicationType } from './models/application-type';
 
 @Component({
   selector: 'app-root',
@@ -29,11 +30,23 @@ export class App {
   onLogout(): void {
     this.fkAnwendung.currentUser = null;
     this.fkAnwendung.loginStatus = this.fkAnwendung.logged_out;
+    this.fkAnwendung.selectedApplication = null;
   }
 
   // Zurück zum Login
   onBackToLogin(): void {
     this.fkAnwendung.currentUser = null;
     this.fkAnwendung.loginStatus = this.fkAnwendung.logged_none;
+    this.fkAnwendung.selectedApplication = null;
   }
+
+  onApplicationSelected(application: ApplicationType): void {
+
+  this.fkAnwendung.selectedApplication = application;
+
+  }
+
+  onBackToApplicationSelection(): void {
+    this.fkAnwendung.selectedApplication = null;
+  }  
 }

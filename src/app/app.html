@@ -16,9 +16,20 @@
 
 } @else if (fkAnwendung.loginStatus === fkAnwendung.logged_in) {
 
-    <app-application-selection
-        [user]="fkAnwendung.currentUser!">
-    </app-application-selection>
+    @if (fkAnwendung.selectedApplication === null) {
+
+        <app-application-selection
+            [user]="fkAnwendung.currentUser!"
+            (applicationSelected)="onApplicationSelected($event)">
+        </app-application-selection>
+
+    } @else if (fkAnwendung.selectedApplication === 'vorgangssteuerung') {
+
+        <app-vorgangssteuerung
+            (backToApplicationSelection)="onBackToApplicationSelection()">
+        </app-vorgangssteuerung>
+
+    }
 
 } @else if (fkAnwendung.loginStatus === fkAnwendung.logged_out) {
 
