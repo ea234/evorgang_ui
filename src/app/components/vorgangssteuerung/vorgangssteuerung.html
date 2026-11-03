@@ -1,34 +1,118 @@
+<div class="vorgangssteuerung">
 
-<div class="workflow-page">
+    <!-- LINKE NAVIGATION -->
 
-    <div class="workflow-header">
+    <aside class="verdichtung-sidebar">
 
-        <div>
-            <h1>Vorgangssteuerung</h1>
+        <div class="verdichtung-list">
 
-            <p>
-                Willkommen, {{ user.username }}!
-            </p>
+            @for (art of verdichtungsarten; track art.id) {
+
+                <button
+                    type="button"
+                    class="verdichtung-button"
+                    [class.active]="verdichtungsart === art.id"
+                    (click)="onVerdichtungsartChanged(art.id)">
+
+                    {{ art.name }}
+
+                </button>
+
+            }
+
         </div>
 
-        <button
-            type="button"
-            (click)="onBackToApplicationSelection()">
-            Zurück zur Anwendungsauswahl
-        </button>
+    </aside>
 
-    </div>
 
-    <div class="workflow-content">
+    <!-- RECHTER ARBEITSBEREICH -->
 
-        <h2>Vorgangsübersicht</h2>
+    <main class="arbeitsbereich">
 
-        <p>
-            Hier entsteht zukünftig die Verwaltung und Bearbeitung
-            der Vorgänge.
-        </p>
+        <!-- BEFEHLSLEISTE -->
 
-    </div>
+        <div class="befehlsleiste">
+
+            @for (befehl of befehle; track befehl.id) {
+
+                <button
+                    type="button"
+                    class="befehl-button"
+                    [class.active]="ausgewaehlterBefehl === befehl.id"
+                    (click)="onBefehlSelected(befehl.id)">
+
+                    {{ befehl.name }}
+
+                </button>
+
+            }
+
+        </div>
+
+
+        <!-- VORGANGSLISTE -->
+
+        <div class="vorgangsliste">
+
+            @for (gruppe of gruppen; track gruppe.schluessel) {
+
+                <details class="vorgangsgruppe" open>
+
+                    <summary class="gruppen-kopf">
+
+                        <span class="gruppen-name">
+                            {{ gruppe.bezeichnung }}
+                        </span>
+
+                        <span class="gruppen-anzahl">
+                            {{ gruppe.vorgaenge.length }}
+                        </span>
+
+                    </summary>
+
+
+                    <div class="gruppen-inhalt">
+
+                        @for (vorgang of gruppe.vorgaenge; track vorgang.id) {
+
+                            <div class="vorgang-zeile">
+
+                                <span class="vorgang-datum">
+                                    {{ vorgang.eingangsdatum }}
+                                </span>
+
+                                <span class="vorgang-uhrzeit">
+                                    {{ vorgang.uhrzeit }}
+                                </span>
+
+                                <span class="vorgang-uid">
+                                    {{ vorgang.uid }}
+                                </span>
+
+                                <span class="vorgang-kundennummer">
+                                    {{ vorgang.kundennummer }}
+                                </span>
+
+                                <span class="vorgang-kunde">
+                                    {{ vorgang.kunde }}
+                                </span>
+
+                                <span class="vorgang-betreff">
+                                    {{ vorgang.betreff }}
+                                </span>
+
+                            </div>
+
+                        }
+
+                    </div>
+
+                </details>
+
+            }
+
+        </div>
+
+    </main>
 
 </div>
-

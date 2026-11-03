@@ -1,0 +1,230 @@
+/* =====================================
+   GESAMTSEITE
+   ===================================== */
+
+.vorgangssteuerung {
+    display: flex;
+    width: 100%;
+    height: calc(100vh - 60px);
+    overflow: hidden;
+    background: var(--background-color, #f5f5f5);
+    color: var(--text-color, #222);
+}
+
+
+/* =====================================
+   LINKE VERDICHTUNGSNAVIGATION
+   ===================================== */
+
+.verdichtung-sidebar {
+    width: 210px;
+    min-width: 210px;
+    border-right: 1px solid var(--border-color, #ccc);
+    background: var(--surface-color, #eeeeee);
+    padding: 12px 8px;
+    box-sizing: border-box;
+}
+
+.verdichtung-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.verdichtung-button {
+    width: 100%;
+    padding: 10px 12px;
+    border: none;
+    border-radius: 4px;
+    background: transparent;
+    color: inherit;
+    text-align: left;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.verdichtung-button:hover {
+    background: rgba(128, 128, 128, 0.12);
+}
+
+.verdichtung-button.active {
+    background: var(--primary-color, #dce8f5);
+    font-weight: 600;
+}
+
+
+/* =====================================
+   RECHTER ARBEITSBEREICH
+   ===================================== */
+
+.arbeitsbereich {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+
+/* =====================================
+   BEFEHLSLEISTE
+   ===================================== */
+
+.befehlsleiste {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 52px;
+    padding: 6px 12px;
+    border-bottom: 1px solid var(--border-color, #ccc);
+    background: var(--surface-color, #eeeeee);
+    box-sizing: border-box;
+}
+
+.befehl-button {
+    padding: 8px 16px;
+    border: 1px solid var(--border-color, #bbb);
+    border-radius: 4px;
+    background: var(--background-color, #fff);
+    color: inherit;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+.befehl-button:hover {
+    background: rgba(128, 128, 128, 0.12);
+}
+
+.befehl-button.active {
+    background: var(--primary-color, #dce8f5);
+    border-color: var(--primary-color, #8baacb);
+    font-weight: 600;
+}
+
+
+/* =====================================
+   VORGANGSLISTE
+   ===================================== */
+
+.vorgangsliste {
+    flex: 1;
+    overflow: auto;
+    padding: 8px 12px;
+}
+
+
+/* =====================================
+   VORGANGSGRUPPEN
+   ===================================== */
+
+.vorgangsgruppe {
+    margin-bottom: 5px;
+    border: 1px solid var(--border-color, #ccc);
+    border-radius: 4px;
+    background: var(--surface-color, #fff);
+}
+
+.gruppen-kopf {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 34px;
+    padding: 4px 10px;
+    cursor: pointer;
+    background: var(--surface-color, #eeeeee);
+    font-size: 13px;
+    font-weight: 600;
+    user-select: none;
+}
+
+.gruppen-kopf:hover {
+    background: rgba(128, 128, 128, 0.12);
+}
+
+.gruppen-name {
+    flex: 1;
+}
+
+.gruppen-anzahl {
+    min-width: 24px;
+    text-align: center;
+    font-weight: normal;
+    color: var(--text-secondary, #666);
+}
+
+
+/* =====================================
+   EINZELNE VORGANGSZEILEN
+   ===================================== */
+
+.gruppen-inhalt {
+    border-top: 1px solid var(--border-color, #ddd);
+}
+
+.vorgang-zeile {
+    display: grid;
+
+    grid-template-columns:
+        100px
+        55px
+        75px
+        100px
+        180px
+        minmax(150px, 1fr);
+
+    align-items: center;
+
+    min-height: 30px;
+    padding: 0 10px;
+
+    border-bottom: 1px solid var(--border-color, #eee);
+
+    font-size: 12px;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.vorgang-zeile:last-child {
+    border-bottom: none;
+}
+
+.vorgang-zeile:hover {
+    background: rgba(128, 128, 128, 0.10);
+}
+
+.vorgang-datum,
+.vorgang-uhrzeit,
+.vorgang-uid,
+.vorgang-kundennummer {
+    font-variant-numeric: tabular-nums;
+}
+
+.vorgang-kunde,
+.vorgang-betreff {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+/* =====================================
+   KLEINERE BILDSCHIRME
+   ===================================== */
+
+@media (max-width: 850px) {
+
+    .verdichtung-sidebar {
+        width: 160px;
+        min-width: 160px;
+    }
+
+    .vorgang-zeile {
+        grid-template-columns:
+            90px
+            50px
+            65px
+            85px
+            130px
+            minmax(120px, 1fr);
+    }
+
+}
