@@ -25,7 +25,9 @@
 
     } @else if (fkAnwendung.selectedApplication === 'vorgangssteuerung') {
 
+
         <app-vorgangssteuerung
+            [user]="fkAnwendung.currentUser!"
             (backToApplicationSelection)="onBackToApplicationSelection()">
         </app-vorgangssteuerung>
 
