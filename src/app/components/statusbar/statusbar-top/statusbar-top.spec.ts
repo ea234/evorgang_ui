@@ -4,7 +4,7 @@ import { NgModule } from '@angular/core';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 import { StatusbarTop } from './statusbar-top';
-import { User } from '../../../models/user';
+import { User } from '../../../user/modell/user';
 
 @NgModule({
   declarations: [StatusbarTop],

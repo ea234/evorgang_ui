@@ -1,5 +1,5 @@
 import { Component, signal } from '@angular/core';
-import { User } from './models/user';
+import { User } from './user/modell/user';
 import { FkAnwendung } from './models/fkAnwendung';
 import { ApplicationType } from './models/application-type';
 

@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { FkAnwendung } from './fkAnwendung';
-import { User } from './user';
+import { User } from '../user/modell/user';
 
 describe('FkAnwendung', () => {
 

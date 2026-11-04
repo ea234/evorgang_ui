@@ -1,8 +1,8 @@
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Vorgangsbearbeitung } from './vorgangsbearbeitung';
-import { User } from '../../models/user';
-import { Vorgang } from '../../models/vorgang';
+import { User } from '../../user/modell/user';
+import { Vorgang } from '../../app_vorgang/modell/vorgang';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 describe('Vorgangsbearbeitung', () => {
@@ -15,6 +15,7 @@ describe('Vorgangsbearbeitung', () => {
 
     beforeEach(async () => {
 
+//      user = new User('testuser');
         user = {
             username: 'testuser',
             darfVorgangBearbeiten: () => true

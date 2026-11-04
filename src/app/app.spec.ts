@@ -7,7 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { describe, it, expect, beforeEach } from 'vitest';
 
 import { App } from './app';
-import { User } from './models/user';
+import { User } from './user/modell/user';
 import { ApplicationType } from './models/application-type';
 
 import { StatusbarTop } from './components/statusbar/statusbar-top/statusbar-top';

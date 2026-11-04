@@ -1,7 +1,7 @@
 
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { User } from '../../models/user';
-import { Vorgang } from '../../models/vorgang';
+import { User } from '../../user/modell/user';
+import { Vorgang } from '../../app_vorgang/modell/vorgang';
 
 type Verdichtungsart = 'eingangsdatum' | 'uid' | 'kundennummer';
 

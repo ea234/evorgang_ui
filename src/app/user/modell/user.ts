@@ -1,5 +1,5 @@
 
-import { Vorgang } from './vorgang';
+import { Vorgang } from '../../app_vorgang/modell/vorgang';
 
 export class User {
 

@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 import { ApplicationSelection } from './application-selection';
-import { User } from '../../models/user';
+import { User } from '../../user/modell/user';
 import { ApplicationType } from '../../models/application-type';
 
 describe('ApplicationSelection', () => {

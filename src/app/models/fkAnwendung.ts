@@ -1,5 +1,4 @@
-
-import { User } from './user';
+import { User } from '../user/modell/user';
 import { ApplicationType } from './application-type';
 export class FkAnwendung {
 
