@@ -3,6 +3,8 @@ import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { User } from '../../models/user';
 import { Vorgang } from '../../models/vorgang';
 
+type DialogAktion = 'zurueck' | 'beenden' | null;
+
 @Component({
     selector: 'app-vorgangsbearbeitung',
     standalone: false,
@@ -25,7 +27,10 @@ export class Vorgangsbearbeitung implements OnInit {
 
     aenderungenGespeichert = false;
 
+    dialogAktion: DialogAktion = null;
+
     ngOnInit(): void {
+
         this.darfBearbeiten =
             this.user.darfVorgangBearbeiten(this.vorgang);
 
@@ -82,23 +87,81 @@ export class Vorgangsbearbeitung implements OnInit {
     onBearbeitungBeenden(): void {
 
         if (this.hatUngespeicherteAenderungen) {
+            this.dialogAktion = 'beenden';
             return;
         }
+
+        this.beendeBearbeitung();
+    }
+
+    onBackToSelection(): void {
+
+        if (this.hatUngespeicherteAenderungen) {
+            this.dialogAktion = 'zurueck';
+            return;
+        }
+
+        this.backToSelection.emit();
+    }
+
+    // =====================================
+    // BESTÄTIGUNGSDIALOG
+    // =====================================
+
+    onDialogSpeichern(): void {
+
+        if (this.dialogAktion === null) {
+            return;
+        }
+
+        this.onSpeichern();
+
+        this.fuehreDialogAktionAus();
+    }
+
+    onDialogVerwerfen(): void {
+
+        if (this.dialogAktion === null) {
+            return;
+        }
+
+        this.bearbeiteterVorgang = { ...this.vorgang };
+
+        this.aenderungenGespeichert = false;
+
+        this.fuehreDialogAktionAus();
+    }
+
+    onDialogWeiterBearbeiten(): void {
+
+        this.dialogAktion = null;
+    }
+
+    private fuehreDialogAktionAus(): void {
+
+        const aktion = this.dialogAktion;
+
+        this.dialogAktion = null;
+
+        if (aktion === 'zurueck') {
+
+            this.backToSelection.emit();
+
+        } else if (aktion === 'beenden') {
+
+            this.beendeBearbeitung();
+
+        }
+
+    }
+
+    private beendeBearbeitung(): void {
 
         this.bearbeitungsmodus = false;
 
         this.aenderungenGespeichert = false;
 
         this.bearbeiteterVorgang = { ...this.vorgang };
-    }
-
-    onBackToSelection(): void {
-
-        if (this.hatUngespeicherteAenderungen) {
-            return;
-        }
-
-        this.backToSelection.emit();
     }
 
 }

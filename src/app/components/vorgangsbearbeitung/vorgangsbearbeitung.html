@@ -6,7 +6,6 @@
         <button
             type="button"
             class="befehl-button"
-            [disabled]="hatUngespeicherteAenderungen"
             (click)="onBackToSelection()">
 
             Zurück zur Auswahl
@@ -40,7 +39,6 @@
             <button
                 type="button"
                 class="befehl-button"
-                [disabled]="hatUngespeicherteAenderungen"
                 (click)="onBearbeitungBeenden()">
 
                 Bearbeitung beenden
@@ -149,5 +147,75 @@
         </div>
 
     </div>
+
+    <!-- BESTÄTIGUNGSDIALOG -->
+
+    @if (dialogAktion !== null) {
+
+        <div class="dialog-hintergrund">
+
+            <div
+                class="bestaetigungsdialog"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="dialog-titel">
+
+                <h2 id="dialog-titel">
+                    Ungespeicherte Änderungen
+                </h2>
+
+                <p>
+                    Du hast Änderungen vorgenommen,
+                    die noch nicht gespeichert wurden.
+                </p>
+
+                <p>
+                    Was möchtest du tun?
+                </p>
+
+                <div class="dialog-aktionen">
+
+                    <button
+                        type="button"
+                        class="dialog-button dialog-speichern"
+                        (click)="onDialogSpeichern()">
+
+                        @if (dialogAktion === 'zurueck') {
+                            Speichern und zurück
+                        } @else {
+                            Speichern und Bearbeitung beenden
+                        }
+
+                    </button>
+
+                    <button
+                        type="button"
+                        class="dialog-button dialog-verwerfen"
+                        (click)="onDialogVerwerfen()">
+
+                        @if (dialogAktion === 'zurueck') {
+                            Änderungen verwerfen und zurück
+                        } @else {
+                            Änderungen verwerfen und Bearbeitung beenden
+                        }
+
+                    </button>
+
+                    <button
+                        type="button"
+                        class="dialog-button dialog-weiter"
+                        (click)="onDialogWeiterBearbeiten()">
+
+                        Weiter bearbeiten
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    }
 
 </div>
