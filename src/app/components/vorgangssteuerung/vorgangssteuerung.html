@@ -1,118 +1,145 @@
+
 <div class="vorgangssteuerung">
 
-    <!-- LINKE NAVIGATION -->
+    <!-- LISTENANSICHT -->
 
-    <aside class="verdichtung-sidebar">
+    <div
+        class="listenansicht"
+        [hidden]="ansicht !== 'liste'">
 
-        <div class="verdichtung-list">
+        <!-- LINKE NAVIGATION -->
 
-            @for (art of verdichtungsarten; track art.id) {
+        <aside class="verdichtung-sidebar">
 
-                <button
-                    type="button"
-                    class="verdichtung-button"
-                    [class.active]="verdichtungsart === art.id"
-                    (click)="onVerdichtungsartChanged(art.id)">
+            <div class="verdichtung-list">
 
-                    {{ art.name }}
+                @for (art of verdichtungsarten; track art.id) {
 
-                </button>
+                    <button
+                        type="button"
+                        class="verdichtung-button"
+                        [class.active]="verdichtungsart === art.id"
+                        (click)="onVerdichtungsartChanged(art.id)">
 
-            }
+                        {{ art.name }}
 
-        </div>
+                    </button>
 
-    </aside>
+                }
+
+            </div>
+
+        </aside>
 
 
-    <!-- RECHTER ARBEITSBEREICH -->
+        <!-- RECHTER ARBEITSBEREICH -->
 
-    <main class="arbeitsbereich">
+        <main class="arbeitsbereich">
 
-        <!-- BEFEHLSLEISTE -->
+            <!-- BEFEHLSLEISTE -->
 
-        <div class="befehlsleiste">
-
-            @for (befehl of befehle; track befehl.id) {
+            <div class="befehlsleiste">
 
                 <button
                     type="button"
                     class="befehl-button"
-                    [class.active]="ausgewaehlterBefehl === befehl.id"
-                    (click)="onBefehlSelected(befehl.id)">
+                    [disabled]="ausgewaehlterVorgang === null"
+                    (click)="onVorgangAnsehen()">
 
-                    {{ befehl.name }}
+                    Vorgang ansehen
 
                 </button>
 
-            }
-
-        </div>
+            </div>
 
 
-        <!-- VORGANGSLISTE -->
+            <!-- VORGANGSLISTE -->
 
-        <div class="vorgangsliste">
+            <div class="vorgangsliste">
 
-            @for (gruppe of gruppen; track gruppe.schluessel) {
+                @for (gruppe of gruppen; track gruppe.schluessel) {
 
-                <details class="vorgangsgruppe" open>
+                    <details class="vorgangsgruppe" open>
 
-                    <summary class="gruppen-kopf">
+                        <summary class="gruppen-kopf">
 
-                        <span class="gruppen-name">
-                            {{ gruppe.bezeichnung }}
-                        </span>
+                            <span class="gruppen-name">
+                                {{ gruppe.bezeichnung }}
+                            </span>
 
-                        <span class="gruppen-anzahl">
-                            {{ gruppe.vorgaenge.length }}
-                        </span>
+                            <span class="gruppen-anzahl">
+                                {{ gruppe.vorgaenge.length }}
+                            </span>
 
-                    </summary>
+                        </summary>
 
 
-                    <div class="gruppen-inhalt">
+                        <div class="gruppen-inhalt">
 
-                        @for (vorgang of gruppe.vorgaenge; track vorgang.id) {
+                            @for (vorgang of gruppe.vorgaenge; track vorgang.id) {
 
-                            <div class="vorgang-zeile">
+                                <div
+                                    class="vorgang-zeile"
+                                    [class.selected]="ausgewaehlterVorgangId === vorgang.id"
+                                    [attr.aria-pressed]="ausgewaehlterVorgangId === vorgang.id"
+                                    role="button"
+                                    tabindex="0"
+                                    (click)="onVorgangSelected(vorgang)"
+                                    (dblclick)="onVorgangDoubleClick(vorgang)"
+                                    (keydown)="onVorgangKeydown($event, vorgang)">
 
-                                <span class="vorgang-datum">
-                                    {{ vorgang.eingangsdatum }}
-                                </span>
+                                    <span class="vorgang-datum">
+                                        {{ vorgang.eingangsdatum }}
+                                    </span>
 
-                                <span class="vorgang-uhrzeit">
-                                    {{ vorgang.uhrzeit }}
-                                </span>
+                                    <span class="vorgang-uhrzeit">
+                                        {{ vorgang.uhrzeit }}
+                                    </span>
 
-                                <span class="vorgang-uid">
-                                    {{ vorgang.uid }}
-                                </span>
+                                    <span class="vorgang-uid">
+                                        {{ vorgang.uid }}
+                                    </span>
 
-                                <span class="vorgang-kundennummer">
-                                    {{ vorgang.kundennummer }}
-                                </span>
+                                    <span class="vorgang-kundennummer">
+                                        {{ vorgang.kundennummer }}
+                                    </span>
 
-                                <span class="vorgang-kunde">
-                                    {{ vorgang.kunde }}
-                                </span>
+                                    <span class="vorgang-kunde">
+                                        {{ vorgang.kunde }}
+                                    </span>
 
-                                <span class="vorgang-betreff">
-                                    {{ vorgang.betreff }}
-                                </span>
+                                    <span class="vorgang-betreff">
+                                        {{ vorgang.betreff }}
+                                    </span>
 
-                            </div>
+                                </div>
 
-                        }
+                            }
 
-                    </div>
+                        </div>
 
-                </details>
+                    </details>
 
-            }
+                }
 
-        </div>
+            </div>
 
-    </main>
+        </main>
+
+    </div>
+
+
+    <!-- DETAILANSICHT -->
+
+    @if (ansicht === 'detail' && ausgewaehlterVorgang !== null) {
+
+        <app-vorgangsbearbeitung
+            [user]="user"
+            [vorgang]="ausgewaehlterVorgang"
+            (backToSelection)="onBackToVorgangsliste()">
+
+        </app-vorgangsbearbeitung>
+
+    }
 
 </div>

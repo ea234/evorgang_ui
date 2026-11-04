@@ -1,14 +1,34 @@
+
 /* =====================================
-   GESAMTSEITE
+   GESAMTANSICHT
    ===================================== */
 
 .vorgangssteuerung {
     display: flex;
     width: 100%;
-    height: calc(100vh - 60px);
+    height: calc(100vh - 64px);
+    min-height: 0;
     overflow: hidden;
-    background: var(--background-color, #f5f5f5);
-    color: var(--text-color, #222);
+
+    background: var(--page-bg);
+    color: var(--text-primary);
+}
+
+
+/* =====================================
+   LISTENANSICHT
+   ===================================== */
+
+.listenansicht {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.listenansicht[hidden] {
+    display: none;
 }
 
 
@@ -19,9 +39,12 @@
 .verdichtung-sidebar {
     width: 210px;
     min-width: 210px;
-    border-right: 1px solid var(--border-color, #ccc);
-    background: var(--surface-color, #eeeeee);
+
     padding: 12px 8px;
+
+    border-right: 1px solid var(--border);
+    background: var(--surface);
+
     box-sizing: border-box;
 }
 
@@ -34,22 +57,32 @@
 .verdichtung-button {
     width: 100%;
     padding: 10px 12px;
+
     border: none;
-    border-radius: 4px;
+    border-radius: 6px;
+
     background: transparent;
-    color: inherit;
+    color: var(--text-primary);
+
     text-align: left;
-    cursor: pointer;
     font-size: 14px;
+
+    cursor: pointer;
 }
 
 .verdichtung-button:hover {
-    background: rgba(128, 128, 128, 0.12);
+    background: var(--surface-hover);
 }
 
 .verdichtung-button.active {
-    background: var(--primary-color, #dce8f5);
+    background: var(--accent);
+    color: var(--accent-text);
     font-weight: 600;
+}
+
+.verdichtung-button:focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
 }
 
 
@@ -60,8 +93,11 @@
 .arbeitsbereich {
     flex: 1;
     min-width: 0;
+    min-height: 0;
+
     display: flex;
     flex-direction: column;
+
     overflow: hidden;
 }
 
@@ -74,31 +110,42 @@
     display: flex;
     align-items: center;
     gap: 6px;
+
     min-height: 52px;
     padding: 6px 12px;
-    border-bottom: 1px solid var(--border-color, #ccc);
-    background: var(--surface-color, #eeeeee);
+
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+
     box-sizing: border-box;
 }
 
 .befehl-button {
     padding: 8px 16px;
-    border: 1px solid var(--border-color, #bbb);
-    border-radius: 4px;
-    background: var(--background-color, #fff);
-    color: inherit;
-    cursor: pointer;
+
+    border: 1px solid var(--border);
+    border-radius: 6px;
+
+    background: var(--surface);
+    color: var(--text-primary);
+
     font-size: 13px;
+
+    cursor: pointer;
 }
 
-.befehl-button:hover {
-    background: rgba(128, 128, 128, 0.12);
+.befehl-button:hover:not(:disabled) {
+    background: var(--surface-hover);
 }
 
-.befehl-button.active {
-    background: var(--primary-color, #dce8f5);
-    border-color: var(--primary-color, #8baacb);
-    font-weight: 600;
+.befehl-button:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.befehl-button:focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
 }
 
 
@@ -108,8 +155,12 @@
 
 .vorgangsliste {
     flex: 1;
+    min-height: 0;
+
     overflow: auto;
     padding: 8px 12px;
+
+    background: var(--page-bg);
 }
 
 
@@ -119,26 +170,33 @@
 
 .vorgangsgruppe {
     margin-bottom: 5px;
-    border: 1px solid var(--border-color, #ccc);
+
+    border: 1px solid var(--border);
     border-radius: 4px;
-    background: var(--surface-color, #fff);
+
+    background: var(--surface);
 }
 
 .gruppen-kopf {
     display: flex;
     align-items: center;
     gap: 12px;
+
     min-height: 34px;
     padding: 4px 10px;
-    cursor: pointer;
-    background: var(--surface-color, #eeeeee);
+
+    background: var(--surface);
+    color: var(--text-primary);
+
     font-size: 13px;
     font-weight: 600;
+
+    cursor: pointer;
     user-select: none;
 }
 
 .gruppen-kopf:hover {
-    background: rgba(128, 128, 128, 0.12);
+    background: var(--surface-hover);
 }
 
 .gruppen-name {
@@ -147,19 +205,21 @@
 
 .gruppen-anzahl {
     min-width: 24px;
+
     text-align: center;
     font-weight: normal;
-    color: var(--text-secondary, #666);
+
+    color: var(--text-secondary);
+}
+
+.gruppen-inhalt {
+    border-top: 1px solid var(--border);
 }
 
 
 /* =====================================
    EINZELNE VORGANGSZEILEN
    ===================================== */
-
-.gruppen-inhalt {
-    border-top: 1px solid var(--border-color, #ddd);
-}
 
 .vorgang-zeile {
     display: grid;
@@ -177,10 +237,14 @@
     min-height: 30px;
     padding: 0 10px;
 
-    border-bottom: 1px solid var(--border-color, #eee);
+    border-bottom: 1px solid var(--border);
+
+    background: var(--surface);
+    color: var(--text-primary);
 
     font-size: 12px;
     white-space: nowrap;
+
     cursor: pointer;
 }
 
@@ -189,8 +253,25 @@
 }
 
 .vorgang-zeile:hover {
-    background: rgba(128, 128, 128, 0.10);
+    background: var(--surface-hover);
 }
+
+/* Ausgewählter Vorgang */
+
+.vorgang-zeile.selected {
+    background: var(--accent);
+    color: var(--accent-text);
+}
+
+.vorgang-zeile:focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: -2px;
+}
+
+
+/* =====================================
+   ZAHLEN UND DATUMSWERTE
+   ===================================== */
 
 .vorgang-datum,
 .vorgang-uhrzeit,
@@ -203,6 +284,21 @@
 .vorgang-betreff {
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+
+/* =====================================
+   DETAILANSICHT
+   ===================================== */
+
+.vorgangssteuerung > app-vorgangsbearbeitung {
+    display: block;
+
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+
+    overflow: hidden;
 }
 
 

@@ -1,0 +1,58 @@
+
+<div class="vorgangsbearbeitung">
+
+    <div class="befehlsleiste">
+
+        <button
+            type="button"
+            class="befehl-button"
+            (click)="onBackToSelection()">
+
+            Zurück zur Auswahl
+
+        </button>
+
+        @if (darfBearbeiten) {
+            <button type="button" class="befehl-button">
+                Vorgang bearbeiten
+            </button>
+        }
+
+    </div>
+
+    <div class="vorgang-detail">
+
+        <div class="detail-zeile">
+            <span>Eingangsdatum</span>
+            <span>{{ vorgang.eingangsdatum }}</span>
+        </div>
+
+        <div class="detail-zeile">
+            <span>Uhrzeit</span>
+            <span>{{ vorgang.uhrzeit }}</span>
+        </div>
+
+        <div class="detail-zeile">
+            <span>UID</span>
+            <span>{{ vorgang.uid }}</span>
+        </div>
+
+        <div class="detail-zeile">
+            <span>Kundennummer</span>
+            <span>{{ vorgang.kundennummer }}</span>
+        </div>
+
+        <div class="detail-zeile">
+            <span>Kunde</span>
+            <span>{{ vorgang.kunde }}</span>
+        </div>
+
+        <div class="detail-zeile">
+            <span>Betreff</span>
+            <span>{{ vorgang.betreff }}</span>
+        </div>
+
+    </div>
+
+</div>
+

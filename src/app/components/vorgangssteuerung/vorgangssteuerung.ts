@@ -1,17 +1,9 @@
+
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { User } from '../../models/user';
+import { Vorgang } from '../../models/vorgang';
 
 type Verdichtungsart = 'eingangsdatum' | 'uid' | 'kundennummer';
-
-interface Vorgang {
-  id: number;
-  eingangsdatum: string;
-  uhrzeit: string;
-  uid: string;
-  kundennummer: string;
-  kunde: string;
-  betreff: string;
-}
 
 interface VorgangsGruppe {
   schluessel: string;
@@ -31,9 +23,22 @@ export class Vorgangssteuerung {
 
   @Output() backToApplicationSelection = new EventEmitter<void>();
 
+  // =====================================
+  // Ansichtssteuerung
+  // =====================================
+
+  ansicht: 'liste' | 'detail' = 'liste';
+
+  ausgewaehlterVorgang: Vorgang | null = null;
+
   onBackToApplicationSelection(): void {
     this.backToApplicationSelection.emit();
   }
+
+  onBackToVorgangsliste(): void {
+    this.ansicht = 'liste';
+  }
+
   // =====================================
   // Verdichtungsarten
   // =====================================
@@ -50,13 +55,40 @@ export class Vorgangssteuerung {
   // Befehlsleiste
   // =====================================
 
-  ausgewaehlterBefehl = 'liste';
+  // =====================================
+  // Vorgangsauswahl
+  // =====================================
 
-  befehle = [
-    { id: 'annehmen', name: 'Vorgang annehmen' },
-    { id: 'bearbeiten', name: 'Vorgang bearbeiten' },
-    { id: 'dokument', name: 'Dokument anzeigen' }
-  ];
+  ausgewaehlterVorgangId: number | null = null;
+
+  onVorgangSelected(vorgang: Vorgang): void {
+    this.ausgewaehlterVorgangId = vorgang.id;
+    this.ausgewaehlterVorgang = vorgang;
+  }
+
+  onVorgangDoubleClick(vorgang: Vorgang): void {
+    this.onVorgangSelected(vorgang);
+    this.onVorgangAnsehen();
+  }
+
+  onVorgangKeydown(event: KeyboardEvent, vorgang: Vorgang): void {
+
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      this.onVorgangSelected(vorgang);
+      this.onVorgangAnsehen();
+    }
+
+  }
+
+  onVorgangAnsehen(): void {
+
+    if (this.ausgewaehlterVorgang === null) {
+      return;
+    }
+
+    this.ansicht = 'detail';
+  }
 
   // =====================================
   // Dummy-Vorgangsdaten
@@ -153,7 +185,6 @@ export class Vorgangssteuerung {
         case 'kundennummer':
           schluessel = vorgang.kundennummer;
           break;
-
       }
 
       if (!gruppierung.has(schluessel)) {
@@ -192,14 +223,6 @@ export class Vorgangssteuerung {
 
   onVerdichtungsartChanged(art: Verdichtungsart): void {
     this.verdichtungsart = art;
-  }
-
-  // =====================================
-  // Befehl auswählen
-  // =====================================
-
-  onBefehlSelected(befehl: string): void {
-    this.ausgewaehlterBefehl = befehl;
   }
 
 }

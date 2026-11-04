@@ -1,0 +1,56 @@
+
+.vorgangsbearbeitung {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: calc(100vh - 60px);
+    overflow: hidden;
+    background: var(--page-bg);
+    color: var(--text-primary);
+}
+
+.befehlsleiste {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 52px;
+    padding: 6px 12px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+}
+
+.befehl-button {
+    padding: 8px 16px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--surface);
+    color: var(--text-primary);
+}
+
+.befehl-button:hover {
+    background: var(--surface-hover);
+}
+
+.vorgang-detail {
+    flex: 1;
+    overflow: auto;
+    padding: 20px;
+    background: var(--page-bg);
+}
+
+.detail-zeile {
+    display: grid;
+    grid-template-columns: 180px minmax(0, 1fr);
+    gap: 16px;
+    padding: 12px;
+    border-bottom: 1px solid var(--border);
+}
+
+.detail-zeile span:first-child {
+    color: var(--text-secondary);
+    font-weight: 600;
+}
+
+.detail-zeile span:last-child {
+    color: var(--text-primary);
+}
