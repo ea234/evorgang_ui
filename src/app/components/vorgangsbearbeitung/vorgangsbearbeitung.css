@@ -9,6 +9,8 @@
     color: var(--text-primary);
 }
 
+/* Befehlsleiste */
+
 .befehlsleiste {
     display: flex;
     align-items: center;
@@ -25,32 +27,131 @@
     border-radius: 6px;
     background: var(--surface);
     color: var(--text-primary);
+    cursor: pointer;
 }
 
-.befehl-button:hover {
+.befehl-button:hover:not(:disabled) {
     background: var(--surface-hover);
 }
+
+.befehl-button:focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
+}
+
+.befehl-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.speichern-button {
+    border-color: var(--accent);
+    background: var(--accent);
+    color: var(--accent-text);
+}
+
+.speichern-button:hover:not(:disabled) {
+    background: var(--accent-hover);
+}
+
+/* Vorgangsdetails */
 
 .vorgang-detail {
     flex: 1;
     overflow: auto;
-    padding: 20px;
+    padding: 24px;
     background: var(--page-bg);
 }
 
+.detail-formular {
+    width: 100%;
+    max-width: 1000px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+/* Einzelne Formularzeilen */
+
 .detail-zeile {
     display: grid;
-    grid-template-columns: 180px minmax(0, 1fr);
-    gap: 16px;
-    padding: 12px;
+    grid-template-columns: 200px minmax(0, 1fr);
+    align-items: center;
+    min-height: 48px;
     border-bottom: 1px solid var(--border);
 }
 
-.detail-zeile span:first-child {
+.detail-zeile:last-child {
+    border-bottom: none;
+}
+
+.detail-label {
+    padding: 12px 16px;
     color: var(--text-secondary);
     font-weight: 600;
 }
 
-.detail-zeile span:last-child {
+.detail-wert {
+    padding: 12px 16px;
     color: var(--text-primary);
+    overflow-wrap: anywhere;
+    font-variant-numeric: tabular-nums;
+}
+
+/* Eingabefelder im Bearbeitungsmodus */
+
+.detail-input {
+    width: calc(100% - 32px);
+    min-width: 0;
+    margin: 5px 16px;
+    padding: 7px 9px;
+    border: 1px solid var(--input-border);
+    border-radius: 4px;
+    background: var(--surface);
+    color: var(--text-primary);
+    font: inherit;
+    font-variant-numeric: tabular-nums;
+    box-sizing: border-box;
+}
+
+.detail-input:focus {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 1px;
+}
+
+/* Kleinere Bildschirme */
+
+@media (max-width: 600px) {
+    .vorgang-detail {
+        padding: 12px;
+    }
+
+    .detail-zeile {
+        grid-template-columns: 140px minmax(0, 1fr);
+    }
+
+    .detail-label,
+    .detail-wert {
+        padding: 10px;
+    }
+
+    .detail-input {
+        width: calc(100% - 20px);
+        margin: 5px 10px;
+    }
+}
+
+.speicherstatus {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-left: 12px;
+    color: var(--text-secondary);
+    font-size: 13px;
+}
+
+.speicherstatus-symbol {
+    color: var(--accent);
+    font-weight: 700;
 }
