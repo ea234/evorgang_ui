@@ -7,8 +7,8 @@ import { StatusbarTop } from './components/statusbar/statusbar-top/statusbar-top
 import { Login } from './components/login/login';
 import { ApplicationSelection } from './components/application-selection/application-selection';
 import { Logout } from './components/logout/logout';
-import { Vorgangssteuerung } from './components/vorgangssteuerung/vorgangssteuerung';
-import { Vorgangsbearbeitung } from './components/vorgangsbearbeitung/vorgangsbearbeitung';
+import { Vorgangssteuerung } from './app_vorgang/components/vorgangssteuerung/vorgangssteuerung';
+import { Vorgangsbearbeitung } from './app_vorgang/components/vorgangsbearbeitung/vorgangsbearbeitung';
 
 @NgModule({
   declarations: [

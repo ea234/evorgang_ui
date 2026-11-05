@@ -1,188 +1,146 @@
+import { describe, it, expect, beforeEach } from 'vitest'; import { TestBed } from '@angular/core/testing';
 
-import { NgModule } from '@angular/core';
-import { TestBed } from '@angular/core/testing';
-import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule } from '@angular/forms';
-
-import { describe, it, expect, beforeEach } from 'vitest';
-
-import { App } from './app';
-import { User } from './user/modell/user';
-import { ApplicationType } from './models/application-type';
-
-import { StatusbarTop } from './components/statusbar/statusbar-top/statusbar-top';
-import { Login } from './components/login/login';
-import { ApplicationSelection } from './components/application-selection/application-selection';
-import { Logout } from './components/logout/logout';
-import { Vorgangssteuerung } from './components/vorgangssteuerung/vorgangssteuerung';
-
-// Statisches Testing-Modul für die App-Komponente
-@NgModule({
-  declarations: [
-    App,
-    StatusbarTop,
-    Login,
-    ApplicationSelection,
-    Logout,
-    Vorgangssteuerung
-  ],
-  imports: [
-    BrowserModule,
-    FormsModule
-  ]
-})
-class AppTestingModule {}
+import { AppModule } from './app-module'; import { App } from './app'; import { User } from './user/modell/user'; import { ApplicationType } from './models/application-type';
 
 describe('App', () => {
 
-  beforeEach(async () => {
+beforeEach(async () => { await TestBed.configureTestingModule({ imports: [AppModule] }).compileComponents(); });
 
-    await TestBed.configureTestingModule({
-      imports: [AppTestingModule]
-    }).compileComponents();
+it('soll eine App-Instanz erstellen', () => { const app = new App();
 
-  });
+expect(app).toBeInstanceOf(App);
 
-  it('soll eine App-Instanz erstellen', () => {
 
-    const app = new App();
+});
 
-    expect(app).toBeInstanceOf(App);
+it('soll mit dem Status logged_none starten', () => { const app = new App();
 
-  });
+expect(app.fkAnwendung.loginStatus)
+  .toBe(app.fkAnwendung.logged_none);
 
-  it('soll mit dem Status logged_none starten', () => {
 
-    const app = new App();
+});
 
-    expect(app.fkAnwendung.loginStatus)
-      .toBe(app.fkAnwendung.logged_none);
+it('soll einen Benutzer nach erfolgreichem Login speichern', () => { const app = new App();
 
-  });
+app.onLoginSuccess('demo');
 
-  it('soll einen Benutzer nach erfolgreichem Login speichern', () => {
+expect(app.fkAnwendung.currentUser)
+  .toBeInstanceOf(User);
 
-    const app = new App();
+expect(app.fkAnwendung.currentUser?.username)
+  .toBe('demo');
 
-    app.onLoginSuccess('demo');
+expect(app.fkAnwendung.loginStatus)
+  .toBe(app.fkAnwendung.logged_in);
 
-    expect(app.fkAnwendung.currentUser)
-      .toBeInstanceOf(User);
 
-    expect(app.fkAnwendung.currentUser?.username)
-      .toBe('demo');
+});
 
-    expect(app.fkAnwendung.loginStatus)
-      .toBe(app.fkAnwendung.logged_in);
+it('soll den Benutzer beim Logout entfernen', () => { const app = new App();
 
-  });
+app.onLoginSuccess('demo');
+app.onLogout();
 
-  it('soll den Benutzer beim Logout entfernen', () => {
+expect(app.fkAnwendung.currentUser).toBeNull();
 
-    const app = new App();
+expect(app.fkAnwendung.loginStatus)
+  .toBe(app.fkAnwendung.logged_out);
 
-    app.onLoginSuccess('demo');
-    app.onLogout();
 
-    expect(app.fkAnwendung.currentUser).toBeNull();
+});
 
-    expect(app.fkAnwendung.loginStatus)
-      .toBe(app.fkAnwendung.logged_out);
+it('soll nach Logout wieder zum Login zurückkehren', () => { const app = new App();
 
-  });
+app.onLoginSuccess('demo');
+app.onLogout();
+app.onBackToLogin();
 
-  it('soll nach Logout wieder zum Login zurückkehren', () => {
+expect(app.fkAnwendung.currentUser).toBeNull();
 
-    const app = new App();
+expect(app.fkAnwendung.loginStatus)
+  .toBe(app.fkAnwendung.logged_none);
 
-    app.onLoginSuccess('demo');
-    app.onLogout();
-    app.onBackToLogin();
 
-    expect(app.fkAnwendung.currentUser).toBeNull();
+});
 
-    expect(app.fkAnwendung.loginStatus)
-      .toBe(app.fkAnwendung.logged_none);
+it('soll den Theme-Status ändern können', () => { const app = new App();
 
-  });
+app.onThemeChanged(true);
 
-  it('soll den Theme-Status ändern können', () => {
+expect(app.fkAnwendung.isDark).toBe(true);
 
-    const app = new App();
 
-    app.onThemeChanged(true);
+});
 
-    expect(app.fkAnwendung.isDark).toBe(true);
+it('soll den Theme-Status deaktivieren können', () => { const app = new App();
 
-  });
+app.onThemeChanged(true);
+app.onThemeChanged(false);
 
-  // =====================================
-  // Tests für die Anwendungsauswahl
-  // =====================================
+expect(app.fkAnwendung.isDark).toBe(false);
 
-  it('soll die ausgewählte Anwendung speichern', () => {
 
-    const app = new App();
+});
 
-    app.onApplicationSelected(ApplicationType.VORGANGSSTEUERUNG);
+it('soll die ausgewählte Anwendung speichern', () => { const app = new App();
 
-    expect(app.fkAnwendung.selectedApplication)
-      .toBe(ApplicationType.VORGANGSSTEUERUNG);
+app.onApplicationSelected(ApplicationType.VORGANGSSTEUERUNG);
 
-  });
+expect(app.fkAnwendung.selectedApplication)
+  .toBe(ApplicationType.VORGANGSSTEUERUNG);
 
-  it('soll zur Anwendungsauswahl zurückkehren können', () => {
 
-    const app = new App();
+});
 
-    app.onApplicationSelected(ApplicationType.VORGANGSSTEUERUNG);
-    app.onBackToApplicationSelection();
+it('soll zur Anwendungsauswahl zurückkehren können', () => { const app = new App();
 
-    expect(app.fkAnwendung.selectedApplication).toBeNull();
+app.onApplicationSelected(ApplicationType.VORGANGSSTEUERUNG);
+app.onBackToApplicationSelection();
 
-  });
+expect(app.fkAnwendung.selectedApplication).toBeNull();
 
-  it('soll den angemeldeten Benutzer beim Ansichtswechsel erhalten', () => {
 
-    const app = new App();
+});
 
-    app.onLoginSuccess('demo');
+it('soll den angemeldeten Benutzer beim Ansichtswechsel erhalten', () => { const app = new App();
 
-    app.onApplicationSelected(ApplicationType.VORGANGSSTEUERUNG);
-    app.onBackToApplicationSelection();
+app.onLoginSuccess('demo');
 
-    expect(app.fkAnwendung.currentUser?.username).toBe('demo');
+app.onApplicationSelected(ApplicationType.VORGANGSSTEUERUNG);
+app.onBackToApplicationSelection();
 
-    expect(app.fkAnwendung.loginStatus)
-      .toBe(app.fkAnwendung.logged_in);
+expect(app.fkAnwendung.currentUser?.username).toBe('demo');
 
-  });
+expect(app.fkAnwendung.loginStatus)
+  .toBe(app.fkAnwendung.logged_in);
 
-  it('soll das Theme beim Ansichtswechsel erhalten', () => {
 
-    const app = new App();
+});
 
-    app.onLoginSuccess('demo');
-    app.onThemeChanged(true);
+it('soll das Theme beim Ansichtswechsel erhalten', () => { const app = new App();
 
-    app.onApplicationSelected(ApplicationType.VORGANGSSTEUERUNG);
-    app.onBackToApplicationSelection();
+app.onLoginSuccess('demo');
+app.onThemeChanged(true);
 
-    expect(app.fkAnwendung.isDark).toBe(true);
+app.onApplicationSelected(ApplicationType.VORGANGSSTEUERUNG);
+app.onBackToApplicationSelection();
 
-  });
+expect(app.fkAnwendung.isDark).toBe(true);
 
-  it('soll die ausgewählte Anwendung beim Logout zurücksetzen', () => {
 
-    const app = new App();
+});
 
-    app.onLoginSuccess('demo');
-    app.onApplicationSelected(ApplicationType.VORGANGSSTEUERUNG);
+it('soll die ausgewählte Anwendung beim Logout zurücksetzen', () => { const app = new App();
 
-    app.onLogout();
+app.onLoginSuccess('demo');
+app.onApplicationSelected(ApplicationType.VORGANGSSTEUERUNG);
 
-    expect(app.fkAnwendung.selectedApplication).toBeNull();
+app.onLogout();
 
-  });
+expect(app.fkAnwendung.selectedApplication).toBeNull();
+
+
+});
 
 });

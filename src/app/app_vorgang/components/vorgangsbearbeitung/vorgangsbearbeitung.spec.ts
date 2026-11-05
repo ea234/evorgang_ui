@@ -1,8 +1,9 @@
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Vorgangsbearbeitung } from './vorgangsbearbeitung';
-import { User } from '../../user/modell/user';
-import { Vorgang } from '../../app_vorgang/modell/vorgang';
+
+import { User } from '../../../user/modell/user';
+import { Vorgang } from '../../modell/vorgang';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 describe('Vorgangsbearbeitung', () => {

@@ -1,7 +1,7 @@
 
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
-import { User } from '../../user/modell/user';
-import { Vorgang } from '../../app_vorgang/modell/vorgang';
+import { User } from '../../../user/modell/user';
+import { Vorgang } from '../../modell/vorgang';
 
 type DialogAktion = 'zurueck' | 'beenden' | null;
 

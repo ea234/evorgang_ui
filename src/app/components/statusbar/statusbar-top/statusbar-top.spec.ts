@@ -1,16 +1,7 @@
-
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { NgModule } from '@angular/core';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-
 import { StatusbarTop } from './statusbar-top';
 import { User } from '../../../user/modell/user';
-
-@NgModule({
-  declarations: [StatusbarTop],
-  exports: [StatusbarTop]
-})
-class StatusbarTopTestingModule {}
 
 describe('StatusbarTop', () => {
 
@@ -20,7 +11,7 @@ describe('StatusbarTop', () => {
   beforeEach(async () => {
 
     await TestBed.configureTestingModule({
-      imports: [StatusbarTopTestingModule]
+      declarations: [StatusbarTop]
     }).compileComponents();
 
     fixture = TestBed.createComponent(StatusbarTop);
@@ -79,7 +70,7 @@ describe('StatusbarTop', () => {
 
   });
 
-it('soll den Benutzernamen im Template anzeigen', () => {
+  it('soll den Benutzernamen im Template anzeigen', () => {
 
     fixture.componentRef.setInput('user', new User('demo'));
 
@@ -89,9 +80,9 @@ it('soll den Benutzernamen im Template anzeigen', () => {
 
     expect(element.textContent).toContain('demo');
 
-});
+  });
 
-  it('soll beim Klick auf den Theme-Button den Dark-Mode aktivieren', async () => {
+  it('soll beim Klick auf den Theme-Button den Dark-Mode aktivieren', () => {
 
     const element = fixture.nativeElement as HTMLElement;
 
