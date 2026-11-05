@@ -2,6 +2,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { User } from '../../../user/modell/user';
 import { Vorgang } from '../../modell/vorgang';
+
 type Verdichtungsart = 'eingangsdatum' | 'uid' | 'kundennummer';
 
 interface VorgangsGruppe {
@@ -51,10 +52,6 @@ export class Vorgangssteuerung {
   ];
 
   // =====================================
-  // Befehlsleiste
-  // =====================================
-
-  // =====================================
   // Vorgangsauswahl
   // =====================================
 
@@ -71,17 +68,14 @@ export class Vorgangssteuerung {
   }
 
   onVorgangKeydown(event: KeyboardEvent, vorgang: Vorgang): void {
-
     if (event.key === 'Enter') {
       event.preventDefault();
       this.onVorgangSelected(vorgang);
       this.onVorgangAnsehen();
     }
-
   }
 
   onVorgangAnsehen(): void {
-
     if (this.ausgewaehlterVorgang === null) {
       return;
     }
@@ -159,6 +153,7 @@ export class Vorgangssteuerung {
     }
   ];
 
+
   // =====================================
   // Verdichtete Vorgangsgruppen
   // =====================================
@@ -167,6 +162,7 @@ export class Vorgangssteuerung {
 
     const gruppierung = new Map<string, Vorgang[]>();
 
+    // Vorgänge anhand der gewählten Verdichtungsart gruppieren
     for (const vorgang of this.vorgaenge) {
 
       let schluessel: string;
@@ -193,6 +189,7 @@ export class Vorgangssteuerung {
       gruppierung.get(schluessel)!.push(vorgang);
     }
 
+    // Gruppen aufbereiten und sortieren
     return Array.from(gruppierung.entries())
       .map(([schluessel, vorgaenge]) => {
 
@@ -206,7 +203,7 @@ export class Vorgangssteuerung {
         return {
           schluessel,
           bezeichnung,
-          vorgaenge: vorgaenge.sort((a, b) =>
+          vorgaenge: [...vorgaenge].sort((a, b) =>
             b.eingangsdatum.localeCompare(a.eingangsdatum) ||
             b.uhrzeit.localeCompare(a.uhrzeit)
           )
@@ -215,6 +212,7 @@ export class Vorgangssteuerung {
       })
       .sort((a, b) => b.schluessel.localeCompare(a.schluessel));
   }
+
 
   // =====================================
   // Verdichtungsart wechseln

@@ -6,6 +6,7 @@ describe('Vorgangssteuerung', () => {
 
 let component: Vorgangssteuerung; let fixture: ComponentFixture<Vorgangssteuerung>; let user: User;
 
+
 beforeEach(async () => {
 
 await TestBed.configureTestingModule({
@@ -15,20 +16,18 @@ await TestBed.configureTestingModule({
   ]
 }).compileComponents();
 
-fixture = TestBed.createComponent(Vorgangssteuerung);
-component = fixture.componentInstance;
+  fixture = TestBed.createComponent(Vorgangssteuerung);
+  component = fixture.componentInstance;
 
-user = new User('demo');
+  user = new User('demo');
 
-fixture.componentRef.setInput('user', user);
+  fixture.componentRef.setInput('user', user);
 
-fixture.detectChanges();
+  fixture.detectChanges();
 
-await fixture.whenStable();
-
+  await fixture.whenStable();
 
 });
-
 // ===================================== // INITIALISIERUNG // =====================================
 
 it('soll die Komponente erstellen', () => {
