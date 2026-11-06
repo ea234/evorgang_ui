@@ -85,7 +85,7 @@
                                     (keydown)="onVorgangKeydown($event, vorgang)">
 
                                     <span class="vorgang-datum">
-                                        {{ vorgang.datumEingang }}
+                                       {{ formatiereDatum(vorgang.datumEingang) }} 
                                     </span>
 
                                     <span class="vorgang-uid">
@@ -102,7 +102,7 @@
                                     </span>
 
                                     <span class="vorgang-enddatum">
-                                        {{ vorgang.datumEndeGeplant }}
+                                        {{ formatiereDatum(vorgang.datumEndeGeplant) }} 
                                     </span>
 
                                     <span class="vorgang-status">

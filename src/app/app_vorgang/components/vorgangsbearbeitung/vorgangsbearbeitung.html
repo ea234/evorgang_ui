@@ -161,35 +161,47 @@
 
             <!-- Datumsangaben -->
 
-            <div class="detail-zeile">
-                <span class="detail-label">Eingangsdatum (JJJJMMTT)</span>
+<!-- Datumsangaben -->
 
-                @if (bearbeitungsmodus) {
-                    <input
-                        type="number"
-                        class="detail-input"
-                        [value]="bearbeiteterVorgang.datumEingang"
-                        (input)="onDatumGeaendert('datumEingang', $any($event.target).value)">
-                } @else {
-                    <span class="detail-wert">{{ vorgang.datumEingang }}</span>
-                }
-            </div>
+<div class="detail-zeile">
+    <span class="detail-label">Eingangsdatum</span>
 
-            <div class="detail-zeile">
-                <span class="detail-label">Geplantes Enddatum (JJJJMMTT)</span>
+    @if (bearbeitungsmodus) {
+        <input
+            type="text"
+            class="detail-input"
+            placeholder="TT.MM.JJJJ"
+            [value]="getDatumEingabeString(bearbeiteterVorgang.datumEingang)"
+            (change)="onDatumGeaendert(
+                'datumEingang',
+                $any($event.target).value
+            )">
+    } @else {
+        <span class="detail-wert">
+            {{ getDatumString(vorgang.datumEingang) }}
+        </span>
+    }
+</div>
 
-                @if (bearbeitungsmodus) {
-                    <input
-                        type="number"
-                        class="detail-input"
-                        [value]="bearbeiteterVorgang.datumEndeGeplant"
-                        (input)="onDatumGeaendert('datumEndeGeplant', $any($event.target).value)">
-                } @else {
-                    <span class="detail-wert">{{ vorgang.datumEndeGeplant }}</span>
-                }
-            </div>
+<div class="detail-zeile">
+    <span class="detail-label">Geplantes Enddatum</span>
 
-            <!-- Bearbeitungsdaten -->
+    @if (bearbeitungsmodus) {
+        <input
+            type="text"
+            class="detail-input"
+            placeholder="TT.MM.JJJJ"
+            [value]="getDatumEingabeString(bearbeiteterVorgang.datumEndeGeplant)"
+            (change)="onDatumGeaendert(
+                'datumEndeGeplant',
+                $any($event.target).value
+            )">
+    } @else {
+        <span class="detail-wert">
+            {{ getDatumString(vorgang.datumEndeGeplant) }}
+        </span>
+    }
+</div>            <!-- Bearbeitungsdaten -->
 
             <div class="detail-zeile">
                 <span class="detail-label">Status</span>

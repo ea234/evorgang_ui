@@ -2,6 +2,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { User } from '../../../user/modell/user';
 import { Vorgang } from '../../modell/vorgang';
+import { FkDate } from '../../../util/fkDate';
 
 type Verdichtungsart =
   | 'datumEingang'
@@ -108,6 +109,7 @@ export class Vorgangssteuerung {
     {
       vorgangID: 1,
       vorgangUID: '4711',
+      vorgangPaginiernummer: 'P-2026-0001',
       kundennummer: '10025',
       kundeVorname: 'Müller GmbH',
       kundeNachname: '',
@@ -116,13 +118,16 @@ export class Vorgangssteuerung {
       kundeAdresseOrt: 'Hamburg',
       datumEingang: 20261103,
       datumEndeGeplant: 20261130,
+      vorgangDatumEnde: 0,
       vorgangStatus: 'NEU',
-      vorgangBearbeiterID: 'stpanr'
+      vorgangBearbeiterID: 'stpanr',
+      vorgangFreitext: 'Unterlagen vollständig eingegangen.'
     },
 
     {
       vorgangID: 2,
       vorgangUID: '4712',
+      vorgangPaginiernummer: 'P-2026-0002',
       kundennummer: '10031',
       kundeVorname: 'Schmidt AG',
       kundeNachname: '',
@@ -131,13 +136,16 @@ export class Vorgangssteuerung {
       kundeAdresseOrt: 'Hamburg',
       datumEingang: 20261103,
       datumEndeGeplant: 20261215,
+      vorgangDatumEnde: 0,
       vorgangStatus: 'IN_BEARBEITUNG',
-      vorgangBearbeiterID: 'beuduf'
+      vorgangBearbeiterID: 'beuduf',
+      vorgangFreitext: 'Rückfrage beim Kunden erforderlich.'
     },
 
     {
       vorgangID: 3,
       vorgangUID: '4713',
+      vorgangPaginiernummer: 'P-2026-0003',
       kundennummer: '10025',
       kundeVorname: 'Müller GmbH',
       kundeNachname: '',
@@ -146,13 +154,16 @@ export class Vorgangssteuerung {
       kundeAdresseOrt: 'Hamburg',
       datumEingang: 20261103,
       datumEndeGeplant: 20261120,
+      vorgangDatumEnde: 20261105,
       vorgangStatus: 'NEU',
-      vorgangBearbeiterID: 'stpanr'
+      vorgangBearbeiterID: 'stpanr',
+      vorgangFreitext: 'Vorgang abgeschlossen.'
     },
 
     {
       vorgangID: 4,
       vorgangUID: '4714',
+      vorgangPaginiernummer: 'P-2026-0004',
       kundennummer: '10042',
       kundeVorname: 'Becker KG',
       kundeNachname: '',
@@ -161,13 +172,16 @@ export class Vorgangssteuerung {
       kundeAdresseOrt: 'Hamburg',
       datumEingang: 20261102,
       datumEndeGeplant: 20261125,
+      vorgangDatumEnde: 0,
       vorgangStatus: 'NEU',
-      vorgangBearbeiterID: 'beuduf'
+      vorgangBearbeiterID: 'beuduf',
+      vorgangFreitext: 'Unterlagen werden geprüft.'
     },
 
     {
       vorgangID: 5,
       vorgangUID: '4711',
+      vorgangPaginiernummer: 'P-2026-0005',
       kundennummer: '10025',
       kundeVorname: 'Müller GmbH',
       kundeNachname: '',
@@ -176,13 +190,16 @@ export class Vorgangssteuerung {
       kundeAdresseOrt: 'Hamburg',
       datumEingang: 20261102,
       datumEndeGeplant: 20261130,
+      vorgangDatumEnde: 0,
       vorgangStatus: 'IN_BEARBEITUNG',
-      vorgangBearbeiterID: 'stpanr'
+      vorgangBearbeiterID: 'stpanr',
+      vorgangFreitext: 'Bearbeitung läuft.'
     },
 
     {
       vorgangID: 6,
       vorgangUID: '4715',
+      vorgangPaginiernummer: 'P-2026-0006',
       kundennummer: '10031',
       kundeVorname: 'Schmidt AG',
       kundeNachname: '',
@@ -191,13 +208,16 @@ export class Vorgangssteuerung {
       kundeAdresseOrt: 'Hamburg',
       datumEingang: 20261101,
       datumEndeGeplant: 20261130,
+      vorgangDatumEnde: 20261104,
       vorgangStatus: 'NEU',
-      vorgangBearbeiterID: 'beuduf'
+      vorgangBearbeiterID: 'beuduf',
+      vorgangFreitext: 'Vorgang abgeschlossen.'
     },
 
     {
       vorgangID: 7,
       vorgangUID: '4716',
+      vorgangPaginiernummer: 'P-2026-0007',
       kundennummer: '10042',
       kundeVorname: 'Becker KG',
       kundeNachname: '',
@@ -206,8 +226,10 @@ export class Vorgangssteuerung {
       kundeAdresseOrt: 'Hamburg',
       datumEingang: 20261101,
       datumEndeGeplant: 20261125,
+      vorgangDatumEnde: 0,
       vorgangStatus: 'NEU',
-      vorgangBearbeiterID: 'stpanr'
+      vorgangBearbeiterID: 'stpanr',
+      vorgangFreitext: 'Wiedervorlage erforderlich.'
     }
 
   ];
@@ -216,7 +238,11 @@ export class Vorgangssteuerung {
   // Datumsformatierung
   // =====================================
 
-  private formatiereDatum(datum: number): string {
+  formatiereDatum(datum: number): string {
+
+    if (!datum || datum === 0) {
+      return '';
+    }
 
     const wert = String(datum);
 

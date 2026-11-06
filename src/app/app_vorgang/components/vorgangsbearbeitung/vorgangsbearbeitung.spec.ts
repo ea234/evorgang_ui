@@ -21,6 +21,7 @@ describe('Vorgangsbearbeitung', () => {
         vorgang = {
             vorgangID: 1,
             vorgangUID: 'UID-001',
+            vorgangPaginiernummer: 'P-2026-0001',
 
             kundennummer: '10001',
             kundeVorname: 'Max',
@@ -32,9 +33,11 @@ describe('Vorgangsbearbeitung', () => {
 
             datumEingang: 20261104,
             datumEndeGeplant: 20261130,
+            vorgangDatumEnde: 0,
 
             vorgangStatus: 'Offen',
-            vorgangBearbeiterID: '4711'
+            vorgangBearbeiterID: '4711',
+            vorgangFreitext: 'Testanmerkung Sachbearbeiter'
         };
 
         component = new Vorgangsbearbeitung();

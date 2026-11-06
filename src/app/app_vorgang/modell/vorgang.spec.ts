@@ -4,27 +4,30 @@ import { Vorgang } from './vorgang';
 describe('Vorgang', () => {
 
   it('soll einen Vorgang mit allen Eigenschaften erstellen', () => {
+const vorgang: Vorgang = {
 
-    const vorgang: Vorgang = {
+  vorgangID: 1,
+  vorgangUID: '4711',
+  vorgangPaginiernummer: 'P-2026-0001',
 
-      vorgangID: 1,
-      vorgangUID: '4711',
+  kundennummer: '10025',
+  kundeVorname: 'Müller GmbH',
+  kundeNachname: '',
 
-      kundennummer: '10025',
-      kundeVorname: 'Müller GmbH',
-      kundeNachname: '',
+  kundeAdresseStrasse: 'Musterstraße 10',
+  kundeAdressePLZ: '12345',
+  kundeAdresseOrt: 'Hamburg',
 
-      kundeAdresseStrasse: 'Musterstraße 10',
-      kundeAdressePLZ: '12345',
-      kundeAdresseOrt: 'Hamburg',
+  datumEingang: 20261103,
+  datumEndeGeplant: 20261231,
+  vorgangDatumEnde: 0,
 
-      datumEingang: 20261103,
-      datumEndeGeplant: 20261231,
+  vorgangStatus: 'NEU',
+  vorgangBearbeiterID: 'stpanr',
 
-      vorgangStatus: 'NEU',
-      vorgangBearbeiterID: 'stpanr'
+  vorgangFreitext: 'Testanmerkung Sachbearbeiter'
 
-    };
+};
 
     expect(vorgang.vorgangID).toBe(1);
     expect(vorgang.vorgangUID).toBe('4711');

@@ -1,6 +1,7 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { User } from '../../../user/modell/user';
 import { Vorgang } from '../../modell/vorgang';
+import { FkDate } from '../../../util/fkDate';
 
 type DialogAktion = 'zurueck' | 'beenden' | null;
 
@@ -62,12 +63,6 @@ export class Vorgangsbearbeitung implements OnInit {
         );
     }
 
-onDatumGeaendert(feld: 'datumEingang' | 'datumEndeGeplant', wert: string): void {
-
-    this.bearbeiteterVorgang[feld] = Number(wert);
-
-    this.onFeldGeaendert();
-}
     onBearbeiten(): void {
 
         if (!this.darfBearbeiten) {
@@ -178,4 +173,31 @@ onDatumGeaendert(feld: 'datumEingang' | 'datumEndeGeplant', wert: string): void 
         this.bearbeiteterVorgang = { ...this.vorgang };
     }
 
+
+  // =====================================
+  // Datumsformatierung
+  // =====================================
+
+  getDatumString(datum: number): string {
+      return FkDate.getString(datum) ?? '';
+  }
+
+  getDatumEingabeString(datum: number): string {
+      return FkDate.getString(datum) ?? '';
+  }
+
+  onDatumGeaendert(
+      feld: 'datumEingang' | 'datumEndeGeplant',
+      wert: string
+  ): void 
+  {
+
+      const datum = FkDate.parseToLong(wert);
+
+      if (datum !== 0) {
+          this.bearbeiteterVorgang[feld] = datum;
+      }
+
+      this.onFeldGeaendert();
+  }    
 }

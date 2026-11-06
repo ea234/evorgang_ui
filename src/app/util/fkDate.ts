@@ -137,7 +137,7 @@ export class FkDate {
    * return Ein Datum im Format JJJJMMTT als Long, wenn sich aus der Eingabe ein Datum parsen laesst. 
    *         Im Fehlerfall wird 0 zurueckgegeben.
    */
-  static parseToLong( pString: string ): number 
+  static parseToLong( pString: string | number ): number 
   {
 
     /*
@@ -158,7 +158,12 @@ export class FkDate {
      * Wird kein gueltiges Datum in diesem Muster erkannt, wird von der 
      * Funktion 0 zurueckgegeben.
      */
-    var long_datum = this.getLongAusTTPMMPJJJJ( pString );
+    let long_datum : number = 0;
+    
+    if (typeof pString === "string") 
+    {
+      long_datum = this.getLongAusTTPMMPJJJJ( pString as string );
+    }
 
     /*
      * Pruefung: Ergebnis der ersten Parserfunktion 0 ?
@@ -180,9 +185,23 @@ export class FkDate {
       long_datum = this.getLongAusJJJJMMTT( pString );
     }
 
-
     return long_datum;
   }  
+
+
+  static getString( pString: string | number ): string | undefined
+  {
+    let long_datum : number = this.parseToLong( pString );
+
+    if ( long_datum === 0 ) 
+    {
+      return undefined;
+    }
+
+    return this.getStringAusJJJJMMTT( long_datum );
+  }  
+
+
 
   /** 
    * <pre>
