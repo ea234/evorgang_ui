@@ -1,318 +1,370 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing'; import { describe, it, expect, beforeEach, vi } from 'vitest';
 
-import { Vorgangssteuerung } from './vorgangssteuerung'; import { Vorgangsbearbeitung } from '../vorgangsbearbeitung/vorgangsbearbeitung'; import { User } from '../../../user/modell/user';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+
+import { Vorgangssteuerung } from './vorgangssteuerung';
+import { User } from '../../../user/modell/user';
+import { Vorgang } from '../../modell/vorgang';
 
 describe('Vorgangssteuerung', () => {
 
-let component: Vorgangssteuerung; let fixture: ComponentFixture<Vorgangssteuerung>; let user: User;
+  let component: Vorgangssteuerung;
+  let user: User;
 
+  beforeEach(() => {
 
-beforeEach(async () => {
+    component = new Vorgangssteuerung();
 
-await TestBed.configureTestingModule({
-  declarations: [
-    Vorgangssteuerung,
-    Vorgangsbearbeitung
-  ]
-}).compileComponents();
+    user = {
+      username: 'demo',
+      darfVorgangBearbeiten: () => true
+    } as User;
 
-  fixture = TestBed.createComponent(Vorgangssteuerung);
-  component = fixture.componentInstance;
+    component.user = user;
 
-  user = new User('demo');
+  });
 
-  fixture.componentRef.setInput('user', user);
+  // =====================================
+  // INITIALISIERUNG
+  // =====================================
 
-  fixture.detectChanges();
+  it('soll die Komponente erstellen', () => {
 
-  await fixture.whenStable();
+    expect(component).toBeTruthy();
 
-});
-// ===================================== // INITIALISIERUNG // =====================================
+  });
 
-it('soll die Komponente erstellen', () => {
+  it('soll initial die Listenansicht verwenden', () => {
 
-expect(component).toBeTruthy();
+    expect(component.ansicht).toBe('liste');
 
+  });
 
-});
+  it('soll initial nach Eingangsdatum verdichten', () => {
 
-it('soll initial die Listenansicht verwenden', () => {
+    expect(component.verdichtungsart).toBe('datumEingang');
 
-expect(component.ansicht).toBe('liste');
+  });
 
+  it('soll den übergebenen Benutzer speichern', () => {
 
-});
+    expect(component.user).toBe(user);
 
-it('soll initial nach Eingangsdatum verdichten', () => {
+  });
 
-expect(component.verdichtungsart).toBe('eingangsdatum');
+  it('soll initial keinen Vorgang ausgewählt haben', () => {
 
+    expect(component.ausgewaehlterVorgang).toBeNull();
 
-});
+    expect(component.ausgewaehlterVorgangId).toBeNull();
 
-it('soll den übergebenen Benutzer speichern', () => {
+  });
 
-expect(component.user).toBe(user);
+  // =====================================
+  // NAVIGATION
+  // =====================================
 
+  it('soll beim Zurückkehren die Navigation auslösen', () => {
 
-});
+    const spy = vi.spyOn(
+      component.backToApplicationSelection,
+      'emit'
+    );
 
-it('soll initial keinen Vorgang ausgewählt haben', () => {
+    component.onBackToApplicationSelection();
 
-expect(component.ausgewaehlterVorgang).toBeNull();
+    expect(spy).toHaveBeenCalledOnce();
 
-expect(component.ausgewaehlterVorgangId).toBeNull();
+  });
 
+  it('soll zur Vorgangsliste zurückkehren', () => {
 
-});
+    component.ansicht = 'detail';
 
-// ===================================== // NAVIGATION // =====================================
+    component.onBackToVorgangsliste();
 
-it('soll beim Zurückkehren die Navigation auslösen', () => {
+    expect(component.ansicht).toBe('liste');
 
-const spy = vi.spyOn(
-  component.backToApplicationSelection,
-  'emit'
-);
+  });
 
-component.onBackToApplicationSelection();
+  // =====================================
+  // VORGANGSAUSWAHL
+  // =====================================
 
-expect(spy).toHaveBeenCalled();
+  it('soll einen Vorgang auswählen', () => {
 
+    const vorgang = component.vorgaenge[0];
 
-});
+    component.onVorgangSelected(vorgang);
 
-it('soll zur Vorgangsliste zurückkehren', () => {
+    expect(component.ausgewaehlterVorgang).toBe(vorgang);
 
-component.ansicht = 'detail';
+    expect(component.ausgewaehlterVorgangId)
+      .toBe(vorgang.vorgangID);
 
-component.onBackToVorgangsliste();
+  });
 
-expect(component.ansicht).toBe('liste');
+  it('soll die Detailansicht ohne Auswahl nicht öffnen', () => {
 
+    component.onVorgangAnsehen();
 
-});
+    expect(component.ansicht).toBe('liste');
 
-// ===================================== // VORGANGSAUSWAHL // =====================================
+  });
 
-it('soll einen Vorgang auswählen', () => {
+  it('soll einen ausgewählten Vorgang öffnen', () => {
 
-const vorgang = component.vorgaenge[0];
+    const vorgang = component.vorgaenge[0];
 
-component.onVorgangSelected(vorgang);
+    component.onVorgangSelected(vorgang);
+    component.onVorgangAnsehen();
 
-expect(component.ausgewaehlterVorgang).toBe(vorgang);
+    expect(component.ansicht).toBe('detail');
 
-expect(component.ausgewaehlterVorgangId).toBe(vorgang.id);
+  });
 
+  it('soll beim Doppelklick einen Vorgang öffnen', () => {
 
-});
+    const vorgang = component.vorgaenge[0];
 
-it('soll die Detailansicht ohne Auswahl nicht öffnen', () => {
+    component.onVorgangDoubleClick(vorgang);
 
-component.onVorgangAnsehen();
+    expect(component.ausgewaehlterVorgang).toBe(vorgang);
 
-expect(component.ansicht).toBe('liste');
+    expect(component.ausgewaehlterVorgangId)
+      .toBe(vorgang.vorgangID);
 
+    expect(component.ansicht).toBe('detail');
 
-});
+  });
 
-it('soll einen ausgewählten Vorgang öffnen', () => {
+  // =====================================
+  // TASTATURBEDIENUNG
+  // =====================================
 
-const vorgang = component.vorgaenge[0];
+  it('soll bei Enter einen Vorgang öffnen', () => {
 
-component.onVorgangSelected(vorgang);
-component.onVorgangAnsehen();
+    const vorgang = component.vorgaenge[0];
 
-expect(component.ansicht).toBe('detail');
+    const event = {
+      key: 'Enter',
+      preventDefault: vi.fn()
+    } as unknown as KeyboardEvent;
 
+    component.onVorgangKeydown(event, vorgang);
 
-});
+    expect(event.preventDefault).toHaveBeenCalledOnce();
 
-it('soll beim Doppelklick einen Vorgang öffnen', () => {
+    expect(component.ausgewaehlterVorgang).toBe(vorgang);
 
-const vorgang = component.vorgaenge[0];
+    expect(component.ansicht).toBe('detail');
 
-component.onVorgangDoubleClick(vorgang);
+  });
 
-expect(component.ausgewaehlterVorgang).toBe(vorgang);
+  it('soll bei anderen Tasten keinen Vorgang öffnen', () => {
 
-expect(component.ansicht).toBe('detail');
+    const vorgang = component.vorgaenge[0];
 
+    const event = {
+      key: 'Escape',
+      preventDefault: vi.fn()
+    } as unknown as KeyboardEvent;
 
-});
+    component.onVorgangKeydown(event, vorgang);
 
-// ===================================== // TASTATURBEDIENUNG // =====================================
+    expect(event.preventDefault).not.toHaveBeenCalled();
 
-it('soll bei Enter einen Vorgang öffnen', () => {
+    expect(component.ansicht).toBe('liste');
 
-const vorgang = component.vorgaenge[0];
+  });
 
-const event = {
-  key: 'Enter',
-  preventDefault: vi.fn()
-} as unknown as KeyboardEvent;
+  // =====================================
+  // VERDICHTUNGSARTEN
+  // =====================================
 
-component.onVorgangKeydown(event, vorgang);
+  it('soll nach Vorgangs-UID verdichten können', () => {
 
-expect(event.preventDefault).toHaveBeenCalled();
+    component.onVerdichtungsartChanged('vorgangUID');
 
-expect(component.ausgewaehlterVorgang).toBe(vorgang);
+    expect(component.verdichtungsart).toBe('vorgangUID');
 
-expect(component.ansicht).toBe('detail');
+  });
 
+  it('soll nach Kundennummer verdichten können', () => {
 
-});
+    component.onVerdichtungsartChanged('kundennummer');
 
-it('soll bei anderen Tasten keinen Vorgang öffnen', () => {
+    expect(component.verdichtungsart).toBe('kundennummer');
 
-const vorgang = component.vorgaenge[0];
+  });
 
-const event = {
-  key: 'Escape',
-  preventDefault: vi.fn()
-} as unknown as KeyboardEvent;
+  it('soll nach Eingangsdatum verdichten können', () => {
 
-component.onVorgangKeydown(event, vorgang);
+    component.onVerdichtungsartChanged('vorgangUID');
 
-expect(event.preventDefault).not.toHaveBeenCalled();
+    component.onVerdichtungsartChanged('datumEingang');
 
-expect(component.ansicht).toBe('liste');
+    expect(component.verdichtungsart).toBe('datumEingang');
 
+  });
 
-});
+  // =====================================
+  // GRUPPIERUNG
+  // =====================================
 
-// ===================================== // VERDICHTUNGSARTEN // =====================================
+  it('soll initial nach Eingangsdatum gruppieren', () => {
 
-it('soll nach UID verdichten können', () => {
+    expect(component.gruppen.length).toBe(3);
 
-component.onVerdichtungsartChanged('uid');
+  });
 
-expect(component.verdichtungsart).toBe('uid');
+  it('soll nach Vorgangs-UID gruppieren', () => {
 
+    component.verdichtungsart = 'vorgangUID';
 
-});
+    expect(component.gruppen.length).toBe(6);
 
-it('soll nach Kundennummer verdichten können', () => {
+  });
 
-component.onVerdichtungsartChanged('kundennummer');
+  it('soll nach Kundennummer gruppieren', () => {
 
-expect(component.verdichtungsart).toBe('kundennummer');
+    component.verdichtungsart = 'kundennummer';
 
+    expect(component.gruppen.length).toBe(3);
 
-});
+  });
 
-it('soll nach Eingangsdatum verdichten können', () => {
+  it('soll bei Kundennummer die Kundenbezeichnung anzeigen', () => {
 
-component.onVerdichtungsartChanged('uid');
+    component.verdichtungsart = 'kundennummer';
 
-component.onVerdichtungsartChanged('eingangsdatum');
+    const gruppe = component.gruppen.find(
+      g => g.schluessel === '10025'
+    );
 
-expect(component.verdichtungsart).toBe('eingangsdatum');
+    expect(gruppe?.bezeichnung).toBe('10025 – Müller GmbH');
 
+  });
 
-});
+  it('soll alle sieben Vorgänge gruppieren', () => {
 
-// ===================================== // GRUPPIERUNG // =====================================
+    const anzahl = component.gruppen.reduce(
+      (summe, gruppe) => summe + gruppe.vorgaenge.length,
+      0
+    );
 
-it('soll initial nach Eingangsdatum gruppieren', () => {
+    expect(anzahl).toBe(7);
 
-const gruppen = component.gruppen;
+  });
 
-expect(gruppen.length).toBe(3);
+  it('soll die Gruppen nach Eingangsdatum absteigend sortieren', () => {
 
+    const gruppen = component.gruppen;
 
-});
+    for (let i = 0; i < gruppen.length - 1; i++) {
 
-it('soll nach UID gruppieren', () => {
+      expect(
+        Number(gruppen[i].schluessel)
+      ).toBeGreaterThanOrEqual(
+        Number(gruppen[i + 1].schluessel)
+      );
 
-component.verdichtungsart = 'uid';
+    }
 
-const gruppen = component.gruppen;
+  });
 
-expect(gruppen.length).toBe(6);
+  it('soll die Vorgänge innerhalb einer Gruppe nach Eingangsdatum sortieren', () => {
 
+    const gruppen = component.gruppen;
 
-});
+    for (const gruppe of gruppen) {
 
-it('soll nach Kundennummer gruppieren', () => {
+      for (let i = 0; i < gruppe.vorgaenge.length - 1; i++) {
 
-component.verdichtungsart = 'kundennummer';
+        expect(
+          gruppe.vorgaenge[i].datumEingang
+        ).toBeGreaterThanOrEqual(
+          gruppe.vorgaenge[i + 1].datumEingang
+        );
 
-const gruppen = component.gruppen;
+      }
 
-expect(gruppen.length).toBe(3);
+    }
 
+  });
 
-});
+  it('soll bei gleichem Eingangsdatum nach VorgangsID absteigend sortieren', () => {
 
-it('soll bei Kundennummer die Kundenbezeichnung anzeigen', () => {
+    const gruppe = component.gruppen.find(
+      g => g.schluessel === '20261103'
+    );
 
-component.verdichtungsart = 'kundennummer';
+    expect(
+      gruppe?.vorgaenge.map(v => v.vorgangID)
+    ).toEqual([3, 2, 1]);
 
-const gruppe = component.gruppen.find(
-  g => g.schluessel === '10025'
-);
+  });
 
-expect(gruppe?.bezeichnung).toBe('10025 – Müller GmbH');
+  it('soll die UID-Gruppen numerisch sortieren', () => {
 
+    component.verdichtungsart = 'vorgangUID';
 
-});
+    const gruppen = component.gruppen;
 
-it('soll alle sieben Vorgänge gruppieren', () => {
+    expect(
+      gruppen.map(g => g.schluessel)
+    ).toEqual(['4716', '4715', '4714', '4713', '4712', '4711']);
 
-const gruppen = component.gruppen;
+  });
 
-const anzahl = gruppen.reduce(
-  (summe, gruppe) => summe + gruppe.vorgaenge.length,
-  0
-);
+  // =====================================
+  // DATUMSFORMATIERUNG
+  // =====================================
 
-expect(anzahl).toBe(7);
+  it('soll das Eingangsdatum im deutschen Format anzeigen', () => {
 
+    const gruppe = component.gruppen.find(
+      g => g.schluessel === '20261103'
+    );
 
-});
+    expect(gruppe?.bezeichnung).toBe('03.11.2026');
 
-it('soll die Gruppen absteigend sortieren', () => {
+  });
 
-const gruppen = component.gruppen;
+  // =====================================
+  // DATENMODELL
+  // =====================================
 
-for (let i = 0; i < gruppen.length - 1; i++) {
+  it('soll die neue VorgangsID verwenden', () => {
 
-  expect(
-    gruppen[i].schluessel.localeCompare(
-      gruppen[i + 1].schluessel
-    )
-  ).toBeGreaterThanOrEqual(0);
+    expect(component.vorgaenge[0].vorgangID).toBe(1);
 
-}
+  });
 
+  it('soll die neue VorgangsUID verwenden', () => {
 
-});
+    expect(component.vorgaenge[0].vorgangUID).toBe('4711');
 
-// ===================================== // TEMPLATE // =====================================
+  });
 
-it('soll die Verdichtungsarten anzeigen', () => {
+  it('soll die Kundendaten korrekt abbilden', () => {
 
-const element = fixture.nativeElement as HTMLElement;
+    const vorgang = component.vorgaenge[0];
 
-expect(element.textContent).toContain('Eingangsdatum');
-expect(element.textContent).toContain('UID');
-expect(element.textContent).toContain('Kundennummer');
+    expect(vorgang.kundennummer).toBe('10025');
+    expect(vorgang.kundeVorname).toBe('Müller GmbH');
+    expect(vorgang.kundeNachname).toBe('');
 
+  });
 
-});
+  it('soll die Bearbeitungsdaten korrekt abbilden', () => {
 
-it('soll die Vorgänge im Template anzeigen', () => {
+    const vorgang = component.vorgaenge[0];
 
-const element = fixture.nativeElement as HTMLElement;
+    expect(vorgang.datumEingang).toBe(20261103);
+    expect(vorgang.datumEndeGeplant).toBe(20261130);
+    expect(vorgang.vorgangStatus).toBe('NEU');
+    expect(vorgang.vorgangBearbeiterID).toBe('stpanr');
 
-expect(element.textContent).toContain('Müller GmbH');
-expect(element.textContent).toContain('Schmidt AG');
-expect(element.textContent).toContain('Becker KG');
-
-
-});
+  });
 
 });

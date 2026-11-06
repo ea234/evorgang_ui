@@ -1,4 +1,3 @@
-
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { User } from '../../../user/modell/user';
 import { Vorgang } from '../../modell/vorgang';
@@ -44,16 +43,31 @@ export class Vorgangsbearbeitung implements OnInit {
         }
 
         return (
-            this.bearbeiteterVorgang.id !== this.vorgang.id ||
-            this.bearbeiteterVorgang.eingangsdatum !== this.vorgang.eingangsdatum ||
-            this.bearbeiteterVorgang.uhrzeit !== this.vorgang.uhrzeit ||
-            this.bearbeiteterVorgang.uid !== this.vorgang.uid ||
+            this.bearbeiteterVorgang.vorgangID !== this.vorgang.vorgangID ||
+            this.bearbeiteterVorgang.vorgangUID !== this.vorgang.vorgangUID ||
+
             this.bearbeiteterVorgang.kundennummer !== this.vorgang.kundennummer ||
-            this.bearbeiteterVorgang.kunde !== this.vorgang.kunde ||
-            this.bearbeiteterVorgang.betreff !== this.vorgang.betreff
+            this.bearbeiteterVorgang.kundeVorname !== this.vorgang.kundeVorname ||
+            this.bearbeiteterVorgang.kundeNachname !== this.vorgang.kundeNachname ||
+
+            this.bearbeiteterVorgang.kundeAdresseStrasse !== this.vorgang.kundeAdresseStrasse ||
+            this.bearbeiteterVorgang.kundeAdressePLZ !== this.vorgang.kundeAdressePLZ ||
+            this.bearbeiteterVorgang.kundeAdresseOrt !== this.vorgang.kundeAdresseOrt ||
+
+            this.bearbeiteterVorgang.datumEingang !== this.vorgang.datumEingang ||
+            this.bearbeiteterVorgang.datumEndeGeplant !== this.vorgang.datumEndeGeplant ||
+
+            this.bearbeiteterVorgang.vorgangStatus !== this.vorgang.vorgangStatus ||
+            this.bearbeiteterVorgang.vorgangBearbeiterID !== this.vorgang.vorgangBearbeiterID
         );
     }
 
+onDatumGeaendert(feld: 'datumEingang' | 'datumEndeGeplant', wert: string): void {
+
+    this.bearbeiteterVorgang[feld] = Number(wert);
+
+    this.onFeldGeaendert();
+}
     onBearbeiten(): void {
 
         if (!this.darfBearbeiten) {

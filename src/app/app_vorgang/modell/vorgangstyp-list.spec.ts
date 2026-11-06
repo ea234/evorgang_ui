@@ -1,5 +1,10 @@
 
 import { VorgangstypList } from './vorgangstyp-list';
+import {
+  describe,
+  it,
+  expect
+} from 'vitest';
 
 describe('VorgangstypList', () => {
 

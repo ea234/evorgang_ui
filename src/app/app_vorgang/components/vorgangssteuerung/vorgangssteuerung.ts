@@ -3,7 +3,10 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { User } from '../../../user/modell/user';
 import { Vorgang } from '../../modell/vorgang';
 
-type Verdichtungsart = 'eingangsdatum' | 'uid' | 'kundennummer';
+type Verdichtungsart =
+  | 'datumEingang'
+  | 'vorgangUID'
+  | 'kundennummer';
 
 interface VorgangsGruppe {
   schluessel: string;
@@ -21,7 +24,8 @@ export class Vorgangssteuerung {
 
   @Input({ required: true }) user!: User;
 
-  @Output() backToApplicationSelection = new EventEmitter<void>();
+  @Output() backToApplicationSelection =
+    new EventEmitter<void>();
 
   // =====================================
   // Ansichtssteuerung
@@ -43,13 +47,20 @@ export class Vorgangssteuerung {
   // Verdichtungsarten
   // =====================================
 
-  verdichtungsart: Verdichtungsart = 'eingangsdatum';
+  verdichtungsart: Verdichtungsart = 'datumEingang';
 
-  verdichtungsarten = [
-    { id: 'eingangsdatum' as Verdichtungsart, name: 'Eingangsdatum' },
-    { id: 'uid' as Verdichtungsart, name: 'UID' },
-    { id: 'kundennummer' as Verdichtungsart, name: 'Kundennummer' }
+  readonly verdichtungsarten: {
+    id: Verdichtungsart;
+    name: string;
+  }[] = [
+    { id: 'datumEingang', name: 'Eingangsdatum' },
+    { id: 'vorgangUID', name: 'Vorgangs-UID' },
+    { id: 'kundennummer', name: 'Kundennummer' }
   ];
+
+  onVerdichtungsartChanged(art: Verdichtungsart): void {
+    this.verdichtungsart = art;
+  }
 
   // =====================================
   // Vorgangsauswahl
@@ -58,7 +69,7 @@ export class Vorgangssteuerung {
   ausgewaehlterVorgangId: number | null = null;
 
   onVorgangSelected(vorgang: Vorgang): void {
-    this.ausgewaehlterVorgangId = vorgang.id;
+    this.ausgewaehlterVorgangId = vorgang.vorgangID;
     this.ausgewaehlterVorgang = vorgang;
   }
 
@@ -67,7 +78,11 @@ export class Vorgangssteuerung {
     this.onVorgangAnsehen();
   }
 
-  onVorgangKeydown(event: KeyboardEvent, vorgang: Vorgang): void {
+  onVorgangKeydown(
+    event: KeyboardEvent,
+    vorgang: Vorgang
+  ): void {
+
     if (event.key === 'Enter') {
       event.preventDefault();
       this.onVorgangSelected(vorgang);
@@ -76,6 +91,7 @@ export class Vorgangssteuerung {
   }
 
   onVorgangAnsehen(): void {
+
     if (this.ausgewaehlterVorgang === null) {
       return;
     }
@@ -88,71 +104,128 @@ export class Vorgangssteuerung {
   // =====================================
 
   vorgaenge: Vorgang[] = [
+
     {
-      id: 1,
-      eingangsdatum: '03.11.2026',
-      uhrzeit: '10:24',
-      uid: '4711',
+      vorgangID: 1,
+      vorgangUID: '4711',
       kundennummer: '10025',
-      kunde: 'Müller GmbH',
-      betreff: 'Neuantrag'
+      kundeVorname: 'Müller GmbH',
+      kundeNachname: '',
+      kundeAdresseStrasse: 'Hauptstraße 10',
+      kundeAdressePLZ: '20095',
+      kundeAdresseOrt: 'Hamburg',
+      datumEingang: 20261103,
+      datumEndeGeplant: 20261130,
+      vorgangStatus: 'NEU',
+      vorgangBearbeiterID: 'stpanr'
     },
+
     {
-      id: 2,
-      eingangsdatum: '03.11.2026',
-      uhrzeit: '09:18',
-      uid: '4712',
+      vorgangID: 2,
+      vorgangUID: '4712',
       kundennummer: '10031',
-      kunde: 'Schmidt AG',
-      betreff: 'Vertragsänderung'
+      kundeVorname: 'Schmidt AG',
+      kundeNachname: '',
+      kundeAdresseStrasse: 'Bahnhofstraße 5',
+      kundeAdressePLZ: '20099',
+      kundeAdresseOrt: 'Hamburg',
+      datumEingang: 20261103,
+      datumEndeGeplant: 20261215,
+      vorgangStatus: 'IN_BEARBEITUNG',
+      vorgangBearbeiterID: 'beuduf'
     },
+
     {
-      id: 3,
-      eingangsdatum: '03.11.2026',
-      uhrzeit: '08:05',
-      uid: '4713',
+      vorgangID: 3,
+      vorgangUID: '4713',
       kundennummer: '10025',
-      kunde: 'Müller GmbH',
-      betreff: 'Rückfrage'
+      kundeVorname: 'Müller GmbH',
+      kundeNachname: '',
+      kundeAdresseStrasse: 'Hauptstraße 10',
+      kundeAdressePLZ: '20095',
+      kundeAdresseOrt: 'Hamburg',
+      datumEingang: 20261103,
+      datumEndeGeplant: 20261120,
+      vorgangStatus: 'NEU',
+      vorgangBearbeiterID: 'stpanr'
     },
+
     {
-      id: 4,
-      eingangsdatum: '02.11.2026',
-      uhrzeit: '16:42',
-      uid: '4714',
+      vorgangID: 4,
+      vorgangUID: '4714',
       kundennummer: '10042',
-      kunde: 'Becker KG',
-      betreff: 'Neuantrag'
+      kundeVorname: 'Becker KG',
+      kundeNachname: '',
+      kundeAdresseStrasse: 'Rathausplatz 3',
+      kundeAdressePLZ: '21073',
+      kundeAdresseOrt: 'Hamburg',
+      datumEingang: 20261102,
+      datumEndeGeplant: 20261125,
+      vorgangStatus: 'NEU',
+      vorgangBearbeiterID: 'beuduf'
     },
+
     {
-      id: 5,
-      eingangsdatum: '02.11.2026',
-      uhrzeit: '14:12',
-      uid: '4711',
+      vorgangID: 5,
+      vorgangUID: '4711',
       kundennummer: '10025',
-      kunde: 'Müller GmbH',
-      betreff: 'Dokumenteneingang'
+      kundeVorname: 'Müller GmbH',
+      kundeNachname: '',
+      kundeAdresseStrasse: 'Hauptstraße 10',
+      kundeAdressePLZ: '20095',
+      kundeAdresseOrt: 'Hamburg',
+      datumEingang: 20261102,
+      datumEndeGeplant: 20261130,
+      vorgangStatus: 'IN_BEARBEITUNG',
+      vorgangBearbeiterID: 'stpanr'
     },
+
     {
-      id: 6,
-      eingangsdatum: '01.11.2026',
-      uhrzeit: '11:30',
-      uid: '4715',
+      vorgangID: 6,
+      vorgangUID: '4715',
       kundennummer: '10031',
-      kunde: 'Schmidt AG',
-      betreff: 'Vertragsänderung'
+      kundeVorname: 'Schmidt AG',
+      kundeNachname: '',
+      kundeAdresseStrasse: 'Bahnhofstraße 5',
+      kundeAdressePLZ: '20099',
+      kundeAdresseOrt: 'Hamburg',
+      datumEingang: 20261101,
+      datumEndeGeplant: 20261130,
+      vorgangStatus: 'NEU',
+      vorgangBearbeiterID: 'beuduf'
     },
+
     {
-      id: 7,
-      eingangsdatum: '01.11.2026',
-      uhrzeit: '09:45',
-      uid: '4716',
+      vorgangID: 7,
+      vorgangUID: '4716',
       kundennummer: '10042',
-      kunde: 'Becker KG',
-      betreff: 'Neuantrag'
+      kundeVorname: 'Becker KG',
+      kundeNachname: '',
+      kundeAdresseStrasse: 'Rathausplatz 3',
+      kundeAdressePLZ: '21073',
+      kundeAdresseOrt: 'Hamburg',
+      datumEingang: 20261101,
+      datumEndeGeplant: 20261125,
+      vorgangStatus: 'NEU',
+      vorgangBearbeiterID: 'stpanr'
     }
+
   ];
 
+  // =====================================
+  // Datumsformatierung
+  // =====================================
+
+  private formatiereDatum(datum: number): string {
+
+    const wert = String(datum);
+
+    if (wert.length !== 8) {
+      return wert;
+    }
+
+    return `${wert.substring(6, 8)}.${wert.substring(4, 6)}.${wert.substring(0, 4)}`;
+  }
 
   // =====================================
   // Verdichtete Vorgangsgruppen
@@ -162,19 +235,18 @@ export class Vorgangssteuerung {
 
     const gruppierung = new Map<string, Vorgang[]>();
 
-    // Vorgänge anhand der gewählten Verdichtungsart gruppieren
     for (const vorgang of this.vorgaenge) {
 
       let schluessel: string;
 
       switch (this.verdichtungsart) {
 
-        case 'eingangsdatum':
-          schluessel = vorgang.eingangsdatum;
+        case 'datumEingang':
+          schluessel = String(vorgang.datumEingang);
           break;
 
-        case 'uid':
-          schluessel = vorgang.uid;
+        case 'vorgangUID':
+          schluessel = vorgang.vorgangUID;
           break;
 
         case 'kundennummer':
@@ -189,37 +261,52 @@ export class Vorgangssteuerung {
       gruppierung.get(schluessel)!.push(vorgang);
     }
 
-    // Gruppen aufbereiten und sortieren
     return Array.from(gruppierung.entries())
+
       .map(([schluessel, vorgaenge]) => {
 
         let bezeichnung = schluessel;
 
-        if (this.verdichtungsart === 'kundennummer') {
-          const kunde = vorgaenge[0].kunde;
-          bezeichnung = `${schluessel} – ${kunde}`;
+        switch (this.verdichtungsart) {
+
+          case 'datumEingang':
+            bezeichnung = this.formatiereDatum(Number(schluessel));
+            break;
+
+          case 'vorgangUID':
+            bezeichnung = `UID ${schluessel}`;
+            break;
+
+          case 'kundennummer':
+            bezeichnung =
+              `${schluessel} – ${vorgaenge[0].kundeVorname}`;
+            break;
         }
 
         return {
           schluessel,
           bezeichnung,
+
           vorgaenge: [...vorgaenge].sort((a, b) =>
-            b.eingangsdatum.localeCompare(a.eingangsdatum) ||
-            b.uhrzeit.localeCompare(a.uhrzeit)
+            b.datumEingang - a.datumEingang ||
+            b.vorgangID - a.vorgangID
           )
         };
 
       })
-      .sort((a, b) => b.schluessel.localeCompare(a.schluessel));
-  }
 
+      .sort((a, b) => {
 
-  // =====================================
-  // Verdichtungsart wechseln
-  // =====================================
+        if (this.verdichtungsart === 'datumEingang') {
+          return Number(b.schluessel) - Number(a.schluessel);
+        }
 
-  onVerdichtungsartChanged(art: Verdichtungsart): void {
-    this.verdichtungsart = art;
+        return b.schluessel.localeCompare(
+          a.schluessel,
+          'de',
+          { numeric: true }
+        );
+      });
   }
 
 }

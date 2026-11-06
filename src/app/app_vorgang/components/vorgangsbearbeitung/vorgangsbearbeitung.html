@@ -1,4 +1,3 @@
-
 <div class="vorgangsbearbeitung">
 
     <div class="befehlsleiste">
@@ -60,47 +59,19 @@
 
         <div class="detail-formular">
 
-            <div class="detail-zeile">
-                <span class="detail-label">Eingangsdatum</span>
+            <!-- Vorgangsidentifikation -->
 
-                @if (bearbeitungsmodus) {
-                    <input
-                        type="text"
-                        class="detail-input"
-                        [value]="bearbeiteterVorgang.eingangsdatum"
-                        (input)="bearbeiteterVorgang.eingangsdatum = $any($event.target).value; onFeldGeaendert()">
-                } @else {
-                    <span class="detail-wert">{{ vorgang.eingangsdatum }}</span>
-                }
+            <div class="detail-zeile">
+                <span class="detail-label">Vorgangs-ID</span>
+                <span class="detail-wert">{{ vorgang.vorgangID }}</span>
             </div>
 
             <div class="detail-zeile">
-                <span class="detail-label">Uhrzeit</span>
-
-                @if (bearbeitungsmodus) {
-                    <input
-                        type="text"
-                        class="detail-input"
-                        [value]="bearbeiteterVorgang.uhrzeit"
-                        (input)="bearbeiteterVorgang.uhrzeit = $any($event.target).value; onFeldGeaendert()">
-                } @else {
-                    <span class="detail-wert">{{ vorgang.uhrzeit }}</span>
-                }
+                <span class="detail-label">Vorgangs-UID</span>
+                <span class="detail-wert">{{ vorgang.vorgangUID }}</span>
             </div>
 
-            <div class="detail-zeile">
-                <span class="detail-label">UID</span>
-
-                @if (bearbeitungsmodus) {
-                    <input
-                        type="text"
-                        class="detail-input"
-                        [value]="bearbeiteterVorgang.uid"
-                        (input)="bearbeiteterVorgang.uid = $any($event.target).value; onFeldGeaendert()">
-                } @else {
-                    <span class="detail-wert">{{ vorgang.uid }}</span>
-                }
-            </div>
+            <!-- Kundendaten -->
 
             <div class="detail-zeile">
                 <span class="detail-label">Kundennummer</span>
@@ -117,30 +88,135 @@
             </div>
 
             <div class="detail-zeile">
-                <span class="detail-label">Kunde</span>
+                <span class="detail-label">Vorname / Firmenname</span>
 
                 @if (bearbeitungsmodus) {
                     <input
                         type="text"
                         class="detail-input"
-                        [value]="bearbeiteterVorgang.kunde"
-                        (input)="bearbeiteterVorgang.kunde = $any($event.target).value; onFeldGeaendert()">
+                        [value]="bearbeiteterVorgang.kundeVorname"
+                        (input)="bearbeiteterVorgang.kundeVorname = $any($event.target).value; onFeldGeaendert()">
                 } @else {
-                    <span class="detail-wert">{{ vorgang.kunde }}</span>
+                    <span class="detail-wert">{{ vorgang.kundeVorname }}</span>
                 }
             </div>
 
             <div class="detail-zeile">
-                <span class="detail-label">Betreff</span>
+                <span class="detail-label">Nachname</span>
 
                 @if (bearbeitungsmodus) {
                     <input
                         type="text"
                         class="detail-input"
-                        [value]="bearbeiteterVorgang.betreff"
-                        (input)="bearbeiteterVorgang.betreff = $any($event.target).value; onFeldGeaendert()">
+                        [value]="bearbeiteterVorgang.kundeNachname"
+                        (input)="bearbeiteterVorgang.kundeNachname = $any($event.target).value; onFeldGeaendert()">
                 } @else {
-                    <span class="detail-wert">{{ vorgang.betreff }}</span>
+                    <span class="detail-wert">{{ vorgang.kundeNachname }}</span>
+                }
+            </div>
+
+            <!-- Kundenadresse -->
+
+            <div class="detail-zeile">
+                <span class="detail-label">Straße</span>
+
+                @if (bearbeitungsmodus) {
+                    <input
+                        type="text"
+                        class="detail-input"
+                        [value]="bearbeiteterVorgang.kundeAdresseStrasse"
+                        (input)="bearbeiteterVorgang.kundeAdresseStrasse = $any($event.target).value; onFeldGeaendert()">
+                } @else {
+                    <span class="detail-wert">{{ vorgang.kundeAdresseStrasse }}</span>
+                }
+            </div>
+
+            <div class="detail-zeile">
+                <span class="detail-label">Postleitzahl</span>
+
+                @if (bearbeitungsmodus) {
+                    <input
+                        type="text"
+                        class="detail-input"
+                        [value]="bearbeiteterVorgang.kundeAdressePLZ"
+                        (input)="bearbeiteterVorgang.kundeAdressePLZ = $any($event.target).value; onFeldGeaendert()">
+                } @else {
+                    <span class="detail-wert">{{ vorgang.kundeAdressePLZ }}</span>
+                }
+            </div>
+
+            <div class="detail-zeile">
+                <span class="detail-label">Ort</span>
+
+                @if (bearbeitungsmodus) {
+                    <input
+                        type="text"
+                        class="detail-input"
+                        [value]="bearbeiteterVorgang.kundeAdresseOrt"
+                        (input)="bearbeiteterVorgang.kundeAdresseOrt = $any($event.target).value; onFeldGeaendert()">
+                } @else {
+                    <span class="detail-wert">{{ vorgang.kundeAdresseOrt }}</span>
+                }
+            </div>
+
+            <!-- Datumsangaben -->
+
+            <div class="detail-zeile">
+                <span class="detail-label">Eingangsdatum (JJJJMMTT)</span>
+
+                @if (bearbeitungsmodus) {
+                    <input
+                        type="number"
+                        class="detail-input"
+                        [value]="bearbeiteterVorgang.datumEingang"
+                        (input)="onDatumGeaendert('datumEingang', $any($event.target).value)">
+                } @else {
+                    <span class="detail-wert">{{ vorgang.datumEingang }}</span>
+                }
+            </div>
+
+            <div class="detail-zeile">
+                <span class="detail-label">Geplantes Enddatum (JJJJMMTT)</span>
+
+                @if (bearbeitungsmodus) {
+                    <input
+                        type="number"
+                        class="detail-input"
+                        [value]="bearbeiteterVorgang.datumEndeGeplant"
+                        (input)="onDatumGeaendert('datumEndeGeplant', $any($event.target).value)">
+                } @else {
+                    <span class="detail-wert">{{ vorgang.datumEndeGeplant }}</span>
+                }
+            </div>
+
+            <!-- Bearbeitungsdaten -->
+
+            <div class="detail-zeile">
+                <span class="detail-label">Status</span>
+
+                @if (bearbeitungsmodus) {
+                    <input
+                        type="text"
+                        class="detail-input"
+                        [value]="bearbeiteterVorgang.vorgangStatus"
+                        (input)="bearbeiteterVorgang.vorgangStatus = $any($event.target).value; onFeldGeaendert()">
+                } @else {
+                    <span class="detail-wert">{{ vorgang.vorgangStatus }}</span>
+                }
+            </div>
+
+            <div class="detail-zeile">
+                <span class="detail-label">Bearbeiter-ID</span>
+
+                @if (bearbeitungsmodus) {
+                    <input
+                        type="text"
+                        maxlength="20"
+                        class="detail-input"
+                        [value]="bearbeiteterVorgang.vorgangBearbeiterID"
+                        (input)="bearbeiteterVorgang.vorgangBearbeiterID = $any($event.target).value; onFeldGeaendert()">
+                } @else {
+                    <span class="detail-wert">{{ vorgang.vorgangBearbeiterID }}</span>
                 }
             </div>
 

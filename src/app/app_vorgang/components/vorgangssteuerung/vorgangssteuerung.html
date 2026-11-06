@@ -1,4 +1,3 @@
-
 <div class="vorgangssteuerung">
 
     <!-- LISTENANSICHT -->
@@ -31,7 +30,6 @@
 
         </aside>
 
-
         <!-- RECHTER ARBEITSBEREICH -->
 
         <main class="arbeitsbereich">
@@ -52,82 +50,80 @@
 
             </div>
 
+            <!-- VORGANGSLISTE -->
 
+            <div class="vorgangsliste">
 
-<!-- VORGANGSLISTE -->
+                @for (gruppe of gruppen; track gruppe.schluessel) {
 
-<div class="vorgangsliste">
+                    <details class="vorgangsgruppe" open>
 
-    @for (gruppe of gruppen; track gruppe.schluessel) {
+                        <summary class="gruppen-kopf">
 
-        <details class="vorgangsgruppe" open>
+                            <span class="gruppen-name">
+                                {{ gruppe.bezeichnung }}
+                            </span>
 
-            <summary class="gruppen-kopf">
+                            <span class="gruppen-anzahl">
+                                {{ gruppe.vorgaenge.length }}
+                            </span>
 
-                <span class="gruppen-name">
-                    {{ gruppe.bezeichnung }}
-                </span>
+                        </summary>
 
-                <span class="gruppen-anzahl">
-                    {{ gruppe.vorgaenge.length }}
-                </span>
+                        <div class="gruppen-inhalt">
 
-            </summary>
+                            @for (vorgang of gruppe.vorgaenge; track vorgang.vorgangID) {
 
-            <div class="gruppen-inhalt">
+                                <div
+                                    class="vorgang-zeile"
+                                    [class.selected]="ausgewaehlterVorgangId === vorgang.vorgangID"
+                                    [attr.aria-pressed]="ausgewaehlterVorgangId === vorgang.vorgangID"
+                                    role="button"
+                                    tabindex="0"
+                                    (click)="onVorgangSelected(vorgang)"
+                                    (dblclick)="onVorgangDoubleClick(vorgang)"
+                                    (keydown)="onVorgangKeydown($event, vorgang)">
 
-                @for (vorgang of gruppe.vorgaenge; track vorgang.id) {
+                                    <span class="vorgang-datum">
+                                        {{ vorgang.datumEingang }}
+                                    </span>
 
-                    <div
-                        class="vorgang-zeile"
-                        [class.selected]="ausgewaehlterVorgangId === vorgang.id"
-                        [attr.aria-pressed]="ausgewaehlterVorgangId === vorgang.id"
-                        role="button"
-                        tabindex="0"
-                        (click)="onVorgangSelected(vorgang)"
-                        (dblclick)="onVorgangDoubleClick(vorgang)"
-                        (keydown)="onVorgangKeydown($event, vorgang)">
+                                    <span class="vorgang-uid">
+                                        {{ vorgang.vorgangUID }}
+                                    </span>
 
-                        <span class="vorgang-datum">
-                            {{ vorgang.eingangsdatum }}
-                        </span>
+                                    <span class="vorgang-kundennummer">
+                                        {{ vorgang.kundennummer }}
+                                    </span>
 
-                        <span class="vorgang-uhrzeit">
-                            {{ vorgang.uhrzeit }}
-                        </span>
+                                    <span class="vorgang-kunde">
+                                        {{ vorgang.kundeVorname }}
+                                        {{ vorgang.kundeNachname }}
+                                    </span>
 
-                        <span class="vorgang-uid">
-                            {{ vorgang.uid }}
-                        </span>
+                                    <span class="vorgang-enddatum">
+                                        {{ vorgang.datumEndeGeplant }}
+                                    </span>
 
-                        <span class="vorgang-kundennummer">
-                            {{ vorgang.kundennummer }}
-                        </span>
+                                    <span class="vorgang-status">
+                                        {{ vorgang.vorgangStatus }}
+                                    </span>
 
-                        <span class="vorgang-kunde">
-                            {{ vorgang.kunde }}
-                        </span>
+                                </div>
 
-                        <span class="vorgang-betreff">
-                            {{ vorgang.betreff }}
-                        </span>
+                            }
 
-                    </div>
+                        </div>
+
+                    </details>
 
                 }
 
             </div>
 
-        </details>
-
-    }
-
-</div>
-
         </main>
 
     </div>
-
 
     <!-- DETAILANSICHT -->
 
