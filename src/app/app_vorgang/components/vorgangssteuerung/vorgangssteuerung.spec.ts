@@ -4,6 +4,7 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { Vorgangssteuerung } from './vorgangssteuerung';
 import { User } from '../../../user/modell/user';
 import { Vorgang } from '../../modell/vorgang';
+import { VorgangService } from '../../services/vorgang.service';
 
 describe('Vorgangssteuerung', () => {
 
@@ -12,7 +13,8 @@ describe('Vorgangssteuerung', () => {
 
   beforeEach(() => {
 
-    component = new Vorgangssteuerung();
+    component = new Vorgangssteuerung(new VorgangService());
+    component.ngOnInit();
 
     user = {
       username: 'demo',

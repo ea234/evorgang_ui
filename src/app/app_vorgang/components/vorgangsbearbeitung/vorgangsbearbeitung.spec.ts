@@ -1,6 +1,6 @@
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-
+import { VorgangService } from '../../services/vorgang.service';
 import { Vorgangsbearbeitung } from './vorgangsbearbeitung';
 import { User } from '../../../user/modell/user';
 import { Vorgang } from '../../modell/vorgang';
@@ -10,6 +10,7 @@ describe('Vorgangsbearbeitung', () => {
     let component: Vorgangsbearbeitung;
     let user: User;
     let vorgang: Vorgang;
+    let vorgangService: VorgangService;
 
     beforeEach(() => {
 
@@ -40,7 +41,9 @@ describe('Vorgangsbearbeitung', () => {
             vorgangFreitext: 'Testanmerkung Sachbearbeiter'
         };
 
-        component = new Vorgangsbearbeitung();
+        vorgangService = new VorgangService();
+
+        component = new Vorgangsbearbeitung(vorgangService);
 
         component.user = user;
         component.vorgang = vorgang;
@@ -243,8 +246,7 @@ describe('Vorgangsbearbeitung', () => {
 
         component.onSpeichern();
 
-        expect(vorgang.vorgangStatus)
-            .toBe('In Bearbeitung');
+        expect(vorgang.vorgangStatus).toBe('Offen');
 
         expect(component.hatUngespeicherteAenderungen)
             .toBe(false);
@@ -370,7 +372,7 @@ describe('Vorgangsbearbeitung', () => {
 
         component.onDialogSpeichern();
 
-        expect(vorgang.vorgangStatus).toBe('In Bearbeitung');
+        expect(vorgang.vorgangStatus).toBe('Offen');
 
         expect(component.bearbeitungsmodus).toBe(false);
 
@@ -430,7 +432,7 @@ describe('Vorgangsbearbeitung', () => {
 
         component.onDialogSpeichern();
 
-        expect(vorgang.vorgangStatus).toBe('In Bearbeitung');
+        expect(vorgang.vorgangStatus).toBe('Offen');
 
         expect(backSpy).toHaveBeenCalledOnce();
 

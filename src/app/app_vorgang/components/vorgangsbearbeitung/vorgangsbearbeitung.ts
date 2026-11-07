@@ -1,206 +1,235 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  OnInit
+} from '@angular/core';
+
 import { User } from '../../../user/modell/user';
 import { Vorgang } from '../../modell/vorgang';
 import { FkDate } from '../../../util/fkDate';
+import { VorgangService } from '../../services/vorgang.service';
 
 type DialogAktion = 'zurueck' | 'beenden' | null;
 
 @Component({
-    selector: 'app-vorgangsbearbeitung',
-    standalone: false,
-    templateUrl: './vorgangsbearbeitung.html',
-    styleUrl: './vorgangsbearbeitung.css'
+  selector: 'app-vorgangsbearbeitung',
+  standalone: false,
+  templateUrl: './vorgangsbearbeitung.html',
+  styleUrl: './vorgangsbearbeitung.css'
 })
 export class Vorgangsbearbeitung implements OnInit {
 
-    @Input({ required: true }) user!: User;
+  @Input({ required: true }) user!: User;
 
-    @Input({ required: true }) vorgang!: Vorgang;
+  @Input({ required: true }) vorgang!: Vorgang;
 
-    @Output() backToSelection = new EventEmitter<void>();
+  @Output() backToSelection = new EventEmitter<void>();
 
-    darfBearbeiten = false;
+  darfBearbeiten = false;
 
-    bearbeitungsmodus = false;
+  bearbeitungsmodus = false;
 
-    bearbeiteterVorgang!: Vorgang;
+  bearbeiteterVorgang!: Vorgang;
 
-    aenderungenGespeichert = false;
+  aenderungenGespeichert = false;
 
-    dialogAktion: DialogAktion = null;
+  dialogAktion: DialogAktion = null;
 
-    ngOnInit(): void {
+  constructor(
+    private vorgangService: VorgangService
+  ) {}
 
-        this.darfBearbeiten =
-            this.user.darfVorgangBearbeiten(this.vorgang);
+  ngOnInit(): void {
 
-        this.bearbeiteterVorgang = { ...this.vorgang };
-    }
+    this.darfBearbeiten =
+      this.user.darfVorgangBearbeiten(this.vorgang);
 
-   get hatUngespeicherteAenderungen(): boolean {
+    this.bearbeiteterVorgang = { ...this.vorgang };
+  }
+
+  get hatUngespeicherteAenderungen(): boolean {
 
     if (!this.bearbeiteterVorgang) {
-        return false;
+      return false;
     }
 
-    return (
-        this.bearbeiteterVorgang.vorgangID !== this.vorgang.vorgangID ||
-        this.bearbeiteterVorgang.vorgangUID !== this.vorgang.vorgangUID ||
-        this.bearbeiteterVorgang.vorgangPaginiernummer !== this.vorgang.vorgangPaginiernummer ||
-
-        this.bearbeiteterVorgang.kundennummer !== this.vorgang.kundennummer ||
-        this.bearbeiteterVorgang.kundeVorname !== this.vorgang.kundeVorname ||
-        this.bearbeiteterVorgang.kundeNachname !== this.vorgang.kundeNachname ||
-
-        this.bearbeiteterVorgang.kundeAdresseStrasse !== this.vorgang.kundeAdresseStrasse ||
-        this.bearbeiteterVorgang.kundeAdressePLZ !== this.vorgang.kundeAdressePLZ ||
-        this.bearbeiteterVorgang.kundeAdresseOrt !== this.vorgang.kundeAdresseOrt ||
-
-        this.bearbeiteterVorgang.datumEingang !== this.vorgang.datumEingang ||
-        this.bearbeiteterVorgang.datumEndeGeplant !== this.vorgang.datumEndeGeplant ||
-        this.bearbeiteterVorgang.vorgangDatumEnde !== this.vorgang.vorgangDatumEnde ||
-
-        this.bearbeiteterVorgang.vorgangStatus !== this.vorgang.vorgangStatus ||
-        this.bearbeiteterVorgang.vorgangBearbeiterID !== this.vorgang.vorgangBearbeiterID ||
-
-        this.bearbeiteterVorgang.vorgangFreitext !== this.vorgang.vorgangFreitext
+    return Object.keys(this.vorgang).some(
+      key =>
+        this.bearbeiteterVorgang[
+          key as keyof Vorgang
+        ] !== this.vorgang[
+          key as keyof Vorgang
+        ]
     );
+  }
+
+  onBearbeiten(): void {
+
+    if (!this.darfBearbeiten) {
+      return;
+    }
+
+    this.bearbeiteterVorgang = { ...this.vorgang };
+
+    this.aenderungenGespeichert = false;
+
+    this.bearbeitungsmodus = true;
+  }
+
+  onFeldGeaendert(): void {
+    this.aenderungenGespeichert = false;
+  }
+
+onSpeichern(): void {
+
+  if (!this.darfBearbeiten || !this.bearbeitungsmodus) {
+    return;
+  }
+
+  // Nur die drei freigegebenen Felder übernehmen.
+  const zuSpeichernderVorgang: Vorgang = {
+    ...this.vorgang,
+    vorgangUID: this.bearbeiteterVorgang.vorgangUID,
+    kundennummer: this.bearbeiteterVorgang.kundennummer,
+    vorgangFreitext: this.bearbeiteterVorgang.vorgangFreitext
+  };
+
+  const erfolgreich =
+    this.vorgangService.updateVorgang(
+      zuSpeichernderVorgang
+    );
+
+  if (!erfolgreich) {
+    console.error(
+      'Vorgang konnte nicht gespeichert werden:',
+      this.vorgang.vorgangID
+    );
+    return;
+  }
+
+  // Ursprüngliche Objektinstanz erhalten!
+  this.vorgang.vorgangUID =
+    zuSpeichernderVorgang.vorgangUID;
+
+  this.vorgang.kundennummer =
+    zuSpeichernderVorgang.kundennummer;
+
+  this.vorgang.vorgangFreitext =
+    zuSpeichernderVorgang.vorgangFreitext;
+
+  // Arbeitskopie mit dem gespeicherten Stand synchronisieren.
+  this.bearbeiteterVorgang = { ...this.vorgang };
+
+  this.aenderungenGespeichert = true;
 }
-    onBearbeiten(): void {
+  onBearbeitungBeenden(): void {
 
-        if (!this.darfBearbeiten) {
-            return;
-        }
-
-        this.bearbeiteterVorgang = { ...this.vorgang };
-
-        this.aenderungenGespeichert = false;
-
-        this.bearbeitungsmodus = true;
+    if (this.hatUngespeicherteAenderungen) {
+      this.dialogAktion = 'beenden';
+      return;
     }
 
-    onFeldGeaendert(): void {
-        this.aenderungenGespeichert = false;
+    this.beendeBearbeitung();
+  }
+
+  onBackToSelection(): void {
+
+    if (this.hatUngespeicherteAenderungen) {
+      this.dialogAktion = 'zurueck';
+      return;
     }
 
-    onSpeichern(): void {
-
-        if (!this.darfBearbeiten || !this.bearbeitungsmodus) {
-            return;
-        }
-
-        Object.assign(this.vorgang, this.bearbeiteterVorgang);
-
-        this.bearbeiteterVorgang = { ...this.vorgang };
-
-        this.aenderungenGespeichert = true;
-    }
-
-    onBearbeitungBeenden(): void {
-
-        if (this.hatUngespeicherteAenderungen) {
-            this.dialogAktion = 'beenden';
-            return;
-        }
-
-        this.beendeBearbeitung();
-    }
-
-    onBackToSelection(): void {
-
-        if (this.hatUngespeicherteAenderungen) {
-            this.dialogAktion = 'zurueck';
-            return;
-        }
-
-        this.backToSelection.emit();
-    }
-
-    // =====================================
-    // BESTÄTIGUNGSDIALOG
-    // =====================================
-
-    onDialogSpeichern(): void {
-
-        if (this.dialogAktion === null) {
-            return;
-        }
-
-        this.onSpeichern();
-
-        this.fuehreDialogAktionAus();
-    }
-
-    onDialogVerwerfen(): void {
-
-        if (this.dialogAktion === null) {
-            return;
-        }
-
-        this.bearbeiteterVorgang = { ...this.vorgang };
-
-        this.aenderungenGespeichert = false;
-
-        this.fuehreDialogAktionAus();
-    }
-
-    onDialogWeiterBearbeiten(): void {
-
-        this.dialogAktion = null;
-    }
-
-    private fuehreDialogAktionAus(): void {
-
-        const aktion = this.dialogAktion;
-
-        this.dialogAktion = null;
-
-        if (aktion === 'zurueck') {
-
-            this.backToSelection.emit();
-
-        } else if (aktion === 'beenden') {
-
-            this.beendeBearbeitung();
-
-        }
-
-    }
-
-    private beendeBearbeitung(): void {
-
-        this.bearbeitungsmodus = false;
-
-        this.aenderungenGespeichert = false;
-
-        this.bearbeiteterVorgang = { ...this.vorgang };
-    }
-
+    this.backToSelection.emit();
+  }
 
   // =====================================
-  // Datumsformatierung
+  // BESTÄTIGUNGSDIALOG
+  // =====================================
+
+  onDialogSpeichern(): void {
+
+    if (this.dialogAktion === null) {
+      return;
+    }
+
+    this.onSpeichern();
+
+    if (this.hatUngespeicherteAenderungen) {
+      return;
+    }
+
+    this.fuehreDialogAktionAus();
+  }
+
+  onDialogVerwerfen(): void {
+
+    if (this.dialogAktion === null) {
+      return;
+    }
+
+    this.bearbeiteterVorgang = { ...this.vorgang };
+
+    this.aenderungenGespeichert = false;
+
+    this.fuehreDialogAktionAus();
+  }
+
+  onDialogWeiterBearbeiten(): void {
+    this.dialogAktion = null;
+  }
+
+  private fuehreDialogAktionAus(): void {
+
+    const aktion = this.dialogAktion;
+
+    this.dialogAktion = null;
+
+    if (aktion === 'zurueck') {
+
+      this.backToSelection.emit();
+
+    } else if (aktion === 'beenden') {
+
+      this.beendeBearbeitung();
+
+    }
+  }
+
+  private beendeBearbeitung(): void {
+
+    this.bearbeitungsmodus = false;
+
+    this.aenderungenGespeichert = false;
+
+    this.bearbeiteterVorgang = { ...this.vorgang };
+  }
+
+  // =====================================
+  // DATUMSFORMATIERUNG
   // =====================================
 
   getDatumString(datum: number): string {
-      return FkDate.getString(datum) ?? '';
+    return FkDate.getString(datum) ?? '';
   }
 
   getDatumEingabeString(datum: number): string {
-      return FkDate.getString(datum) ?? '';
+    return FkDate.getString(datum) ?? '';
   }
 
   onDatumGeaendert(
-      feld: 'datumEingang' | 'datumEndeGeplant',
-      wert: string
-  ): void 
-  {
+    feld: 'datumEingang' | 'datumEndeGeplant',
+    wert: string
+  ): void {
 
-      const datum = FkDate.parseToLong(wert);
+    const datum = FkDate.parseToLong(wert);
 
-      if (datum !== 0) {
-          this.bearbeiteterVorgang[feld] = datum;
-      }
+    if (datum !== 0) {
+      this.bearbeiteterVorgang[feld] = datum;
+    }
 
-      this.onFeldGeaendert();
-  }    
+    this.onFeldGeaendert();
+  }
+
 }

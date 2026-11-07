@@ -1,8 +1,17 @@
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  OnInit,
+  OnDestroy
+} from '@angular/core';
 
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Subject, takeUntil } from 'rxjs';
+
 import { User } from '../../../user/modell/user';
 import { Vorgang } from '../../modell/vorgang';
-import { FkDate } from '../../../util/fkDate';
+import { VorgangService } from '../../services/vorgang.service';
 
 type Verdichtungsart =
   | 'datumEingang'
@@ -21,12 +30,58 @@ interface VorgangsGruppe {
   styleUrl: './vorgangssteuerung.css',
   templateUrl: './vorgangssteuerung.html',
 })
-export class Vorgangssteuerung {
+export class Vorgangssteuerung implements OnInit, OnDestroy {
 
   @Input({ required: true }) user!: User;
 
   @Output() backToApplicationSelection =
     new EventEmitter<void>();
+
+  private readonly destroy$ = new Subject<void>();
+
+  constructor(
+    private vorgangService: VorgangService
+  ) {}
+
+  ngOnInit(): void {
+
+    this.vorgangService.vorgaenge$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+
+next: (vorgaenge: Vorgang[]) => {
+
+    this.vorgaenge = vorgaenge;
+
+    if (this.ausgewaehlterVorgangId !== null) {
+
+        this.ausgewaehlterVorgang =
+            vorgaenge.find(
+                vorgang =>
+                    vorgang.vorgangID === this.ausgewaehlterVorgangId
+            ) ?? null;
+
+    }
+
+},
+
+        error: (fehler: unknown) => {
+          console.error(
+            'Fehler beim Laden der Vorgänge:',
+            fehler
+          );
+
+          this.vorgaenge = [];
+        }
+
+      });
+
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 
   // =====================================
   // Ansichtssteuerung
@@ -69,10 +124,17 @@ export class Vorgangssteuerung {
 
   ausgewaehlterVorgangId: number | null = null;
 
-  onVorgangSelected(vorgang: Vorgang): void {
+  vorgaenge: Vorgang[] = [];
+
+onVorgangSelected(vorgang: Vorgang): void {
+
     this.ausgewaehlterVorgangId = vorgang.vorgangID;
-    this.ausgewaehlterVorgang = vorgang;
-  }
+
+    this.ausgewaehlterVorgang =
+        this.vorgaenge.find(
+            element => element.vorgangID === vorgang.vorgangID
+        ) ?? null;
+}
 
   onVorgangDoubleClick(vorgang: Vorgang): void {
     this.onVorgangSelected(vorgang);
@@ -99,140 +161,6 @@ export class Vorgangssteuerung {
 
     this.ansicht = 'detail';
   }
-
-  // =====================================
-  // Dummy-Vorgangsdaten
-  // =====================================
-
-  vorgaenge: Vorgang[] = [
-
-    {
-      vorgangID: 1,
-      vorgangUID: '4711',
-      vorgangPaginiernummer: 'P-2026-0001',
-      kundennummer: '10025',
-      kundeVorname: 'Müller GmbH',
-      kundeNachname: '',
-      kundeAdresseStrasse: 'Hauptstraße 10',
-      kundeAdressePLZ: '20095',
-      kundeAdresseOrt: 'Hamburg',
-      datumEingang: 20261103,
-      datumEndeGeplant: 20261130,
-      vorgangDatumEnde: 0,
-      vorgangStatus: 'NEU',
-      vorgangBearbeiterID: 'stpanr',
-      vorgangFreitext: 'Unterlagen vollständig eingegangen.'
-    },
-
-    {
-      vorgangID: 2,
-      vorgangUID: '4712',
-      vorgangPaginiernummer: 'P-2026-0002',
-      kundennummer: '10031',
-      kundeVorname: 'Schmidt AG',
-      kundeNachname: '',
-      kundeAdresseStrasse: 'Bahnhofstraße 5',
-      kundeAdressePLZ: '20099',
-      kundeAdresseOrt: 'Hamburg',
-      datumEingang: 20261103,
-      datumEndeGeplant: 20261215,
-      vorgangDatumEnde: 0,
-      vorgangStatus: 'IN_BEARBEITUNG',
-      vorgangBearbeiterID: 'beuduf',
-      vorgangFreitext: 'Rückfrage beim Kunden erforderlich.'
-    },
-
-    {
-      vorgangID: 3,
-      vorgangUID: '4713',
-      vorgangPaginiernummer: 'P-2026-0003',
-      kundennummer: '10025',
-      kundeVorname: 'Müller GmbH',
-      kundeNachname: '',
-      kundeAdresseStrasse: 'Hauptstraße 10',
-      kundeAdressePLZ: '20095',
-      kundeAdresseOrt: 'Hamburg',
-      datumEingang: 20261103,
-      datumEndeGeplant: 20261120,
-      vorgangDatumEnde: 20261105,
-      vorgangStatus: 'NEU',
-      vorgangBearbeiterID: 'stpanr',
-      vorgangFreitext: 'Vorgang abgeschlossen.'
-    },
-
-    {
-      vorgangID: 4,
-      vorgangUID: '4714',
-      vorgangPaginiernummer: 'P-2026-0004',
-      kundennummer: '10042',
-      kundeVorname: 'Becker KG',
-      kundeNachname: '',
-      kundeAdresseStrasse: 'Rathausplatz 3',
-      kundeAdressePLZ: '21073',
-      kundeAdresseOrt: 'Hamburg',
-      datumEingang: 20261102,
-      datumEndeGeplant: 20261125,
-      vorgangDatumEnde: 0,
-      vorgangStatus: 'NEU',
-      vorgangBearbeiterID: 'beuduf',
-      vorgangFreitext: 'Unterlagen werden geprüft.'
-    },
-
-    {
-      vorgangID: 5,
-      vorgangUID: '4711',
-      vorgangPaginiernummer: 'P-2026-0005',
-      kundennummer: '10025',
-      kundeVorname: 'Müller GmbH',
-      kundeNachname: '',
-      kundeAdresseStrasse: 'Hauptstraße 10',
-      kundeAdressePLZ: '20095',
-      kundeAdresseOrt: 'Hamburg',
-      datumEingang: 20261102,
-      datumEndeGeplant: 20261130,
-      vorgangDatumEnde: 0,
-      vorgangStatus: 'IN_BEARBEITUNG',
-      vorgangBearbeiterID: 'stpanr',
-      vorgangFreitext: 'Bearbeitung läuft.'
-    },
-
-    {
-      vorgangID: 6,
-      vorgangUID: '4715',
-      vorgangPaginiernummer: 'P-2026-0006',
-      kundennummer: '10031',
-      kundeVorname: 'Schmidt AG',
-      kundeNachname: '',
-      kundeAdresseStrasse: 'Bahnhofstraße 5',
-      kundeAdressePLZ: '20099',
-      kundeAdresseOrt: 'Hamburg',
-      datumEingang: 20261101,
-      datumEndeGeplant: 20261130,
-      vorgangDatumEnde: 20261104,
-      vorgangStatus: 'NEU',
-      vorgangBearbeiterID: 'beuduf',
-      vorgangFreitext: 'Vorgang abgeschlossen.'
-    },
-
-    {
-      vorgangID: 7,
-      vorgangUID: '4716',
-      vorgangPaginiernummer: 'P-2026-0007',
-      kundennummer: '10042',
-      kundeVorname: 'Becker KG',
-      kundeNachname: '',
-      kundeAdresseStrasse: 'Rathausplatz 3',
-      kundeAdressePLZ: '21073',
-      kundeAdresseOrt: 'Hamburg',
-      datumEingang: 20261101,
-      datumEndeGeplant: 20261125,
-      vorgangDatumEnde: 0,
-      vorgangStatus: 'NEU',
-      vorgangBearbeiterID: 'stpanr',
-      vorgangFreitext: 'Wiedervorlage erforderlich.'
-    }
-
-  ];
 
   // =====================================
   // Datumsformatierung
