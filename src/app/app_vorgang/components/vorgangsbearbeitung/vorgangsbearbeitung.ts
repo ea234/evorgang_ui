@@ -37,32 +37,35 @@ export class Vorgangsbearbeitung implements OnInit {
         this.bearbeiteterVorgang = { ...this.vorgang };
     }
 
-    get hatUngespeicherteAenderungen(): boolean {
+   get hatUngespeicherteAenderungen(): boolean {
 
-        if (!this.bearbeiteterVorgang) {
-            return false;
-        }
-
-        return (
-            this.bearbeiteterVorgang.vorgangID !== this.vorgang.vorgangID ||
-            this.bearbeiteterVorgang.vorgangUID !== this.vorgang.vorgangUID ||
-
-            this.bearbeiteterVorgang.kundennummer !== this.vorgang.kundennummer ||
-            this.bearbeiteterVorgang.kundeVorname !== this.vorgang.kundeVorname ||
-            this.bearbeiteterVorgang.kundeNachname !== this.vorgang.kundeNachname ||
-
-            this.bearbeiteterVorgang.kundeAdresseStrasse !== this.vorgang.kundeAdresseStrasse ||
-            this.bearbeiteterVorgang.kundeAdressePLZ !== this.vorgang.kundeAdressePLZ ||
-            this.bearbeiteterVorgang.kundeAdresseOrt !== this.vorgang.kundeAdresseOrt ||
-
-            this.bearbeiteterVorgang.datumEingang !== this.vorgang.datumEingang ||
-            this.bearbeiteterVorgang.datumEndeGeplant !== this.vorgang.datumEndeGeplant ||
-
-            this.bearbeiteterVorgang.vorgangStatus !== this.vorgang.vorgangStatus ||
-            this.bearbeiteterVorgang.vorgangBearbeiterID !== this.vorgang.vorgangBearbeiterID
-        );
+    if (!this.bearbeiteterVorgang) {
+        return false;
     }
 
+    return (
+        this.bearbeiteterVorgang.vorgangID !== this.vorgang.vorgangID ||
+        this.bearbeiteterVorgang.vorgangUID !== this.vorgang.vorgangUID ||
+        this.bearbeiteterVorgang.vorgangPaginiernummer !== this.vorgang.vorgangPaginiernummer ||
+
+        this.bearbeiteterVorgang.kundennummer !== this.vorgang.kundennummer ||
+        this.bearbeiteterVorgang.kundeVorname !== this.vorgang.kundeVorname ||
+        this.bearbeiteterVorgang.kundeNachname !== this.vorgang.kundeNachname ||
+
+        this.bearbeiteterVorgang.kundeAdresseStrasse !== this.vorgang.kundeAdresseStrasse ||
+        this.bearbeiteterVorgang.kundeAdressePLZ !== this.vorgang.kundeAdressePLZ ||
+        this.bearbeiteterVorgang.kundeAdresseOrt !== this.vorgang.kundeAdresseOrt ||
+
+        this.bearbeiteterVorgang.datumEingang !== this.vorgang.datumEingang ||
+        this.bearbeiteterVorgang.datumEndeGeplant !== this.vorgang.datumEndeGeplant ||
+        this.bearbeiteterVorgang.vorgangDatumEnde !== this.vorgang.vorgangDatumEnde ||
+
+        this.bearbeiteterVorgang.vorgangStatus !== this.vorgang.vorgangStatus ||
+        this.bearbeiteterVorgang.vorgangBearbeiterID !== this.vorgang.vorgangBearbeiterID ||
+
+        this.bearbeiteterVorgang.vorgangFreitext !== this.vorgang.vorgangFreitext
+    );
+}
     onBearbeiten(): void {
 
         if (!this.darfBearbeiten) {

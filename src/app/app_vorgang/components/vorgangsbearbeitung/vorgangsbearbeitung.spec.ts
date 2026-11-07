@@ -472,4 +472,238 @@ describe('Vorgangsbearbeitung', () => {
 
     });
 
+    it('sollte Änderungen an der Paginiernummer erkennen', () => {
+
+    component.onBearbeiten();
+
+    component.bearbeiteterVorgang.vorgangPaginiernummer = 'P-2026-0002';
+
+    expect(component.hatUngespeicherteAenderungen).toBe(true);
+
+});
+
+it('sollte Änderungen am tatsächlichen Abschlussdatum erkennen', () => {
+
+    component.onBearbeiten();
+
+    component.bearbeiteterVorgang.vorgangDatumEnde = 20261107;
+
+    expect(component.hatUngespeicherteAenderungen).toBe(true);
+
+});
+
+it('sollte Änderungen am Freitext erkennen', () => {
+
+    component.onBearbeiten();
+
+    component.bearbeiteterVorgang.vorgangFreitext = 'Neue Anmerkung';
+
+    expect(component.hatUngespeicherteAenderungen).toBe(true);
+
+});
+
+
+// =====================================
+// FESTGELEGTE BEARBEITUNGSRECHTE
+// =====================================
+
+it('sollte Änderungen an der VorgangsUID erkennen', () => {
+
+    component.onBearbeiten();
+
+    component.bearbeiteterVorgang.vorgangUID = 'UID-002';
+
+    expect(component.hatUngespeicherteAenderungen).toBe(true);
+
+});
+
+it('sollte Änderungen an der Kundennummer erkennen', () => {
+
+    component.onBearbeiten();
+
+    component.bearbeiteterVorgang.kundennummer = '10002';
+
+    expect(component.hatUngespeicherteAenderungen).toBe(true);
+
+});
+
+it('sollte Änderungen am Freitext erkennen', () => {
+
+    component.onBearbeiten();
+
+    component.bearbeiteterVorgang.vorgangFreitext = 'Neue Anmerkung';
+
+    expect(component.hatUngespeicherteAenderungen).toBe(true);
+
+});
+
+it('sollte die Vorgangs-ID unverändert lassen', () => {
+
+    component.onBearbeiten();
+
+    expect(component.bearbeiteterVorgang.vorgangID)
+        .toBe(vorgang.vorgangID);
+
+});
+
+it('sollte die Paginiernummer unverändert lassen', () => {
+
+    component.onBearbeiten();
+
+    expect(component.bearbeiteterVorgang.vorgangPaginiernummer)
+        .toBe(vorgang.vorgangPaginiernummer);
+
+});
+
+it('sollte Kundendaten außerhalb der Kundennummer unverändert lassen', () => {
+
+    component.onBearbeiten();
+
+    expect(component.bearbeiteterVorgang.kundeVorname)
+        .toBe(vorgang.kundeVorname);
+
+    expect(component.bearbeiteterVorgang.kundeNachname)
+        .toBe(vorgang.kundeNachname);
+
+});
+
+it('sollte die Kundenadresse unverändert lassen', () => {
+
+    component.onBearbeiten();
+
+    expect(component.bearbeiteterVorgang.kundeAdresseStrasse)
+        .toBe(vorgang.kundeAdresseStrasse);
+
+    expect(component.bearbeiteterVorgang.kundeAdressePLZ)
+        .toBe(vorgang.kundeAdressePLZ);
+
+    expect(component.bearbeiteterVorgang.kundeAdresseOrt)
+        .toBe(vorgang.kundeAdresseOrt);
+
+});
+
+it('sollte Datums- und Bearbeitungsdaten unverändert lassen', () => {
+
+    component.onBearbeiten();
+
+    expect(component.bearbeiteterVorgang.datumEingang)
+        .toBe(vorgang.datumEingang);
+
+    expect(component.bearbeiteterVorgang.datumEndeGeplant)
+        .toBe(vorgang.datumEndeGeplant);
+
+    expect(component.bearbeiteterVorgang.vorgangDatumEnde)
+        .toBe(vorgang.vorgangDatumEnde);
+
+    expect(component.bearbeiteterVorgang.vorgangStatus)
+        .toBe(vorgang.vorgangStatus);
+
+    expect(component.bearbeiteterVorgang.vorgangBearbeiterID)
+        .toBe(vorgang.vorgangBearbeiterID);
+
+});
+
+// =====================================
+// SPEICHERN DER FREIGEGEBENEN FELDER
+// =====================================
+
+it('sollte die VorgangsUID speichern', () => {
+
+    component.onBearbeiten();
+
+    component.bearbeiteterVorgang.vorgangUID = 'UID-002';
+
+    component.onSpeichern();
+
+    expect(vorgang.vorgangUID).toBe('UID-002');
+
+});
+
+it('sollte die Kundennummer speichern', () => {
+
+    component.onBearbeiten();
+
+    component.bearbeiteterVorgang.kundennummer = '10002';
+
+    component.onSpeichern();
+
+    expect(vorgang.kundennummer).toBe('10002');
+
+});
+
+it('sollte den Freitext speichern', () => {
+
+    component.onBearbeiten();
+
+    component.bearbeiteterVorgang.vorgangFreitext = 'Neue Anmerkung';
+
+    component.onSpeichern();
+
+    expect(vorgang.vorgangFreitext).toBe('Neue Anmerkung');
+
+});
+
+it('sollte mehrere freigegebene Änderungen gemeinsam speichern', () => {
+
+    component.onBearbeiten();
+
+    component.bearbeiteterVorgang.vorgangUID = 'UID-002';
+    component.bearbeiteterVorgang.kundennummer = '10002';
+    component.bearbeiteterVorgang.vorgangFreitext = 'Neue Anmerkung';
+
+    component.onSpeichern();
+
+    expect(vorgang.vorgangUID).toBe('UID-002');
+    expect(vorgang.kundennummer).toBe('10002');
+    expect(vorgang.vorgangFreitext).toBe('Neue Anmerkung');
+
+});
+
+it('sollte beim Verwerfen alle drei Änderungen zurücksetzen', () => {
+
+    component.onBearbeiten();
+
+    component.bearbeiteterVorgang.vorgangUID = 'UID-002';
+    component.bearbeiteterVorgang.kundennummer = '10002';
+    component.bearbeiteterVorgang.vorgangFreitext = 'Neue Anmerkung';
+
+    component.onBearbeitungBeenden();
+
+    component.onDialogVerwerfen();
+
+    expect(vorgang.vorgangUID).toBe('UID-001');
+    expect(vorgang.kundennummer).toBe('10001');
+    expect(vorgang.vorgangFreitext)
+        .toBe('Testanmerkung Sachbearbeiter');
+
+});
+
+it('sollte beim Speichern die übrigen Vorgangsdaten unverändert lassen', () => {
+
+    component.onBearbeiten();
+
+    component.bearbeiteterVorgang.vorgangUID = 'UID-002';
+    component.bearbeiteterVorgang.kundennummer = '10002';
+    component.bearbeiteterVorgang.vorgangFreitext = 'Neue Anmerkung';
+
+    component.onSpeichern();
+
+    expect(vorgang.vorgangID).toBe(1);
+    expect(vorgang.vorgangPaginiernummer).toBe('P-2026-0001');
+
+    expect(vorgang.kundeVorname).toBe('Max');
+    expect(vorgang.kundeNachname).toBe('Mustermann');
+
+    expect(vorgang.kundeAdresseStrasse).toBe('Musterstraße 1');
+    expect(vorgang.kundeAdressePLZ).toBe('20095');
+    expect(vorgang.kundeAdresseOrt).toBe('Hamburg');
+
+    expect(vorgang.datumEingang).toBe(20261104);
+    expect(vorgang.datumEndeGeplant).toBe(20261130);
+    expect(vorgang.vorgangDatumEnde).toBe(0);
+
+    expect(vorgang.vorgangStatus).toBe('Offen');
+    expect(vorgang.vorgangBearbeiterID).toBe('4711');
+
+});
 });
