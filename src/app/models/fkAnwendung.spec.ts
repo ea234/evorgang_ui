@@ -12,7 +12,7 @@ describe('FkAnwendung', () => {
 
     const anwendung = new FkAnwendung();
 
-    expect(anwendung).toBeInstanceOf(FkAnwendung);
+    expect( anwendung ).toBeInstanceOf( FkAnwendung );
 
   });
 
@@ -25,7 +25,7 @@ describe('FkAnwendung', () => {
 
     const anwendung = new FkAnwendung();
 
-    expect(anwendung.appTitle).toBe('Anwendungs-Auswahl');
+    expect( anwendung.appTitle ).toBe( 'Anwendungs-Auswahl' );
 
   });
 
@@ -33,7 +33,7 @@ describe('FkAnwendung', () => {
 
     const anwendung = new FkAnwendung();
 
-    expect(anwendung.appIcon).toBe('V');
+    expect( anwendung.appIcon ).toBe( 'V' );
 
   });
 
@@ -46,19 +46,21 @@ describe('FkAnwendung', () => {
 
     const anwendung = new FkAnwendung();
 
-    expect(anwendung.currentUser).toBeNull();
+    expect( anwendung.currentUser ).toBeNull();
 
   });
 
   it('soll einen Benutzer speichern können', () => {
 
     const anwendung = new FkAnwendung();
-    const user = new User('demo');
+
+    const user = new User( 'demo' );
 
     anwendung.currentUser = user;
 
-    expect(anwendung.currentUser).toBe(user);
-    expect(anwendung.currentUser?.username).toBe('demo');
+    expect( anwendung.currentUser ).toBe( user );
+
+    expect( anwendung.currentUser?.username ).toBe( 'demo' );
 
   });
 
@@ -71,9 +73,9 @@ describe('FkAnwendung', () => {
 
     const anwendung = new FkAnwendung();
 
-    expect(anwendung.logged_in).toBe(0);
-    expect(anwendung.logged_out).toBe(1);
-    expect(anwendung.logged_none).toBe(2);
+    expect( anwendung.logged_in   ).toBe( 0 );
+    expect( anwendung.logged_out  ).toBe( 1 );
+    expect( anwendung.logged_none ).toBe( 2 );
 
   });
 
@@ -81,7 +83,7 @@ describe('FkAnwendung', () => {
 
     const anwendung = new FkAnwendung();
 
-    expect(anwendung.loginStatus).toBe(anwendung.logged_none);
+    expect( anwendung.loginStatus ).toBe( anwendung.logged_none );
 
   });
 
@@ -104,7 +106,7 @@ describe('FkAnwendung', () => {
 
     const anwendung = new FkAnwendung();
 
-    expect(anwendung.isDark).toBe(false);
+    expect( anwendung.isDarkMode ).toBe(false);
 
   });
 
@@ -112,9 +114,9 @@ describe('FkAnwendung', () => {
 
     const anwendung = new FkAnwendung();
 
-    anwendung.isDark = true;
+    anwendung.isDarkMode = true;
 
-    expect(anwendung.isDark).toBe(true);
+    expect( anwendung.isDarkMode ).toBe(true);
 
   });
 

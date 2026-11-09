@@ -23,7 +23,7 @@ export class App {
 
   // Theme-Wechsel
   onThemeChanged(dark: boolean): void {
-    this.fkAnwendung.isDark = dark;
+    this.fkAnwendung.isDarkMode = dark;
   }
 
   // Abmeldung

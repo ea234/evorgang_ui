@@ -5,16 +5,20 @@ import { User } from '../../../user/modell/user';
 
 describe('StatusbarTop', () => {
 
-  let component: StatusbarTop;
-  let fixture: ComponentFixture<StatusbarTop>;
+  let component : StatusbarTop;
 
-  beforeEach(async () => {
+  let fixture : ComponentFixture<StatusbarTop>;
 
-    await TestBed.configureTestingModule({
-      declarations: [StatusbarTop]
-    }).compileComponents();
+  beforeEach( async () => {
+
+    await TestBed.configureTestingModule( {
+
+      declarations: [ StatusbarTop ]
+
+    } ).compileComponents();
 
     fixture = TestBed.createComponent(StatusbarTop);
+
     component = fixture.componentInstance;
 
     await fixture.whenStable();
@@ -23,13 +27,13 @@ describe('StatusbarTop', () => {
 
   it('soll die Komponente erstellen', () => {
 
-    expect(component).toBeTruthy();
+    expect( component ).toBeTruthy();
 
   });
 
   it('soll initial den Light-Mode verwenden', () => {
 
-    expect(component.isDark).toBe(false);
+    expect( component.isDarkMode ).toBe( false );
 
   });
 
@@ -37,7 +41,7 @@ describe('StatusbarTop', () => {
 
     component.toggleTheme();
 
-    expect(component.isDark).toBe(true);
+    expect( component.isDarkMode ).toBe( true );
 
   });
 
@@ -46,39 +50,39 @@ describe('StatusbarTop', () => {
     component.toggleTheme();
     component.toggleTheme();
 
-    expect(component.isDark).toBe(false);
+    expect( component.isDarkMode ).toBe( false );
 
   });
 
   it('soll beim Theme-Wechsel das themeChanged-Event auslösen', () => {
 
-    const emitSpy = vi.spyOn(component.themeChanged, 'emit');
+    const emitSpy = vi.spyOn( component.themeChanged, 'emit' );
 
     component.toggleTheme();
 
-    expect(emitSpy).toHaveBeenCalledWith(true);
+    expect( emitSpy ).toHaveBeenCalledWith( true );
 
   });
 
   it('soll beim Logout das logout-Event auslösen', () => {
 
-    const emitSpy = vi.spyOn(component.logout, 'emit');
+    const emitSpy = vi.spyOn( component.logout, 'emit' );
 
     component.onLogout();
 
-    expect(emitSpy).toHaveBeenCalled();
+    expect( emitSpy ).toHaveBeenCalled();
 
   });
 
   it('soll den Benutzernamen im Template anzeigen', () => {
 
-    fixture.componentRef.setInput('user', new User('demo'));
+    fixture.componentRef.setInput( 'user', new User( 'demo' ) );
 
     fixture.detectChanges();
 
     const element = fixture.nativeElement as HTMLElement;
 
-    expect(element.textContent).toContain('demo');
+    expect( element.textContent ).toContain( 'demo' );
 
   });
 
@@ -92,7 +96,7 @@ describe('StatusbarTop', () => {
 
     fixture.detectChanges();
 
-    expect(component.isDark).toBe(true);
+    expect(component.isDarkMode).toBe(true);
 
     expect(element.textContent).toContain('Dunkel');
 

@@ -1,35 +1,36 @@
 import { User } from '../user/modell/user';
 import { ApplicationType } from './application-type';
-export class FkAnwendung {
 
+export class FkAnwendung 
+{
   // =====================================
   // Anwendungsinformationen
   // =====================================
 
-  appTitle: string = 'Anwendungs-Auswahl';
-  appIcon: string = 'V';
+  appTitle : string = 'Anwendungs-Auswahl';
+  appIcon  : string = 'V';
 
   // =====================================
   // Benutzerverwaltung
   // =====================================
 
-  currentUser: User | null = null;
+  currentUser : User | null = null;
 
   // =====================================
   // Login-Status
   // =====================================
 
-  readonly logged_in: number = 0;
-  readonly logged_out: number = 1;
-  readonly logged_none: number = 2;
+  readonly logged_in   : number = 0;
+  readonly logged_out  : number = 1;
+  readonly logged_none : number = 2;
 
-  loginStatus: number = this.logged_none;
+  loginStatus : number = this.logged_none;
 
   // =====================================
   // Darstellung / Theme
   // =====================================
 
-  isDark: boolean = false;
+  isDarkMode : boolean = false;
 
   // =====================================
   // Aktuell ausgewählte Fachanwendung

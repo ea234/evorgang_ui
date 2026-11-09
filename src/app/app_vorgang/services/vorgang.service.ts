@@ -8,7 +8,7 @@ import { Vorgang } from '../modell/vorgang';
 })
 export class VorgangService {
 
-  private readonly vorgaenge: Vorgang[] = [
+  private readonly vector_vorgaenge: Vorgang[] = [
 
     {
       vorgangID: 1,
@@ -133,23 +133,23 @@ export class VorgangService {
   ];
 
   private readonly vorgaengeSubject =
-    new BehaviorSubject<Vorgang[]>([...this.vorgaenge]);
+    new BehaviorSubject<Vorgang[]>([...this.vector_vorgaenge]);
 
-  readonly vorgaenge$ = this.vorgaengeSubject.asObservable();
+  readonly vorgaenge_obs = this.vorgaengeSubject.asObservable();
 
   getVorgaenge(): Observable<Vorgang[]> {
-    return this.vorgaenge$;
+    return this.vorgaenge_obs;
   }
 
   getVorgangById(id: number): Vorgang | undefined {
-    return this.vorgaenge.find(
+    return this.vector_vorgaenge.find(
       vorgang => vorgang.vorgangID === id
     );
   }
 
  updateVorgang(vorgang: Vorgang): boolean {
 
-  const index = this.vorgaenge.findIndex(
+  const index = this.vector_vorgaenge.findIndex(
     element => element.vorgangID === vorgang.vorgangID
   );
 
@@ -157,9 +157,9 @@ export class VorgangService {
     return false;
   }
 
-  Object.assign(this.vorgaenge[index], vorgang);
+  Object.assign(this.vector_vorgaenge[index], vorgang);
 
-  this.vorgaengeSubject.next([...this.vorgaenge]);
+  this.vorgaengeSubject.next([...this.vector_vorgaenge]);
 
   return true;
 }
@@ -170,16 +170,16 @@ export class VorgangService {
       return false;
     }
 
-    this.vorgaenge.push({ ...vorgang });
+    this.vector_vorgaenge.push({ ...vorgang });
 
-    this.vorgaengeSubject.next([...this.vorgaenge]);
+    this.vorgaengeSubject.next([...this.vector_vorgaenge]);
 
     return true;
   }
 
   deleteVorgang(id: number): boolean {
 
-    const index = this.vorgaenge.findIndex(
+    const index = this.vector_vorgaenge.findIndex(
       vorgang => vorgang.vorgangID === id
     );
 
@@ -187,9 +187,9 @@ export class VorgangService {
       return false;
     }
 
-    this.vorgaenge.splice(index, 1);
+    this.vector_vorgaenge.splice(index, 1);
 
-    this.vorgaengeSubject.next([...this.vorgaenge]);
+    this.vorgaengeSubject.next([...this.vector_vorgaenge]);
 
     return true;
   }

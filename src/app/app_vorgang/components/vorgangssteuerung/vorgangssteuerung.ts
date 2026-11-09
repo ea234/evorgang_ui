@@ -37,7 +37,7 @@ export class Vorgangssteuerung implements OnInit, OnDestroy {
   @Output() backToApplicationSelection =
     new EventEmitter<void>();
 
-  private readonly destroy$ = new Subject<void>();
+  private readonly destroy = new Subject<void>();
 
   constructor(
     private vorgangService: VorgangService
@@ -45,25 +45,25 @@ export class Vorgangssteuerung implements OnInit, OnDestroy {
 
   ngOnInit(): void {
 
-    this.vorgangService.vorgaenge$
-      .pipe(takeUntil(this.destroy$))
+    this.vorgangService.getVorgaenge()
+      .pipe(takeUntil(this.destroy))
       .subscribe({
 
-next: (vorgaenge: Vorgang[]) => {
+        next: (vorgaenge: Vorgang[]) => {
 
-    this.vorgaenge = vorgaenge;
+            this.vorgaenge = vorgaenge;
 
-    if (this.ausgewaehlterVorgangId !== null) {
+            if (this.ausgewaehlterVorgangId !== null) {
 
-        this.ausgewaehlterVorgang =
-            vorgaenge.find(
-                vorgang =>
-                    vorgang.vorgangID === this.ausgewaehlterVorgangId
-            ) ?? null;
+                this.ausgewaehlterVorgang =
+                    vorgaenge.find(
+                        vorgang =>
+                            vorgang.vorgangID === this.ausgewaehlterVorgangId
+                    ) ?? null;
 
-    }
+            }
 
-},
+        },
 
         error: (fehler: unknown) => {
           console.error(
@@ -79,8 +79,8 @@ next: (vorgaenge: Vorgang[]) => {
   }
 
   ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
+    this.destroy.next();
+    this.destroy.complete();
   }
 
   // =====================================

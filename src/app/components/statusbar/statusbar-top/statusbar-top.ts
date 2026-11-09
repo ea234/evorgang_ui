@@ -7,42 +7,41 @@ import { User } from '../../../user/modell/user';
   styleUrl: './statusbar-top.css',
   templateUrl: './statusbar-top.html',
 })
-export class StatusbarTop {
+export class StatusbarTop 
+{
+  @Input()  title        : string      = '';
 
-  @Input() title: string = '';
-  @Input() icon: string = '';
+  @Input()  icon         : string      = '';
 
-  @Input() user: User | null = null;
+  @Input()  user         : User | null = null;
 
-  @Input() isDark: boolean = false;
+  @Input()  isDarkMode   : boolean     = false;
 
   @Output() themeChanged = new EventEmitter<boolean>();
 
-  @Output() logout = new EventEmitter<void>();
+  @Output() logout       = new EventEmitter<void>();
 
-
-  ngOnInit(): void {
+  ngOnInit(): void 
+  {
     this.setTheme();
-    //this.title = 'Titel1'
   }
 
   toggleTheme(): void 
   {
-    this.isDark = !this.isDark;
+    this.isDarkMode = !this.isDarkMode;
 
     this.setTheme();
 
-    this.themeChanged.emit(this.isDark );
+    this.themeChanged.emit(this.isDarkMode );
   }
 
-  onLogout(): void {
+  setTheme(): void 
+  {
+    document.documentElement.setAttribute( 'data-theme', this.isDarkMode ? 'dark' : 'light' );
+  }
+
+  onLogout(): void 
+  {
     this.logout.emit();
-  }
-
-  setTheme(): void {
-    document.documentElement.setAttribute(
-      'data-theme',
-      this.isDark ? 'dark' : 'light'
-    );
   }
 }
