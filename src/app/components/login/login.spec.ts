@@ -4,174 +4,142 @@ import { AppModule } from '../../app-module'; import { Login } from './login';
 
 describe('Login', () => {
 
-let component: Login;
+  let component: Login;
 
-beforeEach(async () => {
+  beforeEach(async () => {
 
-await TestBed.configureTestingModule({
-  imports: [AppModule]
-}).compileComponents();
+    await TestBed.configureTestingModule({
 
-const fixture = TestBed.createComponent(Login);
+      imports: [ AppModule ]
 
-component = fixture.componentInstance;
+    }).compileComponents();
 
-fixture.detectChanges();
+    const fixture = TestBed.createComponent(Login);
 
-await fixture.whenStable();
+    component = fixture.componentInstance;
 
+    fixture.detectChanges();
 
-});
+    await fixture.whenStable();
+  });
 
-it('sollte die Komponente erstellen', () => {
+  it( 'sollte die Komponente erstellen', () => {
 
-expect(component).toBeTruthy();
+    expect(component).toBeTruthy();
 
+  });
 
-});
+  it( 'sollte initial keine Fehlermeldung anzeigen', () => {
 
-it('sollte den initialen Benutzernamen besitzen', () => {
+    expect( component.errorMessage ).toBe( '' );
 
-expect(component.username).toBe('demo');
+  });
 
+  it( 'sollte initial das Passwort verbergen', () => {
 
-});
+    expect( component.showPassword ).toBe( false );
 
-it('sollte das initiale Passwort besitzen', () => {
+  });
 
-expect(component.password).toBe('demo123');
+  it( 'sollte bei erfolgreicher Anmeldung loginSuccess auslösen', () => {
 
+    const spy = vi.spyOn(component.loginSuccess, 'emit');
 
-});
+    component.onLogin();
 
-it('sollte initial keine Fehlermeldung anzeigen', () => {
+    expect( spy ).toHaveBeenCalledWith( 'demo' );
 
-expect(component.errorMessage).toBe('');
+  });
 
+  it( 'sollte bei erfolgreicher Anmeldung keine Fehlermeldung anzeigen', () => {
 
-});
+    component.onLogin();
+  
+    expect(component.errorMessage).toBe('');
 
-it('sollte initial das Passwort verbergen', () => {
+  });
 
-expect(component.showPassword).toBe(false);
+  it( 'sollte ein falsches Passwort erkennen', () => {
 
+    component.password = 'falsch';
 
-});
+    component.onLogin();
 
-it('sollte bei erfolgreicher Anmeldung loginSuccess auslösen', () => {
+    expect(component.errorMessage).toBe( 'Benutzername oder Passwort ist falsch.' );
 
-const spy = vi.spyOn(component.loginSuccess, 'emit');
+  });
 
-component.onLogin();
+  it('sollte einen falschen Benutzernamen erkennen', () => {
 
-expect(spy).toHaveBeenCalledWith('demo');
+    component.username = 'falsch';
 
+    component.onLogin();
 
-});
+    expect(component.errorMessage).toBe( 'Benutzername oder Passwort ist falsch.' );
 
-it('sollte bei erfolgreicher Anmeldung keine Fehlermeldung anzeigen', () => {
+  });
 
-component.onLogin();
+  it('sollte leere Eingaben erkennen', () => {
 
-expect(component.errorMessage).toBe('');
+    component.username = '';
+    component.password = '';
 
+    component.onLogin();
 
-});
+    expect( component.errorMessage ).toBe( 'Bitte Benutzername und Passwort eingeben.' );
 
-it('sollte ein falsches Passwort erkennen', () => {
+  });
 
-component.password = 'falsch';
+  it( 'sollte bei fehlendem Benutzernamen keine Anmeldung auslösen', () => {
 
-component.onLogin();
+    const spy = vi.spyOn( component.loginSuccess, 'emit' );
 
-expect(component.errorMessage).toBe(
-  'Benutzername oder Passwort ist falsch.'
-);
+    component.username = '';
 
+    component.onLogin();
 
-});
+    expect( spy ).not.toHaveBeenCalled();
 
-it('sollte einen falschen Benutzernamen erkennen', () => {
+  });
 
-component.username = 'falsch';
+  it( 'sollte bei fehlendem Passwort keine Anmeldung auslösen', () => {
 
-component.onLogin();
+    const spy = vi.spyOn( component.loginSuccess, 'emit' );
 
-expect(component.errorMessage).toBe(
-  'Benutzername oder Passwort ist falsch.'
-);
+    component.password = '';
 
+    component.onLogin();
 
-});
+    expect( spy ).not.toHaveBeenCalled();
 
-it('sollte leere Eingaben erkennen', () => {
+  });
 
-component.username = '';
-component.password = '';
+  it('sollte das Passwort anzeigen können', () => {
 
-component.onLogin();
+    component.togglePassword();
 
-expect(component.errorMessage).toBe(
-  'Bitte Benutzername und Passwort eingeben.'
-);
+    expect( component.showPassword ).toBe( true );
 
+  });
 
-});
+  it( 'sollte das Passwort wieder verbergen können', () => {
 
-it('sollte bei fehlendem Benutzernamen keine Anmeldung auslösen', () => {
+    component.showPassword = true;
 
-const spy = vi.spyOn(component.loginSuccess, 'emit');
+    component.togglePassword();
 
-component.username = '';
+    expect( component.showPassword ).toBe( false );
 
-component.onLogin();
+  });
 
-expect(spy).not.toHaveBeenCalled();
+  it( 'sollte beim zweiten Umschalten wieder den ursprünglichen Zustand herstellen', () => {
 
+    component.togglePassword();
+    component.togglePassword();
 
-});
+    expect( component.showPassword ).toBe(false);
 
-it('sollte bei fehlendem Passwort keine Anmeldung auslösen', () => {
 
-const spy = vi.spyOn(component.loginSuccess, 'emit');
-
-component.password = '';
-
-component.onLogin();
-
-expect(spy).not.toHaveBeenCalled();
-
-
-});
-
-it('sollte das Passwort anzeigen können', () => {
-
-component.togglePassword();
-
-expect(component.showPassword).toBe(true);
-
-
-});
-
-it('sollte das Passwort wieder verbergen können', () => {
-
-component.showPassword = true;
-
-component.togglePassword();
-
-expect(component.showPassword).toBe(false);
-
-
-});
-
-it('sollte beim zweiten Umschalten wieder den ursprünglichen Zustand herstellen', () => {
-
-component.togglePassword();
-component.togglePassword();
-
-expect(component.showPassword).toBe(false);
-
-
-});
+  });
 
 });

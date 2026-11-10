@@ -9,9 +9,11 @@ import { Component, EventEmitter, Output } from '@angular/core';
 export class Login {
 
   username: string = 'demo';
+
   password: string = 'demo123';
 
   showPassword: boolean = false;
+
   errorMessage: string = '';
 
   @Output() loginSuccess = new EventEmitter<string>();
@@ -20,26 +22,25 @@ export class Login {
 
     this.errorMessage = '';
 
-    if (!this.username || !this.password) {
+    if ( !this.username || !this.password ) 
+    {
       this.errorMessage = 'Bitte Benutzername und Passwort eingeben.';
+
       return;
     }
 
-    // Simulierte Anmeldung
-    if (
-      this.username === 'demo' &&
-      this.password === 'demo123'
-    ) {
+    if ( this.username === 'demo' &&  this.password === 'demo123' ) 
+    {
       this.loginSuccess.emit(this.username);
-    } else {
+    } 
+    else 
+    {
       this.errorMessage = 'Benutzername oder Passwort ist falsch.';
     }
   }
 
-  togglePassword(): void {
+  togglePassword(): void 
+  {
     this.showPassword = !this.showPassword;
   }
-
-
-
 }
