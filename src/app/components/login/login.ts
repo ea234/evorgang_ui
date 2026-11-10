@@ -1,4 +1,6 @@
 import { Component, EventEmitter, Output } from '@angular/core';
+import { UserService } from '../../user/service/user.service';
+import { LoginResult } from '../../user/service/user.service';
 
 @Component({
   selector: 'app-login',
@@ -16,9 +18,28 @@ export class Login {
 
   errorMessage: string = '';
 
+  constructor( private userService: UserService ) {}
+
   @Output() loginSuccess = new EventEmitter<string>();
 
-  onLogin(): void {
+
+  onLogin() {
+
+    this.userService.doLogin( this.username, this.password ).subscribe( result => {
+
+      if ( result.success ) 
+      {
+        this.loginSuccess.emit(this.username);
+      }
+      else
+      {
+        this.errorMessage = result.message;
+      } 
+
+    });
+  }
+
+  dellme_onLogin(): void {
 
     this.errorMessage = '';
 
