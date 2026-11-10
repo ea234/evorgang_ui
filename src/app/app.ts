@@ -9,44 +9,52 @@ import { ApplicationType } from './models/application-type';
   styleUrl: './app.css',
   templateUrl: './app.html',
 })
-export class App {
-
-
+export class App 
+{
   // Zentrale Anwendungsverwaltung
   fkAnwendung: FkAnwendung = new FkAnwendung();
 
   // Erfolgreiche Anmeldung
-  onLoginSuccess(username: string): void {
+  onLoginSuccess(username: string): void 
+  {
     this.fkAnwendung.currentUser = new User(username);
+
     this.fkAnwendung.loginStatus = this.fkAnwendung.logged_in;
   }
 
   // Theme-Wechsel
-  onThemeChanged(dark: boolean): void {
+  onThemeChanged( dark: boolean ): void 
+  {
     this.fkAnwendung.isDarkMode = dark;
   }
 
   // Abmeldung
-  onLogout(): void {
+  onLogout(): void 
+  {
     this.fkAnwendung.currentUser = null;
+
     this.fkAnwendung.loginStatus = this.fkAnwendung.logged_out;
+
     this.fkAnwendung.selectedApplication = null;
   }
 
   // Zurück zum Login
-  onBackToLogin(): void {
+  onBackToLogin(): void 
+  {
     this.fkAnwendung.currentUser = null;
+
     this.fkAnwendung.loginStatus = this.fkAnwendung.logged_none;
+
     this.fkAnwendung.selectedApplication = null;
   }
 
-  onApplicationSelected(application: ApplicationType): void {
-
-  this.fkAnwendung.selectedApplication = application;
-
+  onApplicationSelected( application: ApplicationType ): void 
+  {
+    this.fkAnwendung.selectedApplication = application;
   }
 
-  onBackToApplicationSelection(): void {
+  onBackToApplicationSelection(): void 
+  {
     this.fkAnwendung.selectedApplication = null;
   }  
 }

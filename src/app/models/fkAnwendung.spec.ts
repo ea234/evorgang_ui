@@ -8,7 +8,7 @@ describe('FkAnwendung', () => {
   // Objekterstellung
   // =====================================
 
-  it('soll eine Instanz erstellen', () => {
+  it( 'soll eine Instanz erstellen', () => {
 
     const anwendung = new FkAnwendung();
 
@@ -21,7 +21,7 @@ describe('FkAnwendung', () => {
   // Anwendungsinformationen
   // =====================================
 
-  it('soll den Anwendungstitel korrekt initialisieren', () => {
+  it( 'soll den Anwendungstitel korrekt initialisieren', () => {
 
     const anwendung = new FkAnwendung();
 
@@ -29,7 +29,7 @@ describe('FkAnwendung', () => {
 
   });
 
-  it('soll das Anwendungsicon korrekt initialisieren', () => {
+  it( 'soll das Anwendungsicon korrekt initialisieren', () => {
 
     const anwendung = new FkAnwendung();
 
@@ -42,7 +42,7 @@ describe('FkAnwendung', () => {
   // Benutzerverwaltung
   // =====================================
 
-  it('soll zunächst keinen Benutzer enthalten', () => {
+  it( 'soll zunächst keinen Benutzer enthalten', () => {
 
     const anwendung = new FkAnwendung();
 
@@ -50,7 +50,7 @@ describe('FkAnwendung', () => {
 
   });
 
-  it('soll einen Benutzer speichern können', () => {
+  it( 'soll einen Benutzer speichern können', () => {
 
     const anwendung = new FkAnwendung();
 
@@ -69,7 +69,7 @@ describe('FkAnwendung', () => {
   // Login-Status
   // =====================================
 
-  it('soll die Statuskonstanten korrekt initialisieren', () => {
+  it( 'soll die Statuskonstanten korrekt initialisieren', () => {
 
     const anwendung = new FkAnwendung();
 
@@ -79,7 +79,7 @@ describe('FkAnwendung', () => {
 
   });
 
-  it('soll initial den Status logged_none besitzen', () => {
+  it( 'soll initial den Status logged_none besitzen', () => {
 
     const anwendung = new FkAnwendung();
 
@@ -87,13 +87,13 @@ describe('FkAnwendung', () => {
 
   });
 
-  it('soll den Login-Status ändern können', () => {
+  it( 'soll den Login-Status ändern können', () => {
 
     const anwendung = new FkAnwendung();
 
     anwendung.loginStatus = anwendung.logged_in;
 
-    expect(anwendung.loginStatus).toBe(0);
+    expect( anwendung.loginStatus ).toBe(0);
 
   });
 
@@ -102,7 +102,7 @@ describe('FkAnwendung', () => {
   // Theme
   // =====================================
 
-  it('soll initial den Light-Mode verwenden', () => {
+  it( 'soll initial den Light-Mode verwenden', () => {
 
     const anwendung = new FkAnwendung();
 
@@ -110,13 +110,13 @@ describe('FkAnwendung', () => {
 
   });
 
-  it('soll den Dark-Mode aktivieren können', () => {
+  it( 'soll den Dark-Mode aktivieren können', () => {
 
     const anwendung = new FkAnwendung();
 
     anwendung.isDarkMode = true;
 
-    expect( anwendung.isDarkMode ).toBe(true);
+    expect( anwendung.isDarkMode ).toBe( true );
 
   });
 

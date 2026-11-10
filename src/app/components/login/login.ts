@@ -8,8 +8,8 @@ import { LoginResult } from '../../user/service/user.service';
   styleUrl: './login.css',
   templateUrl: './login.html',
 })
-export class Login {
-
+export class Login 
+{
   username: string = 'demo';
 
   password: string = 'demo123';
@@ -21,7 +21,6 @@ export class Login {
   constructor( private userService: UserService ) {}
 
   @Output() loginSuccess = new EventEmitter<string>();
-
 
   onLogin() {
 
@@ -37,27 +36,6 @@ export class Login {
       } 
 
     });
-  }
-
-  dellme_onLogin(): void {
-
-    this.errorMessage = '';
-
-    if ( !this.username || !this.password ) 
-    {
-      this.errorMessage = 'Bitte Benutzername und Passwort eingeben.';
-
-      return;
-    }
-
-    if ( this.username === 'demo' &&  this.password === 'demo123' ) 
-    {
-      this.loginSuccess.emit(this.username);
-    } 
-    else 
-    {
-      this.errorMessage = 'Benutzername oder Passwort ist falsch.';
-    }
   }
 
   togglePassword(): void 

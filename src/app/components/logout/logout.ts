@@ -10,7 +10,8 @@ export class Logout {
 
   @Output() backToLogin = new EventEmitter<void>();
 
-  onBackToLogin(): void {
+  onBackToLogin(): void 
+  {
     this.backToLogin.emit();
   }
 

@@ -4,26 +4,26 @@
     [icon]="fkAnwendung.appIcon"
     [isDarkMode]="fkAnwendung.isDarkMode"
     [user]="fkAnwendung.currentUser"
-    (themeChanged)="onThemeChanged($event)"
+    (themeChanged)="onThemeChanged( $event )"
     (logout)="onLogout()">
 </app-statusbar-top>
 
-@if (fkAnwendung.loginStatus === fkAnwendung.logged_none) {
+@if ( fkAnwendung.loginStatus === fkAnwendung.logged_none ) {
 
     <app-login
-        (loginSuccess)="onLoginSuccess($event)">
+        (loginSuccess)="onLoginSuccess( $event ) ">
     </app-login>
 
-} @else if (fkAnwendung.loginStatus === fkAnwendung.logged_in) {
+} @else if ( fkAnwendung.loginStatus === fkAnwendung.logged_in ) {
 
-    @if (fkAnwendung.selectedApplication === null) {
+    @if ( fkAnwendung.selectedApplication === null ) {
 
         <app-application-selection
             [user]="fkAnwendung.currentUser!"
-            (applicationSelected)="onApplicationSelected($event)">
+            (applicationSelected)="onApplicationSelected( $event )">
         </app-application-selection>
 
-    } @else if (fkAnwendung.selectedApplication === 'vorgangssteuerung') {
+    } @else if ( fkAnwendung.selectedApplication === 'vorgangssteuerung' ) {
 
 
         <app-vorgangssteuerung
@@ -33,7 +33,7 @@
 
     }
 
-} @else if (fkAnwendung.loginStatus === fkAnwendung.logged_out) {
+} @else if ( fkAnwendung.loginStatus === fkAnwendung.logged_out ) {
 
     <app-logout
         (backToLogin)="onBackToLogin()">

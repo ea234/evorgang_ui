@@ -1,112 +1,103 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing'; import { describe, it, expect, beforeEach, vi } from 'vitest';
-
-import { AppModule } from '../../app-module'; import { Logout } from './logout';
+import { ComponentFixture, TestBed } from '@angular/core/testing'; 
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { AppModule } from '../../app-module'; 
+import { Logout } from './logout';
 
 describe('Logout', () => {
 
-let component: Logout; let fixture: ComponentFixture<Logout>;
+  let component: Logout; 
+  
+  let fixture: ComponentFixture<Logout>;
 
-beforeEach(async () => {
+  beforeEach( async () => {
 
-await TestBed.configureTestingModule({
-  imports: [AppModule]
-}).compileComponents();
+    await TestBed.configureTestingModule({
 
-fixture = TestBed.createComponent(Logout);
+      imports: [AppModule]
 
-component = fixture.componentInstance;
+    }).compileComponents();
 
-fixture.detectChanges();
+    fixture = TestBed.createComponent( Logout );
 
-await fixture.whenStable();
+    component = fixture.componentInstance;
 
+    fixture.detectChanges();
 
-});
+    await fixture.whenStable();
+  });
 
-it('soll die Komponente erstellen', () => {
+  it('soll die Komponente erstellen', () => {
 
-expect(component).toBeTruthy();
+    expect( component ).toBeTruthy();
 
+  });
 
-});
+  it('soll initial das backToLogin-Event besitzen', () => {
 
-it('soll initial das backToLogin-Event besitzen', () => {
+    expect( component.backToLogin ).toBeTruthy();
 
-expect(component.backToLogin).toBeTruthy();
+  });
 
+  it('soll die Abmeldebestätigung anzeigen', () => {
 
-});
+    const element = fixture.nativeElement as HTMLElement;
 
-it('soll die Abmeldebestätigung anzeigen', () => {
+    expect( element.textContent ).toContain( 'Erfolgreich abgemeldet' );
 
-const element = fixture.nativeElement as HTMLElement;
+  });
 
-expect(element.textContent).toContain(
-  'Erfolgreich abgemeldet'
-);
+  it('soll den Abmeldetext anzeigen', () => {
 
+    const element = fixture.nativeElement as HTMLElement;
 
-});
+    expect( element.textContent ).toContain( 'Du hast dich erfolgreich von Evorgang abgemeldet.' );
 
-it('soll den Abmeldetext anzeigen', () => {
+  });
 
-const element = fixture.nativeElement as HTMLElement;
+  it('soll den Zurück-zum-Login-Button anzeigen', () => {
 
-expect(element.textContent).toContain(
-  'Du hast dich erfolgreich von Evorgang abgemeldet.'
-);
+    const element = fixture.nativeElement as HTMLElement;
 
+    const button = element.querySelector( 'button' );
 
-});
+    expect( button ).toBeTruthy();
 
-it('soll den Zurück-zum-Login-Button anzeigen', () => {
+    expect( button?.textContent ).toContain( 'Zurück zum Login' );
 
-const element = fixture.nativeElement as HTMLElement;
+  });
 
-const button = element.querySelector('button');
+  it('soll beim Aufruf von onBackToLogin das Event auslösen', () => {
 
-expect(button).toBeTruthy();
+    const spy = vi.spyOn(component.backToLogin, 'emit');
 
-expect(button?.textContent).toContain('Zurück zum Login');
+    component.onBackToLogin();
 
+    expect( spy ).toHaveBeenCalled();
 
-});
+  });
 
-it('soll beim Aufruf von onBackToLogin das Event auslösen', () => {
+  it('soll das Event ohne zusätzliche Parameter auslösen', () => {
 
-const spy = vi.spyOn(component.backToLogin, 'emit');
+    const spy = vi.spyOn(component.backToLogin, 'emit');
 
-component.onBackToLogin();
+    component.onBackToLogin();
 
-expect(spy).toHaveBeenCalled();
+    expect( spy ).toHaveBeenCalledWith();
 
+  });
 
-});
+  it('soll beim Klick auf den Zurück-zum-Login-Button das Event auslösen', () => {
 
-it('soll das Event ohne zusätzliche Parameter auslösen', () => {
+    const spy = vi.spyOn(component.backToLogin, 'emit');
 
-const spy = vi.spyOn(component.backToLogin, 'emit');
+    const element = fixture.nativeElement as HTMLElement;
 
-component.onBackToLogin();
+    const button = element.querySelector( 'button' ) as HTMLButtonElement;
 
-expect(spy).toHaveBeenCalledWith();
+    button.click();
 
+    expect( spy ).toHaveBeenCalled();
 
-});
-
-it('soll beim Klick auf den Zurück-zum-Login-Button das Event auslösen', () => {
-
-const spy = vi.spyOn(component.backToLogin, 'emit');
-
-const element = fixture.nativeElement as HTMLElement;
-
-const button = element.querySelector('button') as HTMLButtonElement;
-
-button.click();
-
-expect(spy).toHaveBeenCalled();
-
-
-});
+  });
 
 });

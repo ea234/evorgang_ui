@@ -1,6 +1,6 @@
 import { Service } from '@angular/core';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 
 import { User } from '../modell/user';
 
@@ -17,12 +17,12 @@ export class UserService {
   {
     if ( !pBenutzerName || !pBenutzerKennwort ) 
     {
-      return of( { success: false, error: 'MISSING_CREDENTIALS', message : 'Bitte Benutzername und Passwort eingeben.'} );
+      return of( { success: false, error: 'MISSING_CREDENTIALS', message : 'Bitte Benutzername und Passwort eingeben.' } );
     }
 
     if ( !pBenutzerName.trim() || !pBenutzerKennwort.trim() ) 
     {
-      return of( { success: false, error: 'MISSING_CREDENTIALS', message : 'Bitte Benutzername und Passwort eingeben.'} );
+      return of( { success: false, error: 'MISSING_CREDENTIALS', message : 'Bitte Benutzername und Passwort eingeben.' } );
     }
 
 

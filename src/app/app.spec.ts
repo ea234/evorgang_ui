@@ -10,13 +10,17 @@ describe('App', () => {
   
   });
 
-  it( 'soll eine App-Instanz erstellen', () => { const app = new App();
+  it( 'soll eine App-Instanz erstellen', () => { 
+    
+    const app = new App();
 
     expect(app).toBeInstanceOf(App);
 
   });
 
-  it( 'soll mit dem Status logged_none starten', () => { const app = new App();
+  it( 'soll mit dem Status logged_none starten', () => { 
+    
+    const app = new App();
 
     expect( app.fkAnwendung.loginStatus ).toBe( app.fkAnwendung.logged_none );
 
@@ -80,6 +84,7 @@ describe('App', () => {
     const app = new App();
 
     app.onThemeChanged( true );
+    
     app.onThemeChanged( false );
 
     expect( app.fkAnwendung.isDarkMode ).toBe( false );

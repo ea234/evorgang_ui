@@ -1,13 +1,13 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'; 
 import { TestBed } from '@angular/core/testing';
-
-import { AppModule } from '../../app-module'; import { Login } from './login';
+import { AppModule } from '../../app-module'; 
+import { Login } from './login';
 
 describe('Login', () => {
 
   let component: Login;
 
-  beforeEach(async () => {
+  beforeEach( async () => {
 
     await TestBed.configureTestingModule({
 
@@ -26,7 +26,7 @@ describe('Login', () => {
 
   it( 'sollte die Komponente erstellen', () => {
 
-    expect(component).toBeTruthy();
+    expect( component ).toBeTruthy();
 
   });
 
@@ -56,7 +56,7 @@ describe('Login', () => {
 
     component.onLogin();
   
-    expect(component.errorMessage).toBe('');
+    expect( component.errorMessage ).toBe('');
 
   });
 
@@ -66,21 +66,21 @@ describe('Login', () => {
 
     component.onLogin();
 
-    expect(component.errorMessage).toBe( 'Benutzername oder Passwort ist falsch.' );
+    expect( component.errorMessage ).toBe( 'Benutzername oder Passwort ist falsch.' );
 
   });
 
-  it('sollte einen falschen Benutzernamen erkennen', () => {
+  it( 'sollte einen falschen Benutzernamen erkennen', () => {
 
     component.username = 'falsch';
 
     component.onLogin();
 
-    expect(component.errorMessage).toBe( 'Benutzername oder Passwort ist falsch.' );
+    expect( component.errorMessage ).toBe( 'Benutzername oder Passwort ist falsch.' );
 
   });
 
-  it('sollte leere Eingaben erkennen', () => {
+  it( 'sollte leere Eingaben erkennen', () => {
 
     component.username = '';
     component.password = '';
@@ -139,7 +139,6 @@ describe('Login', () => {
     component.togglePassword();
 
     expect( component.showPassword ).toBe(false);
-
 
   });
 
