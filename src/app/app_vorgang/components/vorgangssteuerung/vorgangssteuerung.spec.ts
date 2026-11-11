@@ -13,7 +13,8 @@ describe('Vorgangssteuerung', () => {
 
   beforeEach(() => {
 
-    component = new Vorgangssteuerung(new VorgangService());
+    component = new Vorgangssteuerung( new VorgangService() );
+
     component.ngOnInit();
 
     user = {
@@ -29,35 +30,35 @@ describe('Vorgangssteuerung', () => {
   // INITIALISIERUNG
   // =====================================
 
-  it('soll die Komponente erstellen', () => {
+  it( 'soll die Komponente erstellen', () => {
 
-    expect(component).toBeTruthy();
-
-  });
-
-  it('soll initial die Listenansicht verwenden', () => {
-
-    expect(component.ansicht).toBe('liste');
+    expect( component ).toBeTruthy();
 
   });
 
-  it('soll initial nach Eingangsdatum verdichten', () => {
+  it( 'soll initial die Listenansicht verwenden', () => {
 
-    expect(component.verdichtungsart).toBe('datumEingang');
-
-  });
-
-  it('soll den übergebenen Benutzer speichern', () => {
-
-    expect(component.user).toBe(user);
+    expect( component.ansicht ).toBe( 'liste' );
 
   });
 
-  it('soll initial keinen Vorgang ausgewählt haben', () => {
+  it( 'soll initial nach Eingangsdatum verdichten', () => {
 
-    expect(component.ausgewaehlterVorgang).toBeNull();
+    expect( component.verdichtungsart ).toBe('datumEingang');
 
-    expect(component.ausgewaehlterVorgangId).toBeNull();
+  });
+
+  it( 'soll den übergebenen Benutzer speichern', () => {
+
+    expect( component.user ).toBe( user );
+
+  });
+
+  it( 'soll initial keinen Vorgang ausgewählt haben', () => {
+
+    expect( component.ausgewaehlterVorgang ).toBeNull();
+
+    expect( component.ausgewaehlterVorgangId ).toBeNull();
 
   });
 
@@ -65,26 +66,22 @@ describe('Vorgangssteuerung', () => {
   // NAVIGATION
   // =====================================
 
-  it('soll beim Zurückkehren die Navigation auslösen', () => {
+  it( 'soll beim Zurückkehren die Navigation auslösen', () => {
 
-    const spy = vi.spyOn(
-      component.backToApplicationSelection,
-      'emit'
-    );
+    const spy = vi.spyOn( component.backToApplicationSelection, 'emit' );
 
     component.onBackToApplicationSelection();
 
-    expect(spy).toHaveBeenCalledOnce();
-
+    expect( spy ).toHaveBeenCalledOnce();
   });
 
-  it('soll zur Vorgangsliste zurückkehren', () => {
+  it( 'soll zur Vorgangsliste zurückkehren', () => {
 
     component.ansicht = 'detail';
 
     component.onBackToVorgangsliste();
 
-    expect(component.ansicht).toBe('liste');
+    expect( component.ansicht ).toBe( 'liste' );
 
   });
 
@@ -92,50 +89,49 @@ describe('Vorgangssteuerung', () => {
   // VORGANGSAUSWAHL
   // =====================================
 
-  it('soll einen Vorgang auswählen', () => {
+  it( 'soll einen Vorgang auswählen', () => {
 
     const vorgang = component.vorgaenge[0];
 
-    component.onVorgangSelected(vorgang);
+    component.onVorgangSelected( vorgang );
 
-    expect(component.ausgewaehlterVorgang).toBe(vorgang);
+    expect( component.ausgewaehlterVorgang ).toBe( vorgang );
 
-    expect(component.ausgewaehlterVorgangId)
-      .toBe(vorgang.vorgangID);
+    expect( component.ausgewaehlterVorgangId ).toBe( vorgang.vorgangID );
 
   });
 
-  it('soll die Detailansicht ohne Auswahl nicht öffnen', () => {
+  it( 'soll die Detailansicht ohne Auswahl nicht öffnen', () => {
 
     component.onVorgangAnsehen();
 
-    expect(component.ansicht).toBe('liste');
+    expect( component.ansicht ).toBe( 'liste' );
 
   });
 
-  it('soll einen ausgewählten Vorgang öffnen', () => {
+  it( 'soll einen ausgewählten Vorgang öffnen', () => {
 
     const vorgang = component.vorgaenge[0];
 
-    component.onVorgangSelected(vorgang);
+    component.onVorgangSelected( vorgang );
+
     component.onVorgangAnsehen();
 
-    expect(component.ansicht).toBe('detail');
+    expect( component.ansicht ).toBe( 'detail' );
 
   });
 
-  it('soll beim Doppelklick einen Vorgang öffnen', () => {
+  it( 'soll beim Doppelklick einen Vorgang öffnen', () => {
 
     const vorgang = component.vorgaenge[0];
 
-    component.onVorgangDoubleClick(vorgang);
+    component.onVorgangDoubleClick( vorgang );
 
-    expect(component.ausgewaehlterVorgang).toBe(vorgang);
+    expect( component.ausgewaehlterVorgang ).toBe( vorgang );
 
-    expect(component.ausgewaehlterVorgangId)
-      .toBe(vorgang.vorgangID);
+    expect( component.ausgewaehlterVorgangId ).toBe( vorgang.vorgangID );
 
-    expect(component.ansicht).toBe('detail');
+    expect( component.ansicht ).toBe( 'detail' );
 
   });
 
@@ -143,39 +139,33 @@ describe('Vorgangssteuerung', () => {
   // TASTATURBEDIENUNG
   // =====================================
 
-  it('soll bei Enter einen Vorgang öffnen', () => {
+  it( 'soll bei Enter einen Vorgang öffnen', () => {
 
     const vorgang = component.vorgaenge[0];
 
-    const event = {
-      key: 'Enter',
-      preventDefault: vi.fn()
-    } as unknown as KeyboardEvent;
+    const event = { key: 'Enter', preventDefault: vi.fn() } as unknown as KeyboardEvent;
 
-    component.onVorgangKeydown(event, vorgang);
+    component.onVorgangKeydown( event, vorgang );
 
-    expect(event.preventDefault).toHaveBeenCalledOnce();
+    expect( event.preventDefault ).toHaveBeenCalledOnce();
 
-    expect(component.ausgewaehlterVorgang).toBe(vorgang);
+    expect( component.ausgewaehlterVorgang ).toBe( vorgang );
 
-    expect(component.ansicht).toBe('detail');
+    expect( component.ansicht ).toBe( 'detail' );
 
   });
 
-  it('soll bei anderen Tasten keinen Vorgang öffnen', () => {
+  it( 'soll bei anderen Tasten keinen Vorgang öffnen', () => {
 
     const vorgang = component.vorgaenge[0];
 
-    const event = {
-      key: 'Escape',
-      preventDefault: vi.fn()
-    } as unknown as KeyboardEvent;
+    const event = { key: 'Escape', preventDefault: vi.fn() } as unknown as KeyboardEvent;
 
-    component.onVorgangKeydown(event, vorgang);
+    component.onVorgangKeydown( event, vorgang );
 
-    expect(event.preventDefault).not.toHaveBeenCalled();
+    expect( event.preventDefault ).not.toHaveBeenCalled();
 
-    expect(component.ansicht).toBe('liste');
+    expect( component.ansicht ).toBe( 'liste' );
 
   });
 
@@ -183,29 +173,29 @@ describe('Vorgangssteuerung', () => {
   // VERDICHTUNGSARTEN
   // =====================================
 
-  it('soll nach Vorgangs-UID verdichten können', () => {
+  it( 'soll nach Vorgangs-UID verdichten können', () => {
 
-    component.onVerdichtungsartChanged('vorgangUID');
+    component.onVerdichtungsartChanged( 'vorgangUID' );
 
-    expect(component.verdichtungsart).toBe('vorgangUID');
-
-  });
-
-  it('soll nach Kundennummer verdichten können', () => {
-
-    component.onVerdichtungsartChanged('kundennummer');
-
-    expect(component.verdichtungsart).toBe('kundennummer');
+    expect( component.verdichtungsart ).toBe( 'vorgangUID' );
 
   });
 
-  it('soll nach Eingangsdatum verdichten können', () => {
+  it( 'soll nach Kundennummer verdichten können', () => {
 
-    component.onVerdichtungsartChanged('vorgangUID');
+    component.onVerdichtungsartChanged( 'kundennummer' );
 
-    component.onVerdichtungsartChanged('datumEingang');
+    expect( component.verdichtungsart ).toBe( 'kundennummer' );
 
-    expect(component.verdichtungsart).toBe('datumEingang');
+  });
+
+  it( 'soll nach Eingangsdatum verdichten können', () => {
+
+    component.onVerdichtungsartChanged( 'vorgangUID' );
+
+    component.onVerdichtungsartChanged( 'datumEingang' );
+
+    expect(component.verdichtungsart).toBe( 'datumEingang' );
 
   });
 
@@ -213,108 +203,85 @@ describe('Vorgangssteuerung', () => {
   // GRUPPIERUNG
   // =====================================
 
-  it('soll initial nach Eingangsdatum gruppieren', () => {
+  it( 'soll initial nach Eingangsdatum gruppieren', () => {
 
-    expect(component.gruppen.length).toBe(3);
+    expect( component.gruppen.length ).toBe( 3 );
 
   });
 
-  it('soll nach Vorgangs-UID gruppieren', () => {
+  it( 'soll nach Vorgangs-UID gruppieren', () => {
 
     component.verdichtungsart = 'vorgangUID';
 
-    expect(component.gruppen.length).toBe(6);
+    expect( component.gruppen.length ).toBe( 6 );
 
   });
 
-  it('soll nach Kundennummer gruppieren', () => {
+  it( 'soll nach Kundennummer gruppieren', () => {
 
     component.verdichtungsart = 'kundennummer';
 
-    expect(component.gruppen.length).toBe(3);
+    expect( component.gruppen.length ).toBe( 3 );
 
   });
 
-  it('soll bei Kundennummer die Kundenbezeichnung anzeigen', () => {
+  it( 'soll bei Kundennummer die Kundenbezeichnung anzeigen', () => {
 
     component.verdichtungsart = 'kundennummer';
 
-    const gruppe = component.gruppen.find(
-      g => g.schluessel === '10025'
-    );
+    const gruppe = component.gruppen.find( g => g.schluessel === '10025' );
 
-    expect(gruppe?.bezeichnung).toBe('10025 – Müller GmbH');
+    expect( gruppe?.bezeichnung ).toBe( '10025 – Müller GmbH' );
 
   });
 
   it('soll alle sieben Vorgänge gruppieren', () => {
 
-    const anzahl = component.gruppen.reduce(
-      (summe, gruppe) => summe + gruppe.vorgaenge.length,
-      0
-    );
+    const anzahl = component.gruppen.reduce( ( summe, gruppe ) => summe + gruppe.vorgaenge.length, 0 );
 
-    expect(anzahl).toBe(7);
+    expect( anzahl ).toBe( 7 );
 
   });
 
-  it('soll die Gruppen nach Eingangsdatum absteigend sortieren', () => {
+  it( 'soll die Gruppen nach Eingangsdatum absteigend sortieren', () => {
 
     const gruppen = component.gruppen;
 
-    for (let i = 0; i < gruppen.length - 1; i++) {
-
-      expect(
-        Number(gruppen[i].schluessel)
-      ).toBeGreaterThanOrEqual(
-        Number(gruppen[i + 1].schluessel)
-      );
-
+    for ( let i = 0; i < gruppen.length - 1; i++ ) 
+    {
+      expect( Number( gruppen[ i ].schluessel ) ).toBeGreaterThanOrEqual( Number( gruppen[ i + 1 ].schluessel ) );
     }
 
   });
 
-  it('soll die Vorgänge innerhalb einer Gruppe nach Eingangsdatum sortieren', () => {
+  it( 'soll die Vorgänge innerhalb einer Gruppe nach Eingangsdatum sortieren', () => {
 
     const gruppen = component.gruppen;
 
     for (const gruppe of gruppen) {
 
-      for (let i = 0; i < gruppe.vorgaenge.length - 1; i++) {
-
-        expect(
-          gruppe.vorgaenge[i].datumEingang
-        ).toBeGreaterThanOrEqual(
-          gruppe.vorgaenge[i + 1].datumEingang
-        );
-
+      for (let i = 0; i < gruppe.vorgaenge.length - 1; i++) 
+      {
+        expect( gruppe.vorgaenge[i].datumEingang ).toBeGreaterThanOrEqual( gruppe.vorgaenge[i + 1].datumEingang );
       }
-
     }
 
   });
 
-  it('soll bei gleichem Eingangsdatum nach VorgangsID absteigend sortieren', () => {
+  it( 'soll bei gleichem Eingangsdatum nach VorgangsID absteigend sortieren', () => {
 
-    const gruppe = component.gruppen.find(
-      g => g.schluessel === '20261103'
-    );
+    const gruppe = component.gruppen.find( g => g.schluessel === '20261103' );
 
-    expect(
-      gruppe?.vorgaenge.map(v => v.vorgangID)
-    ).toEqual([3, 2, 1]);
-
+    expect( gruppe?.vorgaenge.map( v => v.vorgangID ) ).toEqual( [3, 2, 1] );
   });
 
-  it('soll die UID-Gruppen numerisch sortieren', () => {
+  it( 'soll die UID-Gruppen numerisch sortieren', () => {
 
     component.verdichtungsart = 'vorgangUID';
 
     const gruppen = component.gruppen;
 
-    expect(
-      gruppen.map(g => g.schluessel)
-    ).toEqual(['4716', '4715', '4714', '4713', '4712', '4711']);
+    expect( gruppen.map( g => g.schluessel ) ).toEqual(['4716', '4715', '4714', '4713', '4712', '4711']);
 
   });
 
@@ -324,11 +291,9 @@ describe('Vorgangssteuerung', () => {
 
   it('soll das Eingangsdatum im deutschen Format anzeigen', () => {
 
-    const gruppe = component.gruppen.find(
-      g => g.schluessel === '20261103'
-    );
+    const gruppe = component.gruppen.find( g => g.schluessel === '20261103' );
 
-    expect(gruppe?.bezeichnung).toBe('03.11.2026');
+    expect( gruppe?.bezeichnung ).toBe( '03.11.2026' );
 
   });
 
@@ -336,15 +301,15 @@ describe('Vorgangssteuerung', () => {
   // DATENMODELL
   // =====================================
 
-  it('soll die neue VorgangsID verwenden', () => {
+  it( 'soll die neue VorgangsID verwenden', () => {
 
-    expect(component.vorgaenge[0].vorgangID).toBe(1);
+    expect( component.vorgaenge[0].vorgangID ).toBe( 1 );
 
   });
 
   it('soll die neue VorgangsUID verwenden', () => {
 
-    expect(component.vorgaenge[0].vorgangUID).toBe('4711');
+    expect( component.vorgaenge[0].vorgangUID ).toBe( '4711' );
 
   });
 
@@ -352,9 +317,9 @@ describe('Vorgangssteuerung', () => {
 
     const vorgang = component.vorgaenge[0];
 
-    expect(vorgang.kundennummer).toBe('10025');
-    expect(vorgang.kundeVorname).toBe('Müller GmbH');
-    expect(vorgang.kundeNachname).toBe('');
+    expect( vorgang.kundennummer  ).toBe( '10025' );
+    expect( vorgang.kundeVorname  ).toBe( 'Müller GmbH' );
+    expect( vorgang.kundeNachname ).toBe( '' );
 
   });
 
@@ -362,10 +327,10 @@ describe('Vorgangssteuerung', () => {
 
     const vorgang = component.vorgaenge[0];
 
-    expect(vorgang.datumEingang).toBe(20261103);
-    expect(vorgang.datumEndeGeplant).toBe(20261130);
-    expect(vorgang.vorgangStatus).toBe('NEU');
-    expect(vorgang.vorgangBearbeiterID).toBe('stpanr');
+    expect( vorgang.datumEingang ).toBe( 20261103 );
+    expect( vorgang.datumEndeGeplant ).toBe( 20261130 );
+    expect( vorgang.vorgangStatus ).toBe( 'NEU' );
+    expect( vorgang.vorgangBearbeiterID ).toBe( 'stpanr' );
 
   });
 

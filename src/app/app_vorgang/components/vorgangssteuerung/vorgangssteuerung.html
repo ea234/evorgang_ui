@@ -12,13 +12,13 @@
 
             <div class="verdichtung-list">
 
-                @for (art of verdichtungsarten; track art.id) {
+                @for ( art of verdichtungsarten; track art.id ) {
 
                     <button
                         type="button"
                         class="verdichtung-button"
                         [class.active]="verdichtungsart === art.id"
-                        (click)="onVerdichtungsartChanged(art.id)">
+                        (click)="onVerdichtungsartChanged( art.id)">
 
                         {{ art.name }}
 
@@ -38,13 +38,12 @@
 
             <div class="befehlsleiste">
 
-
-        <button
-            type="button"
-            class="befehl-button"
-            (click)="onBackToApplicationSelection()">
-            Zurück zur Anwendungsauswahl
-        </button>
+                <button
+                    type="button"
+                    class="befehl-button"
+                    (click)="onBackToApplicationSelection()">
+                    Zurück zur Anwendungsauswahl
+                </button>
 
 
                 <button
@@ -63,7 +62,7 @@
 
             <div class="vorgangsliste">
 
-                @for (gruppe of gruppen; track gruppe.schluessel) {
+                @for ( gruppe of gruppen; track gruppe.schluessel ) {
 
                     <details class="vorgangsgruppe" open>
 
@@ -81,7 +80,7 @@
 
                         <div class="gruppen-inhalt">
 
-                            @for (vorgang of gruppe.vorgaenge; track vorgang.vorgangID) {
+                            @for ( vorgang of gruppe.vorgaenge; track vorgang.vorgangID ) {
 
                                 <div
                                     class="vorgang-zeile"
@@ -136,7 +135,7 @@
 
     <!-- DETAILANSICHT -->
 
-    @if (ansicht === 'detail' && ausgewaehlterVorgang !== null) {
+    @if ( ( ansicht === 'detail' ) && ( ausgewaehlterVorgang !== null ) )  {
 
         <app-vorgangsbearbeitung
             [user]="user"

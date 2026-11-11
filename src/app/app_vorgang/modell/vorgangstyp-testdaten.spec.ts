@@ -1,10 +1,6 @@
 
 import { VORGANGSTYP_TESTDATEN } from './vorgangstyp-testdaten';
-import {
-  describe,
-  it,
-  expect
-} from 'vitest';
+import { describe, it, expect } from 'vitest';
 
 describe('Vorgangstyp-Testdaten', () => {
 

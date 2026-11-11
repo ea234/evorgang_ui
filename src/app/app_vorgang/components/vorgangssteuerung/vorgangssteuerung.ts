@@ -1,17 +1,9 @@
-import {
-  Component,
-  Input,
-  Output,
-  EventEmitter,
-  OnInit,
-  OnDestroy
-} from '@angular/core';
-
+import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
-
 import { User } from '../../../user/modell/user';
 import { Vorgang } from '../../modell/vorgang';
 import { VorgangService } from '../../services/vorgang.service';
+import { FkDate } from '../../../util/fkDate';
 
 type Verdichtungsart =
   | 'datumEingang'
@@ -19,9 +11,9 @@ type Verdichtungsart =
   | 'kundennummer';
 
 interface VorgangsGruppe {
-  schluessel: string;
+  schluessel:  string;
   bezeichnung: string;
-  vorgaenge: Vorgang[];
+  vorgaenge:   Vorgang[];
 }
 
 @Component({
@@ -32,54 +24,43 @@ interface VorgangsGruppe {
 })
 export class Vorgangssteuerung implements OnInit, OnDestroy {
 
-  @Input({ required: true }) user!: User;
+  @Input( { required: true } ) user! : User;
 
-  @Output() backToApplicationSelection =
-    new EventEmitter<void>();
+  @Output() backToApplicationSelection = new EventEmitter<void>();
 
   private readonly destroy = new Subject<void>();
 
-  constructor(
-    private vorgangService: VorgangService
-  ) {}
+  constructor( private vorgangService : VorgangService) {}
 
-  ngOnInit(): void {
-
+  ngOnInit(): void 
+  {
     this.vorgangService.getVorgaenge()
-      .pipe(takeUntil(this.destroy))
-      .subscribe({
+      .pipe( takeUntil( this.destroy ) )
+      .subscribe( {
 
-        next: (vorgaenge: Vorgang[]) => {
+        next: ( vorgaenge : Vorgang[]) => {
 
             this.vorgaenge = vorgaenge;
 
             if (this.ausgewaehlterVorgangId !== null) {
 
-                this.ausgewaehlterVorgang =
-                    vorgaenge.find(
-                        vorgang =>
-                            vorgang.vorgangID === this.ausgewaehlterVorgangId
-                    ) ?? null;
-
+                this.ausgewaehlterVorgang = vorgaenge.find( vorgang => vorgang.vorgangID === this.ausgewaehlterVorgangId ) ?? null;
             }
-
         },
 
-        error: (fehler: unknown) => {
-          console.error(
-            'Fehler beim Laden der Vorgänge:',
-            fehler
-          );
+        error: ( fehler : unknown) => {
+ 
+          console.error( 'Fehler beim Laden der Vorgänge:', fehler );
 
           this.vorgaenge = [];
         }
-
       });
-
   }
 
-  ngOnDestroy(): void {
+  ngOnDestroy(): void 
+  {
     this.destroy.next();
+
     this.destroy.complete();
   }
 
@@ -91,11 +72,13 @@ export class Vorgangssteuerung implements OnInit, OnDestroy {
 
   ausgewaehlterVorgang: Vorgang | null = null;
 
-  onBackToApplicationSelection(): void {
+  onBackToApplicationSelection(): void 
+  {
     this.backToApplicationSelection.emit();
   }
 
-  onBackToVorgangsliste(): void {
+  onBackToVorgangsliste(): void 
+  {
     this.ansicht = 'liste';
   }
 
@@ -105,17 +88,15 @@ export class Vorgangssteuerung implements OnInit, OnDestroy {
 
   verdichtungsart: Verdichtungsart = 'datumEingang';
 
-  readonly verdichtungsarten: {
-    id: Verdichtungsart;
-    name: string;
-  }[] = [
+  readonly verdichtungsarten: { id: Verdichtungsart; name: string;  }[] = [
     { id: 'datumEingang', name: 'Eingangsdatum' },
-    { id: 'vorgangUID', name: 'Vorgangs-UID' },
+    { id: 'vorgangUID',   name: 'Vorgangs-UID' },
     { id: 'kundennummer', name: 'Kundennummer' }
   ];
 
-  onVerdichtungsartChanged(art: Verdichtungsart): void {
-    this.verdichtungsart = art;
+  onVerdichtungsartChanged( pVerdichtungsart: Verdichtungsart ) : void 
+  {
+    this.verdichtungsart = pVerdichtungsart;
   }
 
   // =====================================
@@ -126,36 +107,36 @@ export class Vorgangssteuerung implements OnInit, OnDestroy {
 
   vorgaenge: Vorgang[] = [];
 
-onVorgangSelected(vorgang: Vorgang): void {
+  onVorgangSelected( pVorgang: Vorgang ): void 
+  {
+      this.ausgewaehlterVorgangId = pVorgang.vorgangID;
 
-    this.ausgewaehlterVorgangId = vorgang.vorgangID;
+      this.ausgewaehlterVorgang = this.vorgaenge.find( element => element.vorgangID === pVorgang.vorgangID ) ?? null;
+  }
 
-    this.ausgewaehlterVorgang =
-        this.vorgaenge.find(
-            element => element.vorgangID === vorgang.vorgangID
-        ) ?? null;
-}
+  onVorgangDoubleClick( pVorgang: Vorgang ): void 
+  {
+    this.onVorgangSelected( pVorgang );
 
-  onVorgangDoubleClick(vorgang: Vorgang): void {
-    this.onVorgangSelected(vorgang);
     this.onVorgangAnsehen();
   }
 
-  onVorgangKeydown(
-    event: KeyboardEvent,
-    vorgang: Vorgang
-  ): void {
+  onVorgangKeydown( pEvent: KeyboardEvent, pVorgang: Vorgang ) : void 
+  {
+    if ( pEvent.key === 'Enter' ) 
+    {
+      pEvent.preventDefault();
 
-    if (event.key === 'Enter') {
-      event.preventDefault();
-      this.onVorgangSelected(vorgang);
+      this.onVorgangSelected(pVorgang);
+
       this.onVorgangAnsehen();
     }
   }
 
-  onVorgangAnsehen(): void {
-
-    if (this.ausgewaehlterVorgang === null) {
+  onVorgangAnsehen(): void 
+  {
+    if ( this.ausgewaehlterVorgang === null ) 
+    {
       return;
     }
 
@@ -166,101 +147,80 @@ onVorgangSelected(vorgang: Vorgang): void {
   // Datumsformatierung
   // =====================================
 
-  formatiereDatum(datum: number): string {
-
-    if (!datum || datum === 0) {
+  formatiereDatum( pDatum: number ): string 
+  {
+    if ( ( !pDatum ) || ( pDatum === 0 ) )  
+    {
       return '';
     }
 
-    const wert = String(datum);
-
-    if (wert.length !== 8) {
-      return wert;
-    }
-
-    return `${wert.substring(6, 8)}.${wert.substring(4, 6)}.${wert.substring(0, 4)}`;
+    return FkDate.getString( pDatum ) ?? '';
   }
 
   // =====================================
   // Verdichtete Vorgangsgruppen
   // =====================================
 
-  get gruppen(): VorgangsGruppe[] {
-
+  get gruppen(): VorgangsGruppe[] 
+  {
     const gruppierung = new Map<string, Vorgang[]>();
 
-    for (const vorgang of this.vorgaenge) {
-
+    for ( const vorgang of this.vorgaenge ) 
+    {
       let schluessel: string;
 
-      switch (this.verdichtungsart) {
+      switch ( this.verdichtungsart ) 
+      {
+        case 'datumEingang': schluessel = String( vorgang.datumEingang ); break;
 
-        case 'datumEingang':
-          schluessel = String(vorgang.datumEingang);
-          break;
+        case 'vorgangUID':   schluessel = vorgang.vorgangUID;             break;
 
-        case 'vorgangUID':
-          schluessel = vorgang.vorgangUID;
-          break;
-
-        case 'kundennummer':
-          schluessel = vorgang.kundennummer;
-          break;
+        case 'kundennummer': schluessel = vorgang.kundennummer;           break;
       }
 
-      if (!gruppierung.has(schluessel)) {
-        gruppierung.set(schluessel, []);
+      if ( !gruppierung.has( schluessel ) ) 
+      {
+        gruppierung.set( schluessel, [] );
       }
 
-      gruppierung.get(schluessel)!.push(vorgang);
+      gruppierung.get( schluessel )!.push(vorgang);
     }
 
-    return Array.from(gruppierung.entries())
+    return Array.from( gruppierung.entries() )
 
-      .map(([schluessel, vorgaenge]) => {
+      .map( ( [ schluessel, vorgaenge ] ) => {
 
         let bezeichnung = schluessel;
 
-        switch (this.verdichtungsart) {
+        switch ( this.verdichtungsart ) {
 
-          case 'datumEingang':
-            bezeichnung = this.formatiereDatum(Number(schluessel));
-            break;
+          case 'datumEingang': bezeichnung = this.formatiereDatum( Number( schluessel ) );   break;
 
-          case 'vorgangUID':
-            bezeichnung = `UID ${schluessel}`;
-            break;
+          case 'vorgangUID':   bezeichnung = `UID ${schluessel}`;                            break;
 
-          case 'kundennummer':
-            bezeichnung =
-              `${schluessel} – ${vorgaenge[0].kundeVorname}`;
-            break;
+          case 'kundennummer': bezeichnung = `${schluessel} – ${vorgaenge[0].kundeVorname}`; break;
         }
 
         return {
+
           schluessel,
           bezeichnung,
 
-          vorgaenge: [...vorgaenge].sort((a, b) =>
+          vorgaenge: [...vorgaenge].sort( (a, b) =>
             b.datumEingang - a.datumEingang ||
             b.vorgangID - a.vorgangID
           )
         };
-
       })
 
       .sort((a, b) => {
 
-        if (this.verdichtungsart === 'datumEingang') {
-          return Number(b.schluessel) - Number(a.schluessel);
+        if ( this.verdichtungsart === 'datumEingang' ) 
+        {
+          return Number( b.schluessel ) - Number( a.schluessel );
         }
 
-        return b.schluessel.localeCompare(
-          a.schluessel,
-          'de',
-          { numeric: true }
-        );
+        return b.schluessel.localeCompare( a.schluessel, 'de', { numeric: true } );
       });
   }
-
 }

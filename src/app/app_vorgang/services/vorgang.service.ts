@@ -132,58 +132,56 @@ export class VorgangService {
 
   ];
 
-  private readonly vorgaengeSubject =
-    new BehaviorSubject<Vorgang[]>([...this.vector_vorgaenge]);
+  private readonly vorgaengeSubject = new BehaviorSubject<Vorgang[]>( [...this.vector_vorgaenge] );
 
   readonly vorgaenge_obs = this.vorgaengeSubject.asObservable();
 
-  getVorgaenge(): Observable<Vorgang[]> {
+  getVorgaenge(): Observable<Vorgang[]> 
+  {
     return this.vorgaenge_obs;
   }
 
-  getVorgangById(id: number): Vorgang | undefined {
-    return this.vector_vorgaenge.find(
-      vorgang => vorgang.vorgangID === id
-    );
+  getVorgangById( pID : number) : Vorgang | undefined 
+  {
+    return this.vector_vorgaenge.find( vorgang => vorgang.vorgangID === pID );
   }
 
- updateVorgang(vorgang: Vorgang): boolean {
+  updateVorgang( pVorgang: Vorgang ): boolean 
+  {
+    const index = this.vector_vorgaenge.findIndex( element => element.vorgangID === pVorgang.vorgangID );
 
-  const index = this.vector_vorgaenge.findIndex(
-    element => element.vorgangID === vorgang.vorgangID
-  );
-
-  if (index === -1) {
-    return false;
-  }
-
-  Object.assign(this.vector_vorgaenge[index], vorgang);
-
-  this.vorgaengeSubject.next([...this.vector_vorgaenge]);
-
-  return true;
-}
-
-  addVorgang(vorgang: Vorgang): boolean {
-
-    if (this.getVorgangById(vorgang.vorgangID)) {
+    if ( index === -1 ) 
+    {
       return false;
     }
 
-    this.vector_vorgaenge.push({ ...vorgang });
+    Object.assign( this.vector_vorgaenge[ index ], pVorgang );
 
-    this.vorgaengeSubject.next([...this.vector_vorgaenge]);
+    this.vorgaengeSubject.next( [...this.vector_vorgaenge] );
 
     return true;
   }
 
-  deleteVorgang(id: number): boolean {
+  addVorgang( vorgang: Vorgang ) : boolean 
+  {
+    if (this.getVorgangById( vorgang.vorgangID ) ) 
+    {
+      return false;
+    }
 
-    const index = this.vector_vorgaenge.findIndex(
-      vorgang => vorgang.vorgangID === id
-    );
+    this.vector_vorgaenge.push( { ...vorgang } );
 
-    if (index === -1) {
+    this.vorgaengeSubject.next( [...this.vector_vorgaenge] );
+
+    return true;
+  }
+
+  deleteVorgang( pID : number ) : boolean 
+  {
+    const index = this.vector_vorgaenge.findIndex( vorgang => vorgang.vorgangID === pID );
+
+    if (index === -1) 
+    {
       return false;
     }
 
@@ -193,5 +191,4 @@ export class VorgangService {
 
     return true;
   }
-
 }

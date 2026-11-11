@@ -1,43 +1,48 @@
 
 import { VorgangstypList } from './vorgangstyp-list';
-import {
-  describe,
-  it,
-  expect
-} from 'vitest';
+import { describe, it, expect } from 'vitest';
 
 describe('VorgangstypList', () => {
 
   let vorgangstypList: VorgangstypList;
 
-  beforeEach(() => {
+  beforeEach(() => 
+  {
     vorgangstypList = new VorgangstypList();
   });
 
   it('sollte erstellt werden', () => {
-    expect(vorgangstypList).toBeTruthy();
+
+    expect( vorgangstypList ).toBeTruthy();
+
   });
 
   it('sollte die Vorgangstypen asynchron liefern', async () => {
+
     const liste = await vorgangstypList.getList();
 
-    expect(liste).toBeDefined();
-    expect(liste.length).toBe(18);
+    expect( liste ).toBeDefined();
+
+    expect( liste.length ).toBe(18);
   });
 
   it('sollte den Vertragsabschluss enthalten', async () => {
+
     const liste = await vorgangstypList.getList();
 
-    const typ = liste.find(typ => typ.typNr === '10101');
+    const typ = liste.find( typ => typ.typNr === '10101');
 
-    expect(typ).toBeDefined();
-    expect(typ?.typLangText).toBe('Vertragsabschluss');
+    expect( typ ).toBeDefined();
+
+    expect( typ?.typLangText ).toBe( 'Vertragsabschluss' );
+
   });
 
   it('sollte eine Promise zurückgeben', () => {
+
     const ergebnis = vorgangstypList.getList();
 
-    expect(ergebnis).toBeInstanceOf(Promise);
+    expect( ergebnis ).toBeInstanceOf( Promise );
   });
 
 });
