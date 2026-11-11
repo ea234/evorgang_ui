@@ -9,6 +9,13 @@
             Zurück zur Auswahl
         </button>
 
+        <button
+            type="button"
+            class="befehl-button"
+            (click)="onShowDokument()">
+            Show Dokument
+        </button>
+
         @if (!bearbeitungsmodus) {
 
             @if (darfBearbeiten) {

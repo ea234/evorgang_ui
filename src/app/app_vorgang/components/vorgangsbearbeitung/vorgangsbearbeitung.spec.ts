@@ -4,6 +4,16 @@ import { VorgangService } from '../../services/vorgang.service';
 import { Vorgangsbearbeitung } from './vorgangsbearbeitung';
 import { User } from '../../../user/modell/user';
 import { Vorgang } from '../../modell/vorgang';
+import { DokumentenService } from '../../services/dokumenten.service';
+import { HttpClient } from '@angular/common/http';
+
+const httpClientMock = {
+    get: vi.fn(),
+    post: vi.fn(),
+    put: vi.fn(),
+    delete: vi.fn()
+} as unknown as HttpClient;
+
 
 describe('Vorgangsbearbeitung', () => {
 
@@ -11,6 +21,7 @@ describe('Vorgangsbearbeitung', () => {
     let user: User;
     let vorgang: Vorgang;
     let vorgangService: VorgangService;
+    let dokumentenService : DokumentenService;
 
     beforeEach(() => {
 
@@ -43,7 +54,9 @@ describe('Vorgangsbearbeitung', () => {
 
         vorgangService = new VorgangService();
 
-        component = new Vorgangsbearbeitung(vorgangService);
+        dokumentenService = new DokumentenService( httpClientMock );
+
+        component = new Vorgangsbearbeitung( dokumentenService, vorgangService );
 
         component.user = user;
         component.vorgang = vorgang;

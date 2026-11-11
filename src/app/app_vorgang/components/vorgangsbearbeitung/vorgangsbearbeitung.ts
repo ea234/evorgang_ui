@@ -3,6 +3,7 @@ import { User } from '../../../user/modell/user';
 import { Vorgang } from '../../modell/vorgang';
 import { FkDate } from '../../../util/fkDate';
 import { VorgangService } from '../../services/vorgang.service';
+import { DokumentenService } from '../../services/dokumenten.service';
 
 type DialogAktion = 'zurueck' | 'beenden' | null;
 
@@ -30,7 +31,7 @@ export class Vorgangsbearbeitung implements OnInit {
 
   dialogAktion: DialogAktion = null;
 
-  constructor( private vorgangService: VorgangService ) {}
+  constructor( private dokumentenService : DokumentenService, private vorgangService: VorgangService ) {}
 
   ngOnInit(): void 
   {
@@ -222,6 +223,83 @@ export class Vorgangsbearbeitung implements OnInit {
     }
 
     this.onFeldGeaendert();
+  }
+
+
+  onShowDokument() : void 
+  {
+
+    this.dokumentenService.pdfLaden('12345').subscribe({
+
+      next: ( pdf: Blob ) => 
+      {
+        console.log( "PDF ok" );
+
+        this.dokumentenService.showDocument( pdf );
+      },
+
+      error: ( fehler: unknown ) => 
+      {
+        console.error('PDF konnte nicht geladen werden:', fehler);
+      }
+  });
+
+/*
+
+        $( "#content .section[name=unterlagen] > .message" ).html( "" ).fadeOut();
+    
+    $( "#bsrPdfAnzeigeBereichWarten" ).show();
+
+    var app_post_data = {};
+
+    app_post_data[ "page"                         ] = "PageGetDokument";
+    app_post_data[ "action"                       ] = "get";
+    app_post_data[ "rueckgabe_art"                ] = "pdf";
+    app_post_data[ "knz_nur_antrags_pdf"          ] = app.getKnzNurAntragsPdf() ? "true" : "false";
+    app_post_data[ "knz_berechnung_durchgefuehrt" ] = app.getKnzBerechnungDurchgefuehrt() ? "1" : "0" ;
+    
+    if ( pDokument === "Antrag" )
+    {
+      app_post_data[ "knz_dokument_antrag"    ] = "true";
+      app_post_data[ "knz_dokument_vorschlag" ] = "false";
+    }
+    else if ( pDokument === "Vorschlag" )
+    {
+      app_post_data[ "knz_dokument_antrag"    ] = "false";
+      app_post_data[ "knz_dokument_vorschlag" ] = "true";
+      app_post_data[ "verlauf_verdichtung"    ] = $( "#content .section select[name=cbVerlaufsdarstellung]" ).val();
+    }
+    else
+    {
+      $( "#content .section[name=unterlagen] > .message" ).html( "<p>Keine Unterlagen zum Anzeigen ausgewählt</p>" ).fadeIn();
+
+      return;
+    }
+
+    //var iOS = ( /iphone|ipad|ipod/i.test( navigator.userAgent.toLowerCase() ) );
+    
+    var knz_ist_android = ( /android/i.test( navigator.userAgent.toLowerCase() ) );
+
+    if ( knz_ist_android )
+    {
+      $( 'form[name=getPdfDocument]' ).attr( 'method', 'get' );
+    }
+
+    var html_input_felder = '';
+
+    for ( var parameter in app_post_data )
+    {
+      var value = '' + app_post_data[ parameter ];
+      
+      html_input_felder += '<input type="hidden" name="' + parameter + '" value="' + value.replace( '€', 'EUR' ) + '" />';
+    }
+
+    $( '#postParameter' ).html( html_input_felder );
+
+    $( 'form[name=getPdfDocument]' ).submit();
+    
+    $( "#bsrPdfAnzeigeBereichWarten" ).hide();
+*/
   }
 
 }
