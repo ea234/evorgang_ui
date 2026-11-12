@@ -23,18 +23,16 @@ export class DokumentenService {
         {
             const url = URL.createObjectURL( pBlobDokument );
 
+            const new_window = window.open('', '_blank');
 
-
-            const newWindow = window.open('', '_blank');
-
-            if (newWindow) {
-                newWindow.location.href = url;
-            } else {
+            if ( new_window ) 
+            {
+                new_window.location.href = url;
+            } 
+            else 
+            {
                 console.error('Das Öffnen des neuen Fensters wurde blockiert.');
             }
-
-
-            //window.open( url, '_blank' );
 
             break;
         }
