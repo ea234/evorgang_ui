@@ -1,9 +1,6 @@
 
 <app-statusbar-top
-    [title]="fkAnwendung.appTitle"
-    [icon]="fkAnwendung.appIcon"
-    [isDarkMode]="fkAnwendung.isDarkMode"
-    [user]="fkAnwendung.currentUser"
+    [fkAnwendung]="fkAnwendung"    
     (themeChanged)="onThemeChanged( $event )"
     (logout)="onLogout()">
 </app-statusbar-top>

@@ -29,7 +29,11 @@ export class UserService {
     if ( pBenutzerName === 'demo' &&  pBenutzerKennwort === 'demo123' ) 
     {
        return of( { success: true, user: new User( pBenutzerName )  } );
+    } 
 
+    if ( pBenutzerName === 'test' &&  pBenutzerKennwort === 'test' ) 
+    {
+       return of( { success: true, user: new User( pBenutzerName )  } );
     } 
 
     return of( { success: false, error: 'INVALID_CREDENTIALS', message : 'Benutzername oder Passwort ist falsch.'  } );

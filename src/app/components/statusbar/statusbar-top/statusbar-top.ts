@@ -1,5 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { User } from '../../../user/modell/user';
+import { FkAnwendung } from '../../../models/fkAnwendung';
+
 
 @Component({
   selector: 'app-statusbar-top',
@@ -9,35 +11,45 @@ import { User } from '../../../user/modell/user';
 })
 export class StatusbarTop 
 {
-  @Input()  title        : string      = '';
-
-  @Input()  icon         : string      = '';
-
-  @Input()  user         : User | null = null;
-
-  @Input()  isDarkMode   : boolean     = false;
+  @Input( { required : true } ) fkAnwendung   : FkAnwendung | null = null;
 
   @Output() themeChanged = new EventEmitter<boolean>();
 
   @Output() logout       = new EventEmitter<void>();
 
-  ngOnInit(): void 
+  icon() : string
   {
-    this.setTheme();
+    return this.fkAnwendung!.appIcon;
+  }
+
+  isDarkMode() : boolean
+  {
+    return this.fkAnwendung!.isDarkMode;
+  }
+
+  title() : string 
+  {
+    return this.fkAnwendung?.appTitle ?? '';
+  }
+
+  hasUser() : boolean
+  {
+    return ( ( this.fkAnwendung?.currentUser !== null ) && ( this.fkAnwendung?.currentUser !== undefined ) );
+  }
+
+  user() : String
+  {
+    if ( this.hasUser() )
+    {
+      return this.fkAnwendung?.currentUser?.username!;
+    }
+
+    return '';
   }
 
   toggleTheme(): void 
   {
-    this.isDarkMode = !this.isDarkMode;
-
-    this.setTheme();
-
-    this.themeChanged.emit(this.isDarkMode );
-  }
-
-  setTheme(): void 
-  {
-    document.documentElement.setAttribute( 'data-theme', this.isDarkMode ? 'dark' : 'light' );
+    this.themeChanged.emit( !this.fkAnwendung!.isDarkMode );
   }
 
   onLogout(): void 

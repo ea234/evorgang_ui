@@ -1,7 +1,8 @@
-import { Component, signal } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { User } from './user/modell/user';
 import { FkAnwendung } from './models/fkAnwendung';
 import { ApplicationType } from './models/application-type';
+import { DOCUMENT } from '@angular/core';
 
 @Component({
   selector: 'app-root',
@@ -11,13 +12,21 @@ import { ApplicationType } from './models/application-type';
 })
 export class App 
 {
-  // Zentrale Anwendungsverwaltung
+  //constructor( @Inject(DOCUMENT) private document: Document ) {}
+
+    // Zentrale Anwendungsverwaltung
   fkAnwendung: FkAnwendung = new FkAnwendung();
 
-  // Erfolgreiche Anmeldung
-  onLoginSuccess(username: string): void 
+  ngOnInit(): void 
   {
-    this.fkAnwendung.currentUser = new User(username);
+    document.documentElement.setAttribute( 'data-theme', this.fkAnwendung.isDarkMode ? 'dark' : 'light' );
+  }
+
+
+  // Erfolgreiche Anmeldung
+  onLoginSuccess( pUserName : string ): void 
+  {
+    this.fkAnwendung.currentUser = new User( pUserName );
 
     this.fkAnwendung.loginStatus = this.fkAnwendung.logged_in;
   }
@@ -26,6 +35,10 @@ export class App
   onThemeChanged( dark: boolean ): void 
   {
     this.fkAnwendung.isDarkMode = dark;
+
+    //console.log( "onThemeChanged " + this.fkAnwendung.isDarkMode + "  Parameter " + dark );
+
+    document.documentElement.setAttribute( 'data-theme', dark ? 'dark' : 'light' );
   }
 
   // Abmeldung

@@ -137,7 +137,7 @@ export class FkDate {
    * return Ein Datum im Format JJJJMMTT als Long, wenn sich aus der Eingabe ein Datum parsen laesst. 
    *         Im Fehlerfall wird 0 zurueckgegeben.
    */
-  static parseToLong( pString: string | number ): number 
+  public static parseToLong( pString: string | number ) : number 
   {
 
     /*
@@ -189,7 +189,7 @@ export class FkDate {
   }  
 
 
-  static getString( pString: string | number ): string | undefined
+  public static getString( pString: string | number ) : string | undefined
   {
     let long_datum : number = this.parseToLong( pString );
 
@@ -244,7 +244,7 @@ export class FkDate {
    * @param pEingabe das Eingabedatum im Format "TT.MM.JJJJ" (Tag und Monat koennen einstellig sein, das Jahr muss 4 stellig sein)
    * @return das Datum im Long-Format JJJJMMTT oder 0 sofern die Eingabe kein korrektes Datum ist.
    */
-  static getLongAusTTPMMPJJJJ(pEingabe: string): number 
+  private static getLongAusTTPMMPJJJJ( pEingabe: string ): number 
   {
     try
     {
@@ -293,15 +293,15 @@ export class FkDate {
        * Es werden fuer den Tag, Monat und Jahr jeweils eine Variable
        * deklariert und mit -1 vorbelegt.
        */
-      let datum_tag   = -1;
-      let datum_monat = -1;
-      let datum_jahr  = -1;
+      let datum_tag   : number = -1;
+      let datum_monat : number = -1;
+      let datum_jahr  : number = -1;
 
       let akt_char_code : number = 32;
 
       let akt_zahl : number = 0;
 
-      let akt_index = 0;
+      let akt_index : number = 0;
 
       /*
        * Position Punkt Erwartet
@@ -311,7 +311,7 @@ export class FkDate {
        * 0123456789  0123456789  0123456789  
        * 06.01.2010  006.1.2010  006001.201  
        */
-      let position_punkt_erwartet = 10;
+      let position_punkt_erwartet : number = 10;
 
       /*
        * While-Schleife ueber die Eingabe zum lesen von Tag, Monat und Jahr.
@@ -444,7 +444,7 @@ export class FkDate {
          * Fuer die Maximalwertpruefung des Tages wird die Anzahl der Tage von 
          * Monat und Jahr bestimmt. Dabei wird das Schaltjahr beruecksichtigt.
          */
-        let anzahl_tage = 31;
+        let anzahl_tage : number = 31;
 
         switch ( datum_monat )
         {
@@ -505,7 +505,7 @@ export class FkDate {
    * Als Eingabe werden String und Number akzeptiert.
    * Bei ungültigen Eingaben wird 0 zurückgegeben.
    */
-  static getLongAusJJJJMMTT(pEingabe: unknown): number 
+ private static getLongAusJJJJMMTT( pEingabe : unknown ) : number 
  {
     try
     {
@@ -523,9 +523,9 @@ export class FkDate {
        * Es werden fuer den Tag, Monat und Jahr jeweils eine Variable
        * deklariert und mit -1 vorbelegt.
        */
-      let datum_tag   = -1;
-      let datum_monat = -1;
-      let datum_jahr  = -1;
+      let datum_tag   : number = -1;
+      let datum_monat : number = -1;
+      let datum_jahr  : number = -1;
 
       if ( typeof pEingabe == 'string' )
       {
@@ -550,9 +550,9 @@ export class FkDate {
   
         let akt_char_code : number = 32;
 
-        let akt_zahl = 0;
+        let akt_zahl  : number = 0;
   
-        let akt_index = 0;
+        let akt_index : number = 0;
   
         /*
          * While-Schleife ueber die Eingabe zum lesen von Tag, Monat und Jahr.
@@ -767,7 +767,7 @@ export class FkDate {
    * @param pEingabe das Eingabedatum im Format "TT.MM.JJJJ" (Tag und Monat koennen einstellig sein, das Jahr muss 4 stellig sein)
    * @return das Datum im Format "TT.MM.JJJJ", oder undefined sofern die Eingabe kein korrektes Datum ist.
    */
-   static getStringAusTTPMMPJJJJ(  pEingabe: unknown ): string | undefined 
+  private static getStringAusTTPMMPJJJJ( pEingabe: unknown ): string | undefined 
   {
     try
     {
@@ -816,15 +816,15 @@ export class FkDate {
        * Es werden fuer den Tag, Monat und Jahr jeweils eine Variable
        * deklariert und mit -1 vorbelegt.
        */
-      let datum_tag   = -1;
-      let datum_monat = -1;
-      let datum_jahr  = -1;
+      let datum_tag   : number = -1;
+      let datum_monat : number = -1;
+      let datum_jahr  : number = -1;
 
       let akt_char_code : number = 32;
 
-      let akt_zahl = 0;
+      let akt_zahl  : number = 0;
 
-      let akt_index = 0;
+      let akt_index : number = 0;
 
       /*
        * Position Punkt Erwartet
@@ -834,7 +834,7 @@ export class FkDate {
        * 0123456789  0123456789  0123456789  
        * 06.01.2010  006.1.2010  006001.201  
        */
-      let position_punkt_erwartet = 10;
+      let position_punkt_erwartet : number = 10;
 
       /*
        * While-Schleife ueber die Eingabe zum lesen von Tag, Monat und Jahr.
@@ -967,7 +967,7 @@ export class FkDate {
          * Fuer die Maximalwertpruefung des Tages wird die Anzahl der Tage von 
          * Monat und Jahr bestimmt. Dabei wird das Schaltjahr beruecksichtigt.
          */
-        let anzahl_tage = 31;
+        let anzahl_tage : number = 31;
 
         switch ( datum_monat )
         {
@@ -1024,9 +1024,7 @@ export class FkDate {
   /**
    * Wandelt JJJJMMTT in TT.MM.JJJJ um.
    */
-  static getStringAusJJJJMMTT(
-    pEingabe: unknown
-  ): string | undefined 
+  private static getStringAusJJJJMMTT( pEingabe: unknown ): string | undefined 
   {
     try
     {
@@ -1044,9 +1042,9 @@ export class FkDate {
        * Es werden fuer den Tag, Monat und Jahr jeweils eine Variable
        * deklariert und mit -1 vorbelegt.
        */
-      let datum_tag   = -1;
-      let datum_monat = -1;
-      let datum_jahr  = -1;
+      let datum_tag   : number = -1;
+      let datum_monat : number = -1;
+      let datum_jahr  : number = -1;
 
       if ( typeof pEingabe == 'string' )
       {
@@ -1071,9 +1069,9 @@ export class FkDate {
   
         let akt_char_code : number = 32;
 
-        let akt_zahl = 0;
+        let akt_zahl  : number = 0;
   
-        let akt_index = 0;
+        let akt_index : number = 0;
   
         /*
          * While-Schleife ueber die Eingabe zum lesen von Tag, Monat und Jahr.
@@ -1181,7 +1179,7 @@ export class FkDate {
          * Fuer die Maximalwertpruefung des Tages wird die Anzahl der Tage von 
          * Monat und Jahr bestimmt. Dabei wird das Schaltjahr beruecksichtigt.
          */
-        let anzahl_tage = 31;
+        let anzahl_tage : number = 31;
 
         switch ( datum_monat )
         {

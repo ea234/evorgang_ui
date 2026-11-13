@@ -2,6 +2,11 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { StatusbarTop } from './statusbar-top';
 import { User } from '../../../user/modell/user';
+import { FkAnwendung  } from '../../../models/fkAnwendung';
+
+/*
+ * ng test --include "src/app/components/statusbar/statusbar-top/statusbar-top.spec.ts"
+ */
 
 describe('StatusbarTop', () => {
 
@@ -21,36 +26,62 @@ describe('StatusbarTop', () => {
 
     component = fixture.componentInstance;
 
+    const anwendung = new FkAnwendung();
+
+    anwendung.currentUser = new User('demo');
+
+    anwendung.isDarkMode = false;
+
+    fixture.componentRef.setInput('fkAnwendung', anwendung);
+
     await fixture.whenStable();
+  });
+
+  it( 'soll den Benutzernamen im Template anzeigen', () => {
+
+      const users = new User( 'test' );
+
+      const fkAnwendung = new FkAnwendung();
+
+      fkAnwendung.currentUser = users;
+
+      fixture.componentRef.setInput( 'fkAnwendung', fkAnwendung );
+
+      fixture.detectChanges();
+
+      const element = fixture.nativeElement as HTMLElement;
+
+      const username = element.querySelector( '#status-username' );
+
+      expect( username ).not.toBeNull();
+
+      expect( username?.textContent?.trim() ).toBe( 'test' );
 
   });
 
-  it('soll die Komponente erstellen', () => {
+  it( 'soll den Titel im Template anzeigen', () => {
+
+      const fkAnwendung = new FkAnwendung();
+
+      fkAnwendung.appTitle = 'appTitle';
+
+      fixture.componentRef.setInput( 'fkAnwendung', fkAnwendung );
+
+      fixture.detectChanges();
+
+      const element = fixture.nativeElement as HTMLElement;
+
+      const appTitle = element.querySelector('#app-title');
+
+      expect( appTitle ).not.toBeNull();
+
+      expect( appTitle?.textContent?.trim() ).toBe( 'appTitle' );
+
+  });
+
+  it( 'soll die Komponente erstellen', () => {
 
     expect( component ).toBeTruthy();
-
-  });
-
-  it('soll initial den Light-Mode verwenden', () => {
-
-    expect( component.isDarkMode ).toBe( false );
-
-  });
-
-  it('soll beim Theme-Wechsel den Dark-Mode aktivieren', () => {
-
-    component.toggleTheme();
-
-    expect( component.isDarkMode ).toBe( true );
-
-  });
-
-  it('soll beim zweiten Theme-Wechsel den Light-Mode aktivieren', () => {
-
-    component.toggleTheme();
-    component.toggleTheme();
-
-    expect( component.isDarkMode ).toBe( false );
 
   });
 
@@ -73,33 +104,4 @@ describe('StatusbarTop', () => {
     expect( emitSpy ).toHaveBeenCalled();
 
   });
-
-  it('soll den Benutzernamen im Template anzeigen', () => {
-
-    fixture.componentRef.setInput( 'user', new User( 'demo' ) );
-
-    fixture.detectChanges();
-
-    const element = fixture.nativeElement as HTMLElement;
-
-    expect( element.textContent ).toContain( 'demo' );
-
-  });
-
-  it('soll beim Klick auf den Theme-Button den Dark-Mode aktivieren', () => {
-
-    const element = fixture.nativeElement as HTMLElement;
-
-    const button = element.querySelector('#theme-toggle') as HTMLButtonElement;
-
-    button.click();
-
-    fixture.detectChanges();
-
-    expect(component.isDarkMode).toBe(true);
-
-    expect(element.textContent).toContain('Dunkel');
-
-  });
-
 });

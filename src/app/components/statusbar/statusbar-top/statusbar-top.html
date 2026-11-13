@@ -1,15 +1,16 @@
 
 <header class="statusbar">
+
     <div class="app-brand">
-        <span class="brand-icon">{{ icon }}</span>
-        <span>{{ title }}</span>
+        <span class="brand-icon">{{ icon() }}</span>
+        <span id="app-title">{{ title() }}</span>
     </div>
 
     <div class="statusbar-right">
 
-        @if (user !== null) {
-            <span class="status-username">
-                {{ user.username }}
+        @if ( hasUser() ) {
+            <span class="status-username" id="status-username" >
+                {{ user() }}
             </span>
 
             <button
@@ -32,9 +33,8 @@
             (click)="toggleTheme()"
 
             >
-            <span id="theme-icon" >{{ isDarkMode ? '&#9789;' : '&#9728;' }}</span>
-            <span id="theme-label">{{ isDarkMode ? 'Dunkel'  : 'Hell'    }}</span>
+            <span id="theme-icon" >{{ isDarkMode() ? '&#9789;' : '&#9728;' }}</span>
+            <span id="theme-label">{{ isDarkMode() ? 'Dunkel'  : 'Hell'    }}</span>
         </button>
     </div>
 </header>
-
