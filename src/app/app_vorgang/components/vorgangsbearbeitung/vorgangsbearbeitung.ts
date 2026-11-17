@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { User } from '../../../user/modell/user';
 import { Vorgang } from '../../modell/vorgang';
 import { FkDate } from '../../../util/fkDate';
@@ -247,23 +247,17 @@ constructor( private dokumentenService : DokumentenService,
   }
 
 
-  onShowDokument() : void 
+  onShowDokument(): void
   {
+    const url = this.router.serializeUrl(
+      this.router.createUrlTree([
+        '/evorgang/dokument',
+        '12345'
+      ])
+    );
 
-    this.dokumentenService.pdfLaden('12345').subscribe({
-
-      next: ( pdf: Blob ) => 
-      {
-        console.log( "PDF ok" );
-
-        this.dokumentenService.showDocument( pdf );
-      },
-
-      error: ( fehler: unknown ) => 
-      {
-        console.error('PDF konnte nicht geladen werden:', fehler);
-      }
-  });
+    window.open(url, '_blank');
+  }
 
 /*
 
@@ -321,6 +315,6 @@ constructor( private dokumentenService : DokumentenService,
     
     $( "#bsrPdfAnzeigeBereichWarten" ).hide();
 */
-  }
+  
 
 }

@@ -1,24 +1,22 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing'; 
-import { Router } from '@angular/router';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { Router                               } from '@angular/router';
+import { ComponentFixture, TestBed            } from '@angular/core/testing'; 
+import { ApplicationSelection                 } from './application-selection'; 
+import { UserService                          } from '../../user/service/user.service';
+import { User                                 } from '../../user/modell/user'; 
+import { ApplicationType                      } from '../../models/application-type';
+import { AppModule                            } from '../../app-module'; 
 
-import { AppModule } from '../../app-module'; 
-import { ApplicationSelection } from './application-selection'; 
-import { User } from '../../user/modell/user'; 
-import { ApplicationType } from '../../models/application-type';
-import { UserService } from '../../user/service/user.service';
 
-const routerMock = {
-    navigate: vi.fn()
-};
+const routerMock      = { navigate: vi.fn() };
 
-const userServiceMock = {
-    getCurrentUser: vi.fn()
-};
+const userServiceMock = { getCurrentUser: vi.fn() };
+
 
 describe('ApplicationSelection', () => {
 
-  let component: ApplicationSelection; let fixture: ComponentFixture<ApplicationSelection>;
+  let component: ApplicationSelection; 
+  let fixture: ComponentFixture<ApplicationSelection>;
 
   beforeEach(async () => {
 
@@ -44,7 +42,6 @@ describe('ApplicationSelection', () => {
     fixture.detectChanges();
 
     await fixture.whenStable();
-
   });
 
   it( 'soll die Komponente erstellen', () => {
@@ -52,6 +49,7 @@ describe('ApplicationSelection', () => {
     expect(component).toBeTruthy();
 
   });
+
 
   it( 'soll den übergebenen Benutzer speichern', () => {
 
@@ -61,6 +59,7 @@ describe('ApplicationSelection', () => {
 
   });
 
+  
   it( 'soll den Benutzernamen im Template anzeigen', () => {
 
     const element = fixture.nativeElement as HTMLElement;
@@ -117,6 +116,7 @@ describe('ApplicationSelection', () => {
 
   });
 
+
   it( 'soll beim Klick auf den Öffnen-Button zur Vorgangsliste navigieren', () => {
 
       const element = fixture.nativeElement as HTMLElement;
@@ -131,6 +131,7 @@ describe('ApplicationSelection', () => {
 
   });
 
+
   it( 'soll bei einem nicht unterstützten Anwendungstyp nicht navigieren', () => {
 
       component.onOpenApplication( 'UNBEKANNT' as ApplicationType );
@@ -140,10 +141,10 @@ describe('ApplicationSelection', () => {
   });
 
 
+
   it( 'soll das ApplicationType-Enum im Template verfügbar machen', () => {
 
     expect( component.ApplicationType ).toBe( ApplicationType );
-
 
   });
 

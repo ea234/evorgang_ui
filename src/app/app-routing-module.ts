@@ -6,7 +6,7 @@ import { Login } from './components/login/login';
 import { ApplicationSelection } from './components/application-selection/application-selection';
 import { Vorgangssteuerung } from './app_vorgang/components/vorgangssteuerung/vorgangssteuerung';
 import { Vorgangsbearbeitung } from './app_vorgang/components/vorgangsbearbeitung/vorgangsbearbeitung';
-
+import { Dokumentenanzeige } from './app_vorgang/components/dokumentenanzeige/dokumentenanzeige';
 import { authGuard } from './user/service/auth.guard';
 
 const routes: Routes = [
@@ -29,7 +29,11 @@ const routes: Routes = [
       {
         path: 'vorgang/:id',
         component: Vorgangsbearbeitung
-      }
+      },
+      {
+        path: 'dokument/:paginiernummer',
+        component: Dokumentenanzeige
+      }      
     ]
   },
   {

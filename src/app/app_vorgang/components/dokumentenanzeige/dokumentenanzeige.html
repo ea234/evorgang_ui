@@ -1,0 +1,19 @@
+
+<div class="dokumentenanzeige">
+
+  @if (wirdGeladen) {
+    <p>Dokument wird geladen ...</p>
+  }
+
+  @if (ladeFehler) {
+    <p class="fehler">{{ ladeFehler }}</p>
+  }
+
+  @if (pdfUrl) {
+    <iframe
+      [src]="pdfUrl"
+      title="Dokumentenanzeige">
+    </iframe>
+  }
+
+</div>
