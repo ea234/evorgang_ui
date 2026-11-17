@@ -2,9 +2,7 @@
 
     <!-- LISTENANSICHT -->
 
-    <div
-        class="listenansicht"
-        [hidden]="ansicht !== 'liste'">
+    <div class="listenansicht" >
 
         <!-- LINKE NAVIGATION -->
 
@@ -132,18 +130,5 @@
         </main>
 
     </div>
-
-    <!-- DETAILANSICHT -->
-
-    @if ( ( ansicht === 'detail' ) && ( ausgewaehlterVorgang !== null ) )  {
-
-        <app-vorgangsbearbeitung
-            [user]="user"
-            [vorgang]="ausgewaehlterVorgang"
-            (backToSelection)="onBackToVorgangsliste()">
-
-        </app-vorgangsbearbeitung>
-
-    }
 
 </div>

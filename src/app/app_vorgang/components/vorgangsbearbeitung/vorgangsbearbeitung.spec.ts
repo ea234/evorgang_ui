@@ -1,4 +1,8 @@
 
+/*
+ * ng test --include "src/app/app_vorgang/components/vorgangsbearbeitung/vorgangsbearbeitung.spec.ts"
+ */
+
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { VorgangService } from '../../services/vorgang.service';
 import { Vorgangsbearbeitung } from './vorgangsbearbeitung';
@@ -6,6 +10,8 @@ import { User } from '../../../user/modell/user';
 import { Vorgang } from '../../modell/vorgang';
 import { DokumentenService } from '../../services/dokumenten.service';
 import { HttpClient } from '@angular/common/http';
+import { ActivatedRoute, Router } from '@angular/router';
+import { UserService } from '../../../user/service/user.service';
 
 const httpClientMock = {
     get: vi.fn(),
@@ -14,14 +20,15 @@ const httpClientMock = {
     delete: vi.fn()
 } as unknown as HttpClient;
 
-
 describe('Vorgangsbearbeitung', () => {
 
     let component: Vorgangsbearbeitung;
     let user: User;
     let vorgang: Vorgang;
     let vorgangService: VorgangService;
-    let dokumentenService : DokumentenService;
+    let dokumentenService: DokumentenService;
+    let userService: UserService;
+    let router: Router;
 
     beforeEach(() => {
 
@@ -54,12 +61,34 @@ describe('Vorgangsbearbeitung', () => {
 
         vorgangService = new VorgangService();
 
-        dokumentenService = new DokumentenService( httpClientMock );
+        dokumentenService = new DokumentenService(httpClientMock);
 
-        component = new Vorgangsbearbeitung( dokumentenService, vorgangService );
+        userService = {
+            getCurrentUser: vi.fn().mockReturnValue(user)
+        } as unknown as UserService;
 
-        component.user = user;
-        component.vorgang = vorgang;
+        router = {
+            navigate: vi.fn().mockResolvedValue(true)
+        } as unknown as Router;
+
+        const route = {
+            snapshot: {
+                paramMap: {
+                    get: vi.fn().mockReturnValue('1')
+                }
+            }
+        } as unknown as ActivatedRoute;
+
+        vi.spyOn(vorgangService, 'getVorgangById')
+            .mockReturnValue(vorgang);
+
+        component = new Vorgangsbearbeitung(
+            dokumentenService,
+            vorgangService,
+            userService,
+            route,
+            router
+        );
 
         component.ngOnInit();
     });
@@ -345,72 +374,61 @@ describe('Vorgangsbearbeitung', () => {
     // ZURÜCK ZUR AUSWAHL
     // =====================================
 
-    it('sollte ohne Änderungen direkt zur Auswahl zurückkehren', () => {
-
-        const backSpy = vi.spyOn(component.backToSelection, 'emit');
+    it( 'sollte ohne Änderungen direkt zur Auswahl zurückkehren', () => {
 
         component.onBackToSelection();
 
-        expect(backSpy).toHaveBeenCalledOnce();
+        expect( router.navigate ).toHaveBeenCalledWith( ['/evorgang/vorgang'] );
 
     });
 
-    it('sollte bei ungespeicherten Änderungen nicht direkt zurückkehren', () => {
+    it( 'sollte bei ungespeicherten Änderungen nicht direkt zurückkehren', () => {
 
-        const backSpy = vi.spyOn(component.backToSelection, 'emit');
+        const backSpy = vi.spyOn( router, 'navigate' );
 
         component.onBearbeiten();
 
-        component.bearbeiteterVorgang.vorgangStatus = 'In Bearbeitung';
+        component.bearbeiteterVorgang.vorgangUID = 'UID-002';
 
         component.onBackToSelection();
 
-        expect(component.dialogAktion).toBe('zurueck');
+        expect( component.dialogAktion ).toBe( 'zurueck' );
 
-        expect(backSpy).not.toHaveBeenCalled();
-
+        expect( backSpy ).not.toHaveBeenCalled();
     });
 
     // =====================================
     // BESTÄTIGUNGSDIALOG
     // =====================================
 
-    it('sollte beim Speichern im Dialog den Vorgang speichern und die Bearbeitung beenden', () => {
+    it( 'sollte beim Speichern im Dialog zur Auswahl zurückkehren', () => {
 
         component.onBearbeiten();
 
-        component.bearbeiteterVorgang.vorgangStatus = 'In Bearbeitung';
+        component.bearbeiteterVorgang.vorgangUID = 'UID-002';
 
-        component.onBearbeitungBeenden();
+        component.onBackToSelection();
 
         component.onDialogSpeichern();
 
-        expect(vorgang.vorgangStatus).toBe('Offen');
+        expect( vorgang.vorgangUID ).toBe( 'UID-002' );
 
-        expect(component.bearbeitungsmodus).toBe(false);
-
-        expect(component.dialogAktion).toBe(null);
-
+        expect( router.navigate ).toHaveBeenCalledWith( ['/evorgang/vorgang'] );
     });
 
-    it('sollte beim Verwerfen im Dialog die Änderungen zurücksetzen und die Bearbeitung beenden', () => {
+    it( 'sollte beim Verwerfen im Dialog zur Auswahl zurückkehren', () => {
 
         component.onBearbeiten();
 
-        component.bearbeiteterVorgang.vorgangStatus = 'In Bearbeitung';
+        component.bearbeiteterVorgang.vorgangUID = 'UID-002';
 
-        component.onBearbeitungBeenden();
+        component.onBackToSelection();
 
         component.onDialogVerwerfen();
 
-        expect(vorgang.vorgangStatus).toBe('Offen');
+        expect( vorgang.vorgangUID ).toBe( 'UID-001' );
 
-        expect(component.bearbeiteterVorgang.vorgangStatus)
-            .toBe('Offen');
-
-        expect(component.bearbeitungsmodus).toBe(false);
-
-        expect(component.dialogAktion).toBe(null);
+        expect( router.navigate ).toHaveBeenCalledWith( ['/evorgang/vorgang'] );
 
     });
 
@@ -428,62 +446,23 @@ describe('Vorgangsbearbeitung', () => {
 
         expect(component.bearbeitungsmodus).toBe(true);
 
-        expect(component.bearbeiteterVorgang.vorgangStatus)
-            .toBe('In Bearbeitung');
-
-    });
-
-    it('sollte beim Speichern im Dialog zur Auswahl zurückkehren', () => {
-
-        const backSpy = vi.spyOn(component.backToSelection, 'emit');
-
-        component.onBearbeiten();
-
-        component.bearbeiteterVorgang.vorgangStatus = 'In Bearbeitung';
-
-        component.onBackToSelection();
-
-        component.onDialogSpeichern();
-
-        expect(vorgang.vorgangStatus).toBe('Offen');
-
-        expect(backSpy).toHaveBeenCalledOnce();
-
-    });
-
-    it('sollte beim Verwerfen im Dialog zur Auswahl zurückkehren', () => {
-
-        const backSpy = vi.spyOn(component.backToSelection, 'emit');
-
-        component.onBearbeiten();
-
-        component.bearbeiteterVorgang.vorgangStatus = 'In Bearbeitung';
-
-        component.onBackToSelection();
-
-        component.onDialogVerwerfen();
-
-        expect(vorgang.vorgangStatus).toBe('Offen');
-
-        expect(backSpy).toHaveBeenCalledOnce();
+        expect( component.bearbeiteterVorgang.vorgangStatus ).toBe('In Bearbeitung');
 
     });
 
     it('sollte beim Weiterbearbeiten die Rückkehr zur Auswahl verhindern', () => {
 
-        const backSpy = vi.spyOn(component.backToSelection, 'emit');
-
         component.onBearbeiten();
 
-        component.bearbeiteterVorgang.vorgangStatus = 'In Bearbeitung';
+        component.bearbeiteterVorgang.vorgangUID = 'UID-002';
 
         component.onBackToSelection();
 
         component.onDialogWeiterBearbeiten();
 
-        expect(backSpy).not.toHaveBeenCalled();
+        expect( router.navigate ).not.toHaveBeenCalled();
 
-        expect(component.bearbeitungsmodus).toBe(true);
+        expect( component.bearbeitungsmodus ).toBe( true );
 
     });
 

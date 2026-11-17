@@ -1,134 +1,150 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing'; import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { ComponentFixture, TestBed } from '@angular/core/testing'; 
+import { Router } from '@angular/router';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
-import { AppModule } from '../../app-module'; import { ApplicationSelection } from './application-selection'; import { User } from '../../user/modell/user'; import { ApplicationType } from '../../models/application-type';
+import { AppModule } from '../../app-module'; 
+import { ApplicationSelection } from './application-selection'; 
+import { User } from '../../user/modell/user'; 
+import { ApplicationType } from '../../models/application-type';
+import { UserService } from '../../user/service/user.service';
+
+const routerMock = {
+    navigate: vi.fn()
+};
+
+const userServiceMock = {
+    getCurrentUser: vi.fn()
+};
 
 describe('ApplicationSelection', () => {
 
-let component: ApplicationSelection; let fixture: ComponentFixture<ApplicationSelection>;
+  let component: ApplicationSelection; let fixture: ComponentFixture<ApplicationSelection>;
 
-beforeEach(async () => {
+  beforeEach(async () => {
 
-await TestBed.configureTestingModule({
-  imports: [AppModule]
-}).compileComponents();
+    vi.clearAllMocks();
 
-fixture = TestBed.createComponent(ApplicationSelection);
+    userServiceMock.getCurrentUser.mockReturnValue( new User('demo') );
 
-component = fixture.componentInstance;
+    await TestBed.configureTestingModule({
 
-fixture.componentRef.setInput('user', new User('demo'));
+        imports: [AppModule],
 
-fixture.detectChanges();
+        providers: [
+            { provide: Router,      useValue: routerMock      },
+            { provide: UserService, useValue: userServiceMock }
+        ]
 
-await fixture.whenStable();
+    }).compileComponents();
 
+    fixture = TestBed.createComponent(ApplicationSelection);
 
-});
+    component = fixture.componentInstance;
 
-it('soll die Komponente erstellen', () => {
+    fixture.detectChanges();
 
-expect(component).toBeTruthy();
+    await fixture.whenStable();
 
+  });
 
-});
+  it( 'soll die Komponente erstellen', () => {
 
-it('soll den übergebenen Benutzer speichern', () => {
+    expect(component).toBeTruthy();
 
-expect(component.user).toBeInstanceOf(User);
+  });
 
-expect(component.user.username).toBe('demo');
+  it( 'soll den übergebenen Benutzer speichern', () => {
 
+    expect(component.user).toBeInstanceOf(User);
 
-});
+    expect(component.user.username).toBe('demo');
 
-it('soll den Benutzernamen im Template anzeigen', () => {
+  });
 
-const element = fixture.nativeElement as HTMLElement;
+  it( 'soll den Benutzernamen im Template anzeigen', () => {
 
-expect(element.textContent).toContain('Willkommen, demo!');
+    const element = fixture.nativeElement as HTMLElement;
 
+    expect( element.textContent ).toContain( 'Willkommen, demo!' );
 
-});
-
-it('soll die Aufforderung zur Anwendungsauswahl anzeigen', () => {
-
-const element = fixture.nativeElement as HTMLElement;
-
-expect(element.textContent).toContain(
-  'Bitte wähle eine Anwendung aus.'
-);
+  });
 
 
-});
+  it( 'soll die Aufforderung zur Anwendungsauswahl anzeigen', () => {
 
-it('soll den Anwendungsnamen Evorgang anzeigen', () => {
+    const element = fixture.nativeElement as HTMLElement;
 
-const element = fixture.nativeElement as HTMLElement;
+    expect(element.textContent).toContain( 'Bitte wähle eine Anwendung aus.' );
 
-expect(element.textContent).toContain('Evorgang');
+  });
 
+  it( 'soll den Anwendungsnamen Evorgang anzeigen', () => {
 
-});
+    const element = fixture.nativeElement as HTMLElement;
 
-it('soll die Beschreibung der Anwendung anzeigen', () => {
+    expect( element.textContent ).toContain( 'Evorgang' );
 
-const element = fixture.nativeElement as HTMLElement;
+  });
 
-expect(element.textContent).toContain(
-  'Verwaltung und Bearbeitung von Vorgängen.'
-);
+  it( 'soll die Beschreibung der Anwendung anzeigen', () => {
 
+    const element = fixture.nativeElement as HTMLElement;
 
-});
+    expect(element.textContent).toContain( 'Verwaltung und Bearbeitung von Vorgängen.' );
 
-it('soll den Öffnen-Button anzeigen', () => {
+  });
 
-const element = fixture.nativeElement as HTMLElement;
+  it( 'soll den Öffnen-Button anzeigen', () => {
 
-const button = element.querySelector('button');
+    const element = fixture.nativeElement as HTMLElement;
 
-expect(button).toBeTruthy();
+    const button = element.querySelector( 'button' );
 
-expect(button?.textContent).toContain('Öffnen');
+    expect( button ).toBeTruthy();
 
+    expect( button?.textContent ).toContain( 'Öffnen' );
 
-});
-
-it('soll beim Öffnen einer Anwendung das applicationSelected-Event auslösen', () => {
-
-const spy = vi.spyOn(component.applicationSelected, 'emit');
-
-component.onOpenApplication(ApplicationType.VORGANGSSTEUERUNG);
-
-expect(spy).toHaveBeenCalledWith(
-  ApplicationType.VORGANGSSTEUERUNG
-);
+  });
 
 
-});
+  it( 'soll beim Öffnen der Vorgangssteuerung zur Vorgangsliste navigieren', () => {
 
-it('soll beim Klick auf den Öffnen-Button die Vorgangssteuerung auswählen', () => {
+      component.onOpenApplication( ApplicationType.VORGANGSSTEUERUNG );
 
-const spy = vi.spyOn(component.applicationSelected, 'emit');
+      expect(routerMock.navigate).toHaveBeenCalledOnce();
 
-const element = fixture.nativeElement as HTMLElement;
+      expect(routerMock.navigate).toHaveBeenCalledWith( ['/evorgang/vorgang'] );
 
-const button = element.querySelector('button') as HTMLButtonElement;
+  });
 
-button.click();
+  it( 'soll beim Klick auf den Öffnen-Button zur Vorgangsliste navigieren', () => {
 
-expect(spy).toHaveBeenCalledWith(
-  ApplicationType.VORGANGSSTEUERUNG
-);
+      const element = fixture.nativeElement as HTMLElement;
+
+      const button = element.querySelector('button') as HTMLButtonElement;
+
+      button.click();
+
+      expect(routerMock.navigate).toHaveBeenCalledOnce();
+
+      expect(routerMock.navigate).toHaveBeenCalledWith( [ '/evorgang/vorgang' ] );
+
+  });
+
+  it( 'soll bei einem nicht unterstützten Anwendungstyp nicht navigieren', () => {
+
+      component.onOpenApplication( 'UNBEKANNT' as ApplicationType );
+
+      expect(routerMock.navigate).not.toHaveBeenCalled();
+
+  });
 
 
-});
+  it( 'soll das ApplicationType-Enum im Template verfügbar machen', () => {
 
-it('soll das ApplicationType-Enum im Template verfügbar machen', () => {
-
-expect(component.ApplicationType).toBe(ApplicationType);
+    expect( component.ApplicationType ).toBe( ApplicationType );
 
 
-});
+  });
 
 });

@@ -1,6 +1,7 @@
-import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
-import { User } from '../../../user/modell/user';
+import { UserService } from '../../../user/service/user.service';
 import { Vorgang } from '../../modell/vorgang';
 import { VorgangService } from '../../services/vorgang.service';
 import { FkDate } from '../../../util/fkDate';
@@ -24,13 +25,10 @@ interface VorgangsGruppe {
 })
 export class Vorgangssteuerung implements OnInit, OnDestroy {
 
-  @Input( { required: true } ) user! : User;
-
-  @Output() backToApplicationSelection = new EventEmitter<void>();
-
   private readonly destroy = new Subject<void>();
 
-  constructor( private vorgangService : VorgangService) {}
+  constructor( private vorgangService : VorgangService,
+               private router: Router ) {}
 
   ngOnInit(): void 
   {
@@ -41,11 +39,6 @@ export class Vorgangssteuerung implements OnInit, OnDestroy {
         next: ( vorgaenge : Vorgang[]) => {
 
             this.vorgaenge = vorgaenge;
-
-            if (this.ausgewaehlterVorgangId !== null) {
-
-                this.ausgewaehlterVorgang = vorgaenge.find( vorgang => vorgang.vorgangID === this.ausgewaehlterVorgangId ) ?? null;
-            }
         },
 
         error: ( fehler : unknown) => {
@@ -74,12 +67,7 @@ export class Vorgangssteuerung implements OnInit, OnDestroy {
 
   onBackToApplicationSelection(): void 
   {
-    this.backToApplicationSelection.emit();
-  }
-
-  onBackToVorgangsliste(): void 
-  {
-    this.ansicht = 'liste';
+    this.router.navigate(['/evorgang']);
   }
 
   // =====================================
@@ -140,8 +128,10 @@ export class Vorgangssteuerung implements OnInit, OnDestroy {
       return;
     }
 
-    this.ansicht = 'detail';
+    this.router.navigate(['/evorgang/vorgang', this.ausgewaehlterVorgang.vorgangID]);
   }
+
+
 
   // =====================================
   // Datumsformatierung

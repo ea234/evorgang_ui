@@ -1,31 +1,34 @@
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-
 import { Vorgangssteuerung } from './vorgangssteuerung';
-import { User } from '../../../user/modell/user';
 import { Vorgang } from '../../modell/vorgang';
 import { VorgangService } from '../../services/vorgang.service';
+import { Router } from '@angular/router';
+
+/*
+ * ng test --include "src/app/app_vorgang/components/vorgangssteuerung/vorgangssteuerung.spec.ts"
+ */
 
 describe('Vorgangssteuerung', () => {
 
   let component: Vorgangssteuerung;
-  let user: User;
+  let vorgangService: VorgangService;
+  let router: Router;
 
   beforeEach(() => {
 
-    component = new Vorgangssteuerung( new VorgangService() );
+    vorgangService = new VorgangService();
+
+    router = {
+      navigate: vi.fn()
+    } as unknown as Router;
+
+    component = new Vorgangssteuerung( vorgangService, router );
 
     component.ngOnInit();
-
-    user = {
-      username: 'demo',
-      darfVorgangBearbeiten: () => true
-    } as User;
-
-    component.user = user;
-
   });
-
+  
+  
   // =====================================
   // INITIALISIERUNG
   // =====================================
@@ -36,21 +39,9 @@ describe('Vorgangssteuerung', () => {
 
   });
 
-  it( 'soll initial die Listenansicht verwenden', () => {
-
-    expect( component.ansicht ).toBe( 'liste' );
-
-  });
-
   it( 'soll initial nach Eingangsdatum verdichten', () => {
 
     expect( component.verdichtungsart ).toBe('datumEingang');
-
-  });
-
-  it( 'soll den übergebenen Benutzer speichern', () => {
-
-    expect( component.user ).toBe( user );
 
   });
 
@@ -66,22 +57,11 @@ describe('Vorgangssteuerung', () => {
   // NAVIGATION
   // =====================================
 
-  it( 'soll beim Zurückkehren die Navigation auslösen', () => {
-
-    const spy = vi.spyOn( component.backToApplicationSelection, 'emit' );
+  it( 'soll zur Anwendungsauswahl zurückkehren', () => {
 
     component.onBackToApplicationSelection();
 
-    expect( spy ).toHaveBeenCalledOnce();
-  });
-
-  it( 'soll zur Vorgangsliste zurückkehren', () => {
-
-    component.ansicht = 'detail';
-
-    component.onBackToVorgangsliste();
-
-    expect( component.ansicht ).toBe( 'liste' );
+    expect( router.navigate ).toHaveBeenCalledWith( ['/evorgang'] );
 
   });
 
@@ -101,15 +81,15 @@ describe('Vorgangssteuerung', () => {
 
   });
 
-  it( 'soll die Detailansicht ohne Auswahl nicht öffnen', () => {
+  it( 'soll ohne Auswahl keinen Vorgang öffnen', () => {
 
     component.onVorgangAnsehen();
 
-    expect( component.ansicht ).toBe( 'liste' );
+    expect( router.navigate ).not.toHaveBeenCalled();
 
   });
 
-  it( 'soll einen ausgewählten Vorgang öffnen', () => {
+  it( 'soll einen ausgewählten Vorgang über die Route öffnen', () => {
 
     const vorgang = component.vorgaenge[0];
 
@@ -117,7 +97,7 @@ describe('Vorgangssteuerung', () => {
 
     component.onVorgangAnsehen();
 
-    expect( component.ansicht ).toBe( 'detail' );
+    expect( router.navigate ).toHaveBeenCalledWith( ['/evorgang/vorgang', vorgang.vorgangID] );
 
   });
 
@@ -131,9 +111,10 @@ describe('Vorgangssteuerung', () => {
 
     expect( component.ausgewaehlterVorgangId ).toBe( vorgang.vorgangID );
 
-    expect( component.ansicht ).toBe( 'detail' );
+    expect( router.navigate ).toHaveBeenCalledWith( [ '/evorgang/vorgang', vorgang.vorgangID ] );
 
   });
+
 
   // =====================================
   // TASTATURBEDIENUNG
@@ -151,9 +132,10 @@ describe('Vorgangssteuerung', () => {
 
     expect( component.ausgewaehlterVorgang ).toBe( vorgang );
 
-    expect( component.ansicht ).toBe( 'detail' );
+    expect( router.navigate ).toHaveBeenCalledWith( [ '/evorgang/vorgang', vorgang.vorgangID ] );
 
   });
+
 
   it( 'soll bei anderen Tasten keinen Vorgang öffnen', () => {
 
@@ -165,7 +147,7 @@ describe('Vorgangssteuerung', () => {
 
     expect( event.preventDefault ).not.toHaveBeenCalled();
 
-    expect( component.ansicht ).toBe( 'liste' );
+    expect( router.navigate ).not.toHaveBeenCalled();
 
   });
 

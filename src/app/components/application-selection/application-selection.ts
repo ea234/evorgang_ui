@@ -1,5 +1,9 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+
 import { User } from '../../user/modell/user';
+import { UserService } from '../../user/service/user.service';
 import { ApplicationType } from '../../models/application-type';
 
 @Component({
@@ -10,13 +14,23 @@ import { ApplicationType } from '../../models/application-type';
 })
 export class ApplicationSelection {
 
-  @Input( { required: true } ) user!: User;
+  user!: User;
 
-@Output() applicationSelected = new EventEmitter<ApplicationType>();
-
-  onOpenApplication(application: ApplicationType): void {
-    this.applicationSelected.emit(application);
+  constructor( private userService: UserService,
+               private router: Router ) 
+  {
+    this.user = this.userService.getCurrentUser()!;
   }
+
+
+  onOpenApplication( application: ApplicationType ): void 
+  {
+    if ( application === ApplicationType.VORGANGSSTEUERUNG )
+    {
+      this.router.navigate(['/evorgang/vorgang']);
+    }
+  }
+
 
   // Zugriff auf das Enum im HTML-Template
   ApplicationType = ApplicationType;

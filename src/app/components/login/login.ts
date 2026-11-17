@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { UserService } from '../../user/service/user.service';
 import { LoginResult } from '../../user/service/user.service';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -18,7 +19,9 @@ export class Login
 
   errorMessage: string = '';
 
-  constructor( private userService: UserService ) {}
+  constructor( private userService: UserService,
+               private router: Router,
+               private route: ActivatedRoute ) {}
 
   @Output() loginSuccess = new EventEmitter<string>();
 
@@ -29,6 +32,17 @@ export class Login
       if ( result.success ) 
       {
         this.loginSuccess.emit(this.username);
+
+        const returnUrl = this.route.snapshot.queryParams[ 'returnUrl' ];
+
+        if ( returnUrl && returnUrl.startsWith('/evorgang') )
+        {
+          this.router.navigateByUrl( returnUrl );
+        }
+        else
+        {
+          this.router.navigate(['/evorgang']);
+        }
       }
       else
       {

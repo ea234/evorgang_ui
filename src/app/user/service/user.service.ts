@@ -11,9 +11,29 @@ export type LoginResult =
 @Injectable({
   providedIn: 'root'
 })
-export class UserService {
+export class UserService 
+{
+  private currentUser: User | null = null;
 
-  doLogin( pBenutzerName : string, pBenutzerKennwort : string) : Observable<LoginResult> 
+  isAuthenticated(): boolean 
+  {
+    return this.currentUser !== null;
+  }
+
+
+  getCurrentUser(): User | null 
+  {
+    return this.currentUser;
+  }
+
+
+  logout(): void 
+  {
+    this.currentUser = null;
+  }
+
+
+  doLogin( pBenutzerName : string, pBenutzerKennwort : string ) : Observable<LoginResult> 
   {
     if ( !pBenutzerName || !pBenutzerKennwort ) 
     {
@@ -25,21 +45,17 @@ export class UserService {
       return of( { success: false, error: 'MISSING_CREDENTIALS', message : 'Bitte Benutzername und Passwort eingeben.' } );
     }
 
-
-    if ( pBenutzerName === 'demo' &&  pBenutzerKennwort === 'demo123' ) 
+    if ( ( ( pBenutzerName === 'demo' ) && ( pBenutzerKennwort === 'demo123') ) ||
+         ( ( pBenutzerName === 'test' ) && ( pBenutzerKennwort === 'test'   ) ) ) 
     {
-       return of( { success: true, user: new User( pBenutzerName )  } );
-    } 
+      const user = new User( pBenutzerName );
 
-    if ( pBenutzerName === 'test' &&  pBenutzerKennwort === 'test' ) 
-    {
-       return of( { success: true, user: new User( pBenutzerName )  } );
-    } 
+      this.currentUser = user;
+
+      return of( { success: true, user: this.currentUser } );
+    }
 
     return of( { success: false, error: 'INVALID_CREDENTIALS', message : 'Benutzername oder Passwort ist falsch.'  } );
   }
 
 }
-
-
-

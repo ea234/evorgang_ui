@@ -4,6 +4,8 @@ import { Vorgang } from '../../modell/vorgang';
 import { FkDate } from '../../../util/fkDate';
 import { VorgangService } from '../../services/vorgang.service';
 import { DokumentenService } from '../../services/dokumenten.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { UserService } from '../../../user/service/user.service';
 
 type DialogAktion = 'zurueck' | 'beenden' | null;
 
@@ -15,11 +17,9 @@ type DialogAktion = 'zurueck' | 'beenden' | null;
 })
 export class Vorgangsbearbeitung implements OnInit {
 
-  @Input({ required: true }) user!: User;
+  user!: User;
 
-  @Input({ required: true }) vorgang!: Vorgang;
-
-  @Output() backToSelection = new EventEmitter<void>();
+  vorgang!: Vorgang;
 
   darfBearbeiten = false;
 
@@ -31,14 +31,35 @@ export class Vorgangsbearbeitung implements OnInit {
 
   dialogAktion: DialogAktion = null;
 
-  constructor( private dokumentenService : DokumentenService, private vorgangService: VorgangService ) {}
+constructor( private dokumentenService : DokumentenService,
+             private vorgangService: VorgangService,
+             private userService: UserService,
+             private route: ActivatedRoute,
+             private router: Router ) {}
 
   ngOnInit(): void 
   {
+    const id = Number( this.route.snapshot.paramMap.get('id') );
+
+    const user = this.userService.getCurrentUser();
+
+    const vorgang = this.vorgangService.getVorgangById( id );
+
+    if ( ( !user ) || ( !vorgang ) )
+    {
+      this.router.navigate(['/evorgang/vorgang']);
+
+      return;
+    }
+
+    this.user = user;
+
+    this.vorgang = vorgang;
+
     this.darfBearbeiten = this.user.darfVorgangBearbeiten( this.vorgang );
 
     this.bearbeiteterVorgang = { ...this.vorgang };
-  }
+  }  
 
   get hatUngespeicherteAenderungen(): boolean 
   {
@@ -123,15 +144,16 @@ export class Vorgangsbearbeitung implements OnInit {
 
   onBackToSelection(): void 
   {
-    if (this.hatUngespeicherteAenderungen) 
+    if ( this.hatUngespeicherteAenderungen ) 
     {
       this.dialogAktion = 'zurueck';
 
       return;
     }
 
-    this.backToSelection.emit();
+    this.router.navigate(['/evorgang/vorgang']);
   }
+
 
   // =====================================
   // BESTÄTIGUNGSDIALOG
@@ -181,8 +203,7 @@ export class Vorgangsbearbeitung implements OnInit {
 
     if ( aktion === 'zurueck' ) 
     {
-      this.backToSelection.emit();
-
+      this.router.navigate(['/evorgang/vorgang']);
     } 
     else if ( aktion === 'beenden' ) 
     {

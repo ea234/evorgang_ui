@@ -5,35 +5,4 @@
     (logout)="onLogout()">
 </app-statusbar-top>
 
-@if ( fkAnwendung.loginStatus === fkAnwendung.logged_none ) {
-
-    <app-login
-        (loginSuccess)="onLoginSuccess( $event ) ">
-    </app-login>
-
-} @else if ( fkAnwendung.loginStatus === fkAnwendung.logged_in ) {
-
-    @if ( fkAnwendung.selectedApplication === null ) {
-
-        <app-application-selection
-            [user]="fkAnwendung.currentUser!"
-            (applicationSelected)="onApplicationSelected( $event )">
-        </app-application-selection>
-
-    } @else if ( fkAnwendung.selectedApplication === 'vorgangssteuerung' ) {
-
-
-        <app-vorgangssteuerung
-            [user]="fkAnwendung.currentUser!"
-            (backToApplicationSelection)="onBackToApplicationSelection()">
-        </app-vorgangssteuerung>
-
-    }
-
-} @else if ( fkAnwendung.loginStatus === fkAnwendung.logged_out ) {
-
-    <app-logout
-        (backToLogin)="onBackToLogin()">
-    </app-logout>
-
-}
+<router-outlet></router-outlet>
