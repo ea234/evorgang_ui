@@ -1,0 +1,88 @@
+
+<div class="backend-container">
+
+  <h1>Spring Backend – Verbindungstest</h1>
+
+  <div class="status">
+    Status:
+    <strong>
+      {{ authenticated ? 'Angemeldet' : 'Nicht angemeldet' }}
+    </strong>
+  </div>
+
+  @if (!authenticated) {
+
+    <form (ngSubmit)="onLogin()">
+
+      <div class="form-group">
+        <label for="username">Benutzername</label>
+        <input
+          id="username"
+          name="username"
+          type="text"
+          [(ngModel)]="username"
+          required>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Passwort</label>
+        <input
+          id="password"
+          name="password"
+          type="password"
+          [(ngModel)]="password"
+          required>
+      </div>
+
+      <button type="submit" [disabled]="busy">
+        Anmelden
+      </button>
+
+    </form>
+
+  }
+
+  @if (authenticated) {
+
+    <div class="actions">
+
+      <button
+        type="button"
+        (click)="onPing()"
+        [disabled]="busy">
+        Ping aufrufen
+      </button>
+
+      <button
+        type="button"
+        (click)="onLogout()"
+        [disabled]="busy">
+        Abmelden
+      </button>
+
+    </div>
+
+  }
+
+  @if (busy) {
+    <p>Bitte warten ...</p>
+  }
+
+  @if (statusMessage) {
+    <p class="success">{{ statusMessage }}</p>
+  }
+
+  @if (pingResult) {
+    <div class="result">
+      <h3>Antwort des Spring-Backends</h3>
+      <pre>{{ pingResult }}</pre>
+    </div>
+  }
+
+  @if (errorMessage) {
+    <div class="error" role="alert">
+      {{ errorMessage }}
+    </div>
+  }
+
+</div>

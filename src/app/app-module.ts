@@ -10,6 +10,8 @@ import { Vorgangsbearbeitung } from './app_vorgang/components/vorgangsbearbeitun
 import { AppRoutingModule } from './app-routing-module';
 import { App } from './app';
 import { Dokumentenanzeige } from './app_vorgang/components/dokumentenanzeige/dokumentenanzeige';
+import { provideHttpClient } from '@angular/common/http';
+import { AppTestBackend } from './app_test_backend/components/app-test-backend/app-test-backend';
 
 @NgModule({
   declarations: [
@@ -21,9 +23,10 @@ import { Dokumentenanzeige } from './app_vorgang/components/dokumentenanzeige/do
     Vorgangssteuerung,
     Vorgangsbearbeitung,
     Dokumentenanzeige,
+    AppTestBackend,
   ],
   imports: [BrowserModule, AppRoutingModule, FormsModule],
-  providers: [provideBrowserGlobalErrorListeners()],
+  providers: [provideBrowserGlobalErrorListeners(), provideHttpClient()],
   bootstrap: [App],
 })
 export class AppModule {}

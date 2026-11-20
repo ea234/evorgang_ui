@@ -8,6 +8,7 @@ import { Vorgangssteuerung } from './app_vorgang/components/vorgangssteuerung/vo
 import { Vorgangsbearbeitung } from './app_vorgang/components/vorgangsbearbeitung/vorgangsbearbeitung';
 import { Dokumentenanzeige } from './app_vorgang/components/dokumentenanzeige/dokumentenanzeige';
 import { authGuard } from './user/service/auth.guard';
+import { AppTestBackend } from './app_test_backend/components/app-test-backend/app-test-backend';
 
 const routes: Routes = [
   {
@@ -35,6 +36,10 @@ const routes: Routes = [
         component: Dokumentenanzeige
       }      
     ]
+  },
+  {
+    path: 'app_test_backend',
+    component: AppTestBackend
   },
   {
     path: '',
