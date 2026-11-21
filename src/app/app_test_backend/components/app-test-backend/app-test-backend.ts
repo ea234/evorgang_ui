@@ -1,9 +1,8 @@
 
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { SpringAuthService } from '../../service/spring-auth.service';
 import { switchMap, tap, finalize } from 'rxjs';
-import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-test-backend',
@@ -23,119 +22,178 @@ export class AppTestBackend {
   pingResult = '';
   statusMessage = '';
 
-  constructor(  private springAuth: SpringAuthService,  private cdr: ChangeDetectorRef ) {}
+  constructor(
+    private springAuth: SpringAuthService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
+  /**
+   * Zentrale Auswertung von HTTP-Fehlern.
+   */
+  private getErrorMessage( error: HttpErrorResponse,  operation: string ): string {
 
-onLogin(): void {
+    switch (error.status) {
 
-  console.log('[Backend-Test] onLogin() aufgerufen');
-  console.log('[Backend-Test] Benutzername:', this.username);
+      case 0:
+        return 'Backend nicht erreichbar. Netzwerkverbindung prüfen.';
 
-  this.busy = true;
-  this.errorMessage = '';
-  this.pingResult = '';
-  this.statusMessage = '';
+      case 400:
+        return `${operation}: Ungültige Anfrage (HTTP 400).`;
 
-  console.log('[Backend-Test] Rufe GET /csrf auf');
+      case 401:
+        if ( operation === 'Anmeldung' ) {
+          return 'Anmeldung fehlgeschlagen: Benutzername oder Passwort falsch.';
+        }
 
-  this.springAuth.loadCsrfToken().pipe(
+        return 'Nicht angemeldet. Zugriff auf das Backend verweigert.';
 
-    tap(() => {
-      console.log('[Backend-Test] CSRF-Abruf erfolgreich');
-      console.log('[Backend-Test] Starte POST /login');
-    }),
+      case 403:
+        return 'Zugriff verweigert (HTTP 403). Möglicherweise CSRF-Fehler.';
 
-    switchMap(() =>
-      this.springAuth.login(this.username, this.password)
-    ),
+      case 404:
+        return 'Backend-Endpunkt nicht gefunden (HTTP 404).';
 
-    tap(response => {
-      console.log('[Backend-Test] Login-Antwort:', response);
-    }),
+      case 500:
+        return 'Interner Fehler im Spring-Backend (HTTP 500).';
 
-    finalize(() => {
-      console.log('[Backend-Test] Login-Vorgang beendet');
-      this.busy = false;
-    })
-
-  ).subscribe({
-
-    next: response => {
-      this.authenticated = response.authenticated;
-
-      console.log(
-  '[Backend-Test] Komponentenstatus:',
-  this.authenticated
-);
-      this.statusMessage = 'Anmeldung erfolgreich.';
-
-      this.cdr.markForCheck();
-      console.log(
-        '[Backend-Test] Authentifiziert:',
-        this.authenticated
-      );
-    },
-
-    error: (error: HttpErrorResponse) => {
-
-      console.error('[Backend-Test] HTTP-Fehler:', {
-        status: error.status,
-        statusText: error.statusText,
-        message: error.message,
-        response: error.error
-      });
-
-      this.authenticated = false;
-
-      this.errorMessage =
-        `Anmeldung fehlgeschlagen (HTTP ${error.status}).`;
-        
-      this.cdr.markForCheck();
-
+      default:
+        return `${operation} fehlgeschlagen (HTTP ${error.status}).`;
     }
+  }
 
-  });
-}
-
-  onPing(): void {
+  /**
+   * Anmeldung über Spring Security.
+   */
+  onLogin(): void {
 
     this.busy = true;
     this.errorMessage = '';
     this.pingResult = '';
+    this.statusMessage = '';
 
-    this.springAuth.ping().subscribe({
-      next: result => {
-        this.pingResult = result;
+    this.springAuth.loadCsrfToken().pipe(
+
+      switchMap(() =>
+        this.springAuth.login(this.username, this.password)
+      ),
+
+      tap(response => {
+        console.log('[Backend-Test] Login-Antwort:', response);
+      }),
+
+      finalize(() => {
         this.busy = false;
         this.cdr.markForCheck();
+      })
+
+    ).subscribe({
+
+      next: response => {
+
+        this.authenticated = response.authenticated;
+
+        if (response.authenticated) {
+          this.statusMessage = 'Anmeldung erfolgreich.';
+        } else {
+          this.errorMessage = 'Anmeldung nicht erfolgreich.';
+        }
+
+        this.cdr.markForCheck();
       },
+
       error: (error: HttpErrorResponse) => {
-        this.errorMessage =
-          `Ping fehlgeschlagen (HTTP ${error.status}).`;
-        this.busy = false;
+
+        console.error('[Backend-Test] Login-Fehler:', {
+          status: error.status,
+          statusText: error.statusText,
+          message: error.message,
+          response: error.error
+        });
+
+        this.authenticated = false;
+        this.errorMessage = this.getErrorMessage(error, 'Anmeldung');
+
         this.cdr.markForCheck();
       }
     });
   }
 
+  /**
+   * Ping-Endpunkt aufrufen.
+   */
+  onPing(): void {
+
+    this.busy = true;
+    this.errorMessage = '';
+    this.pingResult = '';
+    this.statusMessage = '';
+
+    this.springAuth.ping().pipe(
+
+      finalize(() => {
+        this.busy = false;
+        this.cdr.markForCheck();
+      })
+
+    ).subscribe({
+
+      next: result => {
+        this.pingResult = result;
+        this.statusMessage = 'Ping erfolgreich.';
+        this.cdr.markForCheck();
+      },
+
+      error: (error: HttpErrorResponse) => {
+
+        console.error('[Backend-Test] Ping-Fehler:', {
+          status: error.status,
+          statusText: error.statusText,
+          message: error.message,
+          response: error.error
+        });
+
+        this.errorMessage = this.getErrorMessage(error, 'Ping');
+        this.cdr.markForCheck();
+      }
+    });
+  }
+
+  /**
+   * Abmeldung über Spring Security.
+   */
   onLogout(): void {
 
     this.busy = true;
     this.errorMessage = '';
     this.pingResult = '';
+    this.statusMessage = '';
 
-    this.springAuth.logout().subscribe({
+    this.springAuth.logout().pipe(
+
+      finalize(() => {
+        this.busy = false;
+        this.cdr.markForCheck();
+      })
+
+    ).subscribe({
+
       next: () => {
         this.authenticated = false;
         this.password = '';
         this.statusMessage = 'Abmeldung erfolgreich.';
-        this.busy = false;
         this.cdr.markForCheck();
       },
+
       error: (error: HttpErrorResponse) => {
-        this.errorMessage =
-          `Abmeldung fehlgeschlagen (HTTP ${error.status}).`;
-        this.busy = false;
+
+        console.error('[Backend-Test] Logout-Fehler:', {
+          status: error.status,
+          statusText: error.statusText,
+          message: error.message,
+          response: error.error
+        });
+
+        this.errorMessage = this.getErrorMessage(error, 'Abmeldung');
         this.cdr.markForCheck();
       }
     });
