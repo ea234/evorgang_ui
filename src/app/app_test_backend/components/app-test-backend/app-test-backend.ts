@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { SpringAuthService } from '../../service/spring-auth.service';
 import { switchMap, tap, finalize } from 'rxjs';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-test-backend',
@@ -22,7 +23,7 @@ export class AppTestBackend {
   pingResult = '';
   statusMessage = '';
 
-  constructor(private springAuth: SpringAuthService) {}
+  constructor(  private springAuth: SpringAuthService,  private cdr: ChangeDetectorRef ) {}
 
 
 onLogin(): void {
@@ -61,8 +62,14 @@ onLogin(): void {
 
     next: response => {
       this.authenticated = response.authenticated;
+
+      console.log(
+  '[Backend-Test] Komponentenstatus:',
+  this.authenticated
+);
       this.statusMessage = 'Anmeldung erfolgreich.';
 
+      this.cdr.markForCheck();
       console.log(
         '[Backend-Test] Authentifiziert:',
         this.authenticated
@@ -82,6 +89,9 @@ onLogin(): void {
 
       this.errorMessage =
         `Anmeldung fehlgeschlagen (HTTP ${error.status}).`;
+        
+      this.cdr.markForCheck();
+
     }
 
   });
@@ -97,11 +107,13 @@ onLogin(): void {
       next: result => {
         this.pingResult = result;
         this.busy = false;
+        this.cdr.markForCheck();
       },
       error: (error: HttpErrorResponse) => {
         this.errorMessage =
           `Ping fehlgeschlagen (HTTP ${error.status}).`;
         this.busy = false;
+        this.cdr.markForCheck();
       }
     });
   }
@@ -118,11 +130,13 @@ onLogin(): void {
         this.password = '';
         this.statusMessage = 'Abmeldung erfolgreich.';
         this.busy = false;
+        this.cdr.markForCheck();
       },
       error: (error: HttpErrorResponse) => {
         this.errorMessage =
           `Abmeldung fehlgeschlagen (HTTP ${error.status}).`;
         this.busy = false;
+        this.cdr.markForCheck();
       }
     });
   }
